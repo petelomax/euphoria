@@ -1,0 +1,15 @@
+include space-age.e 
+
+set_test_verbosity(TEST_SHOW_ALL)
+test_equal(age_on("Earth", 1000000000), 31.6881, "age on Earth", "%.4f")
+test_equal(age_on("Mercury", 2134835688), 280.8793, "age on Mercury", "%.4f")
+test_equal(age_on("Venus", 189839836), 9.7784, "age on Venus", "%.4f")
+test_equal(age_on("Mars", 2129871239), 35.8842, "age on Mars", "%.4f")
+test_equal(age_on("Jupiter", 901876382), 2.4091, "age on Jupiter", "%.4f")
+test_equal(age_on("Saturn", 2000000000), 2.1522, "age on Saturn", "%.4f")
+test_equal(age_on("Uranus", 1210123456), 0.4564, "age on Uranus", "%.4f")
+test_equal(age_on("Neptune", 1821023456), 0.3502, "age on Neptune", "%.4f")
+test_false(age_on("Sun", 680804807), "invalid planet returns false")
+test_summary() 
+
+

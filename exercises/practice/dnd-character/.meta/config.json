@@ -1,16 +1,16 @@
 {
   "authors": [
-    "BNAndras"
+    "petelomax"
   ],
   "files": {
     "solution": [
-      "dnd-character.ex"
+      "dnd-character.e"
     ],
     "test": [
-      "t_dnd-character.e"
+      "test.exw"
     ],
     "example": [
-      ".meta/example.ex"
+      ".meta/example.e"
     ]
   },
   "blurb": "Randomly generate Dungeons & Dragons characters.",

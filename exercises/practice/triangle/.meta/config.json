@@ -1,16 +1,16 @@
 {
   "authors": [
-    "axtens"
+    "petelomax"
   ],
   "files": {
     "solution": [
-      "triangle.ex"
+      "triangle.e"
     ],
     "test": [
-      "t_triangle.e"
+      "test.exw"
     ],
     "example": [
-      ".meta/example.ex"
+      ".meta/example.e"
     ]
   },
   "blurb": "Determine if a triangle is equilateral, isosceles, or scalene.",

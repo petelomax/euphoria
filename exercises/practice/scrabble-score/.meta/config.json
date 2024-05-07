@@ -1,16 +1,16 @@
 {
   "authors": [
-    "glennj"
+    "petelomax"
   ],
   "files": {
     "solution": [
-      "scrabble-score.ex"
+      "scrabble-score.e"
     ],
     "test": [
-      "t_scrabble-score.e"
+      "test.exw"
     ],
     "example": [
-      ".meta/example.ex"
+      ".meta/example.e"
     ]
   },
   "blurb": "Given a word, compute the Scrabble score for that word.",

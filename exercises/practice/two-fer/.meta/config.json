@@ -1,16 +1,16 @@
 {
   "authors": [
-    "axtens"
+    "petelomax"
   ],
   "files": {
     "solution": [
-      "two-fer.ex"
+      "two-fer.e"
     ],
     "test": [
-      "t_two-fer.e"
+      "test.exw"
     ],
     "example": [
-      ".meta/example.ex"
+      ".meta/example.e"
     ]
   },
   "blurb": "Create a sentence of the form \"One for X, one for me.\".",

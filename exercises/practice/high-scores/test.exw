@@ -1,0 +1,13 @@
+include high-scores.e
+
+set_test_verbosity(TEST_SHOW_ALL)
+--set_test_verbosity(TEST_SHOW_FAILED)
+test_equal(latest({100,0,90,30}), 30, "Latest score")
+test_equal(personal_best({100,0,90,30}), 100, "Personal best")
+test_equal(personal_top_three({0,90,30,100,20,10,0,30,40,40,70,70}), {100,90,70}, "Personal top three from a list of scores")
+test_equal(personal_top_three({20,10,30}), {30,20,10}, "Personal top three highest to lowest")
+test_equal(personal_top_three({40,20,40,30}), {40,40,30}, "Personal top three when there is a tie")
+test_equal(personal_top_three({30,70}), {70,30}, "Personal top three when there are less than three")
+test_equal(personal_top_three({40}), {40}, "Personal top three when there is only one")
+test_summary()
+

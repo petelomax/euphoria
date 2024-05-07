@@ -1,8 +1,8 @@
-# Exercism Euphoria Track
+# Exercism Phix Track
 
-[![Configlet](https://github.com/exercism/euphoria/actions/workflows/configlet.yml/badge.svg)](https://github.com/exercism/euphoria/actions/workflows/configlet.yml) [![Test](https://github.com/exercism/euphoria/actions/workflows/test.yml/badge.svg)](https://github.com/exercism/euphoria/actions/workflows/test.yml)
+[![Configlet](https://github.com/exercism/phix/actions/workflows/configlet.yml/badge.svg)](https://github.com/exercism/phix/actions/workflows/configlet.yml) [![Test](https://github.com/exercism/phix/actions/workflows/test.yml/badge.svg)](https://github.com/exercism/phix/actions/workflows/test.yml)
 
-Exercism exercises in Euphoria.
+Exercism exercises in Phix.
 
 ## Testing
 

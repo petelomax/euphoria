@@ -1,16 +1,16 @@
 {
   "authors": [
-    "BNAndras"
+    "petelomax"
   ],
   "files": {
     "solution": [
-      "queen-attack.ex"
+      "queen-attack.e"
     ],
     "test": [
-      "t_queen-attack.e"
+      "test.exw"
     ],
     "example": [
-      ".meta/example.ex"
+      ".meta/example.e"
     ]
   },
   "blurb": "Given the position of two queens on a chess board, indicate whether or not they are positioned so that they can attack each other.",

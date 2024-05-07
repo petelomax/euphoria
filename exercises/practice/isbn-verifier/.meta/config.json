@@ -1,16 +1,16 @@
 {
   "authors": [
-    "axtens"
+    "petelomax"
   ],
   "files": {
     "solution": [
-      "isbn-verifier.ex"
+      "isbn-verifier.e"
     ],
     "test": [
-      "t_isbn-verifier.e"
+      "test.exw"
     ],
     "example": [
-      ".meta/example.ex"
+      ".meta/example.e"
     ]
   },
   "blurb": "Check if a given string is a valid ISBN-10 number.",

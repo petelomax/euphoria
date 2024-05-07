@@ -1,16 +1,16 @@
 {
   "authors": [
-    "axtens"
+    "petelomax"
   ],
   "files": {
     "solution": [
-      "hello-world.ex"
+      "hello-world.e"
     ],
     "test": [
-      "t_hello-world.e"
+      "test.exw"
     ],
     "example": [
-      ".meta/example.ex"
+      ".meta/example.e"
     ]
   },
   "blurb": "Exercism's classic introductory exercise. Just say \"Hello, World!\".",

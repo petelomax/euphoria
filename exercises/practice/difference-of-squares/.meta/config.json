@@ -1,16 +1,16 @@
 {
   "authors": [
-    "glennj"
+    "petelomax"
   ],
   "files": {
     "solution": [
-      "difference-of-squares.ex"
+      "difference-of-squares.e"
     ],
     "test": [
-      "t_difference-of-squares.e"
+      "test.exw"
     ],
     "example": [
-      ".meta/example.ex"
+      ".meta/example.e"
     ]
   },
   "blurb": "Find the difference between the square of the sum and the sum of the squares of the first N natural numbers.",

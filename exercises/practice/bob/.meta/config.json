@@ -1,16 +1,16 @@
 {
   "authors": [
-    "axtens"
+    "petelomax"
   ],
   "files": {
     "solution": [
-      "bob.ex"
+      "bob.e"
     ],
     "test": [
-      "t_bob.e"
+      "test.exw"
     ],
     "example": [
-      ".meta/example.ex"
+      ".meta/example.e"
     ]
   },
   "blurb": "Bob is a lackadaisical teenager. In conversation, his responses are very limited.",

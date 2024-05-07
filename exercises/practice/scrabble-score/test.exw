@@ -1,0 +1,16 @@
+include scrabble-score.e
+
+set_test_verbosity(TEST_SHOW_ALL)
+test_equal(score("a"), 1, "lowercase letter")
+test_equal(score("A"), 1, "uppercase letter")
+test_equal(score("f"), 4, "valuable letter")
+test_equal(score("at"), 2, "short word")
+test_equal(score("zoo"), 12, "short, valuable word")
+test_equal(score("street"), 6, "medium word")
+test_equal(score("quirky"), 22, "medium, valuable word")
+test_equal(score("OxyphenButazone"), 41, "long, mixed-case word")
+test_equal(score("pinata"), 8, "english-like word")
+test_equal(score(""), 0, "empty input")
+test_equal(score("abcdefghijklmnopqrstuvwxyz"), 87, "entire alphabet available")
+test_summary()
+

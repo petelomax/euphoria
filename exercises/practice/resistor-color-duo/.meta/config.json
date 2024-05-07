@@ -1,16 +1,16 @@
 {
   "authors": [
-    "BNAndras"
+    "petelomax"
   ],
   "files": {
     "solution": [
-      "resistor-color-duo.ex"
+      "resistor-color-duo.e"
     ],
     "test": [
-      "t_resistor-color-duo.e"
+      "test.exw"
     ],
     "example": [
-      ".meta/example.ex"
+      ".meta/example.e"
     ]
   },
   "blurb": "Convert color codes, as used on resistors, to a numeric value.",

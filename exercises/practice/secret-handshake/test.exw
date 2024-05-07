@@ -1,0 +1,15 @@
+include secret-handshake.e
+set_test_verbosity(TEST_SHOW_ALL)
+test_equal(commands(1),{"wink"},"wink for 1")
+test_equal(commands(2),{"double blink"},"double blink for 10")
+test_equal(commands(4),{"close your eyes"},"close your eyes for 100")
+test_equal(commands(8),{"jump"},"jump for 1000")
+test_equal(commands(3),{"wink", "double blink"},"combine two actions")
+test_equal(commands(19),{"double blink", "wink"},"reverse two actions")
+test_equal(commands(24),{"jump"},"reversing one action gives the same action")
+test_equal(commands(16),{},"reversing no actions still gives no actions")
+test_equal(commands(15),{"wink", "double blink", "close your eyes", "jump"},"all possible actions")
+test_equal(commands(31),{"jump", "close your eyes", "double blink", "wink"},"reverse all possible actions")
+test_equal(commands(0),{},"do nothing for zero")
+test_summary()
+

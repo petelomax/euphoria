@@ -1,16 +1,16 @@
 {
   "authors": [
-    "BNAndras"
+    "petelomax"
   ],
   "files": {
     "solution": [
-      "robot-simulator.ex"
+      "robot-simulator.e"
     ],
     "test": [
-      "t_robot-simulator.e"
+      "test.exw"
     ],
     "example": [
-      ".meta/example.ex"
+      ".meta/example.e"
     ]
   },
   "blurb": "Write a robot simulator.",

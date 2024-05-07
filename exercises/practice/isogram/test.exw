@@ -1,0 +1,21 @@
+include isogram.e
+--include .meta/example.e
+
+set_test_verbosity(TEST_SHOW_ALL)
+
+test_true(isogram(""), "empty string")
+test_true(isogram("isogram"), "isogram with only lower case characters")
+test_false(isogram("eleven"), "word with one duplicated character")
+test_false(isogram("zzyzx"), "word with one duplicated character from the end of the alphabet")
+test_true(isogram("subdermatoglyphic"), "longest reported english isogram")
+test_false(isogram("Alphabet"), "word with duplicated character in mixed case")
+test_false(isogram("alphAbet"), "word with duplicated character in mixed case, lowercase first")
+test_true(isogram("thumbscrew-japingly"), "hypothetical isogrammic word with hyphen")
+test_false(isogram("thumbscrew-jappingly"), "hypothetical word with duplicated character following hyphen")
+test_true(isogram("six-year-old"), "isogram with duplicated hyphen")
+test_true(isogram("Emily Jung Schwartzkopf"), "made-up name that is an isogram")
+test_false(isogram("accentor"), "duplicated character in the middle")
+test_false(isogram("angola"), "same first and last characters")
+test_false(isogram("up-to-date"), "word with duplicated character and with two hyphens")
+
+test_summary()

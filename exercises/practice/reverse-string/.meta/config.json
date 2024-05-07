@@ -1,16 +1,16 @@
 {
   "authors": [
-    "glennj"
+    "petelomax"
   ],
   "files": {
     "solution": [
-      "reverse-string.ex"
+      "reverse-string.e"
     ],
     "test": [
-      "t_reverse-string.e"
+      "test.exw"
     ],
     "example": [
-      ".meta/example.ex"
+      ".meta/example.e"
     ]
   },
   "blurb": "Reverse a given string.",

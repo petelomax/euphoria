@@ -1,32 +1,32 @@
 {
   "docs": [
     {
-      "uuid": "3dc25e74-6bec-4a57-b127-e620d7bf2d8c",
+      "uuid": "54b076cd-ebd9-4fa8-908f-56280df3374d",
       "slug": "installation",
       "path": "docs/INSTALLATION.md",
-      "title": "Installing OpenEuphoria locally",
-      "blurb": "Learn how to install OpenEuphoria locally to solve Exercism's exercises on your own machine"
+      "title": "Installing Phix locally",
+      "blurb": "Learn how to install Phix locally to solve Exercism's exercises on your own machine"
     },
     {
-      "uuid": "a2ab2a2c-6f80-4f0e-ae20-1e804906cc20",
+      "uuid": "9b3633d5-496c-4a38-85ad-b0eb22f151bb",
       "slug": "learning",
       "path": "docs/LEARNING.md",
-      "title": "How to learn OpenEuphoria",
-      "blurb": "An overview of how to get started from scratch with OpenEuphoria"
+      "title": "How to learn Phix",
+      "blurb": "An overview of how to get started from scratch with Phix"
     },
     {
-      "uuid": "d6792a01-3fcc-4126-b318-6f329ac18192",
+      "uuid": "1107ae06-9582-4b1b-95c1-550a4c02f042",
       "slug": "tests",
       "path": "docs/TESTS.md",
-      "title": "Testing on the OpenEuphoria track",
-      "blurb": "Learn how to test your OpenEuphoria exercises on Exercism"
+      "title": "Testing on the Phix track",
+      "blurb": "Learn how to test your Phix exercises on Exercism"
     },
     {
-      "uuid": "cf67f253-260c-4b3b-9054-221619475a9a",
+      "uuid": "c696093a-870b-43ef-9db0-ea1e4eac94fd",
       "slug": "resources",
       "path": "docs/RESOURCES.md",
-      "title": "Useful OpenEuphoria resources",
-      "blurb": "A collection of useful resources to help you master OpenEuphoria"
+      "title": "Useful Phix resources",
+      "blurb": "A collection of useful resources to help you master Phix"
     }
   ]
 }

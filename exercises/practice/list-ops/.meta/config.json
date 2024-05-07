@@ -1,16 +1,16 @@
 {
   "authors": [
-    "BNAndras"
+    "petelomax"
   ],
   "files": {
     "solution": [
-      "list-ops.ex"
+      "list-ops.e"
     ],
     "test": [
-      "t_list-ops.e"
+      "test.exw"
     ],
     "example": [
-      ".meta/example.ex"
+      ".meta/example.e"
     ]
   },
   "blurb": "Implement basic list operations."

@@ -1,3 +1,3 @@
 # Instructions append
 
-Euphoria provides support for [optional parameters](https://openeuphoria.org/docs/lang_decl.html#_114_procedures).
+Phix provides support for [optional parameters](http://phix.x10.mx/docs/html/procedures.htm#optionalparams).

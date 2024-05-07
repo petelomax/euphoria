@@ -5,7 +5,8 @@ exit_code=0
 # Verify the Practice Exercises
 for practice_exercise_dir in ./exercises/practice/*/; do
     echo -n "Checking $(basename "${practice_exercise_dir}") exercise..."
-    eui bin/run.ex $(basename "${practice_exercise_dir}") ${practice_exercise_dir} /tmp
+#   p bin/run.exw $(basename "${practice_exercise_dir}") ${practice_exercise_dir} /tmp
+    p bin/run.exw ${practice_exercise_dir}
     echo
     if [[ $(jq -r '.status' /tmp/results.json) != "pass" ]]; then
         ((exit_code++))

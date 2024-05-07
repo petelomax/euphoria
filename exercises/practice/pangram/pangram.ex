@@ -1,1 +1,0 @@
--- public function is_pangram(sequence sentence)

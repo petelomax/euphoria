@@ -4,13 +4,13 @@
   ],
   "files": {
     "solution": [
-      "eliuds-eggs.ex"
+      "eliuds-eggs.e"
     ],
     "test": [
-      "t_eliuds-eggs.e"
+      "test.exw"
     ],
     "example": [
-      ".meta/example.ex"
+      ".meta/example.e"
     ]
   },
   "blurb": "Help Eliud count the number of eggs in her chicken coop by counting the number of 1 bits in a binary representation.",

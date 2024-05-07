@@ -1,16 +1,16 @@
 {
   "authors": [
-    "glennj"
+    "petelomax"
   ],
   "files": {
     "solution": [
-      "game-of-life.ex"
+      "game-of-life.e"
     ],
     "test": [
-      "t_game-of-life.e"
+      "test.exw"
     ],
     "example": [
-      ".meta/example.ex"
+      ".meta/example.e"
     ]
   },
   "blurb": "Implement Conway's Game of Life.",

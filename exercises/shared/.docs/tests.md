@@ -1,27 +1,27 @@
 # Tests
 
-If you have the eutest binary on your path, enter the command:
+If you have the phix binary on your path, enter the command:
 
 ```bash
-eutest 
+p test 
 ```
-This will run all test files (t_*.e).
+This will run the test file (test.exw).
 
-If the eutest binary is not on the PATH, in Windows enter
+If the phix binary is not on the PATH, in Windows enter
 
 ```cmd
-\path\to\eutest
+\path\to\p.exw test
 ```
 
-Linux or macOS:
+Linux:
 
 ```bash
-/path/to/eutest
+/path/to/p test
 ```
 
 ## Skipped tests
 
 Solving an exercise means making all its tests pass.
-By default, all the test in the t_*.e file are executed.
-To skip a test, prepend two dashes (the standard Euphoria comment marker) to the beginning of the line.
+By default, all the tests in the test.exw file are executed.
+To skip a test, prepend two dashes (the standard Phix comment marker) to the beginning of the line.
 

@@ -11,13 +11,14 @@ usage() { echo "$usage" >&2; exit 1; }
 [[ $# -eq 1 && -d "$1" ]] || usage
 
 slug=$(basename "$1")
-if ! [[ -f "$1/${slug}.ex" && -f "$1/t_${slug}.e" ]]; then
+if ! [[ -f "$1/${slug}.e" && -f "$1/test.exw" ]]; then
     echo "'$1' does not appear to contain an exercise" >&2
     echo "" >&2
     usage
 fi
 
-eui bin/run.ex "${slug}" "$1" /tmp
+#p bin/run.exw "${slug}" "$1" /tmp
+p bin/run.exw "$1"
 
 echo
 echo

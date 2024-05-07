@@ -1,0 +1,12 @@
+include builtins/map.e
+
+include nucleotide-count.e
+
+set_test_verbosity(TEST_SHOW_ALL)
+test_equal(pairs(counts("")),{{'A',0},{'C',0},{'G',0},{'T',0}},"Empty strand")
+test_equal(pairs(counts("G")),{{'A',0},{'C',0},{'G',1},{'T',0}},"Can count one nucleotide in single-character input strand")
+test_equal(pairs(counts("GGGGGGG")),{{'A',0},{'C',0},{'G',7},{'T',0}},"Strand with repeated nucleotide")
+test_equal(pairs(counts("AGCTTTTCATTCTGACTGCAACGGGCAATATGTCTCTGTGTGGATTAAAAAAAGAGTGTCTGATAGCAGC")),{{'A',20},{'C',12},{'G',17},{'T',21}},"Strand with multiple nucleotides")
+test_false(counts("AGXXACT"),"Strand with invalid nucleotides")
+test_summary()
+

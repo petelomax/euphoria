@@ -1,0 +1,25 @@
+include isbn-verifier.e
+
+set_test_verbosity(TEST_SHOW_ALL)
+
+test_equal(is_valid("3-598-21508-8"), 1, "valid isbn")
+test_equal(is_valid("3-598-21508-9"), 0, "invalid isbn check digit")
+test_equal(is_valid("3-598-21507-X"), 1, "valid isbn with a check digit of 10")
+test_equal(is_valid("3-598-21507-A"), 0, "check digit is a character other than X")
+test_equal(is_valid("4-598-21507-B"), 0, "invalid check digit in isbn is not treated as zero")
+test_equal(is_valid("3-598-P1581-X"), 0, "invalid character in isbn is not treated as zero")
+test_equal(is_valid("3-598-2X507-9"), 0, "X is only valid as a check digit")
+test_equal(is_valid("3598215088"), 1, "valid isbn without separating dashes")
+test_equal(is_valid("359821507X"), 1, "isbn without separating dashes and X as check digit")
+test_equal(is_valid("359821507"), 0, "isbn without check digit and dashes")
+test_equal(is_valid("3598215078X"), 0, "too long isbn and no dashes")
+test_equal(is_valid("00"), 0, "too short isbn")
+test_equal(is_valid("3-598-21507"), 0, "isbn without check digit")
+test_equal(is_valid("3-598-21515-X"), 0, "check digit of X should not be used for 0")
+test_equal(is_valid(""), 0, "empty isbn")
+test_equal(is_valid("134456729"), 0, "input is 9 characters")
+test_equal(is_valid("3132P34035"), 0, "invalid characters are not ignored after checking length")
+test_equal(is_valid("3598P215088"), 0, "invalid characters are not ignored before checking length")
+test_equal(is_valid("98245726788"), 0, "input is too long but contains a valid isbn")
+
+test_summary() 

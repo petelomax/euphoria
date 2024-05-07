@@ -1,0 +1,11 @@
+include rna-transcription.e
+
+set_test_verbosity(TEST_SHOW_ALL)
+test_equal(to_rna(""),"", "Empty RNA sequence")
+test_equal(to_rna("C"),"G",  "RNA complement of cytosine is guanine")
+test_equal(to_rna("G"),"C", "RNA complement of guanine is cytosine")
+test_equal(to_rna("T"),"A", "RNA complement of thymine is adenine")
+test_equal(to_rna("A"),"U", "RNA complement of adenine is uracil")
+test_equal(to_rna("ACGTGGTCTTAA"),"UGCACCAGAAUU", "RNA complement")
+test_summary()
+

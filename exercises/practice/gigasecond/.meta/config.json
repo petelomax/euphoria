@@ -1,16 +1,16 @@
 {
   "authors": [
-    "BNAndras"
+    "petelomax"
   ],
   "files": {
     "solution": [
-      "gigasecond.ex"
+      "gigasecond.e"
     ],
     "test": [
-      "t_gigasecond.e"
+      "test.exw"
     ],
     "example": [
-      ".meta/example.ex"
+      ".meta/example.e"
     ]
   },
   "blurb": "Given a moment, determine the moment that would be after a gigasecond has passed.",

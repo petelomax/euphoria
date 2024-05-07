@@ -1,0 +1,12 @@
+include reverse-string.e
+
+set_test_verbosity(TEST_SHOW_ALL)
+
+test_equal(reverse_string(""), "", "an empty string")
+test_equal(reverse_string("robot"), "tobor", "a word")
+test_equal(reverse_string("Ramen"), "nemaR", "a capitalized word")
+test_equal(reverse_string("I'm hungry!"), "!yrgnuh m'I", "a sentence with punctuation")
+test_equal(reverse_string("racecar"), "racecar", "a palindrome")
+test_equal(reverse_string("drawer"), "reward", "an even-sized word")
+
+test_summary()

@@ -1,0 +1,23 @@
+include difference-of-squares.e
+
+set_test_verbosity(TEST_SHOW_ALL)
+
+-- Square the sum of the numbers up to the given number
+
+test_equal(square_of_sum(1), 1, "square of sum 1")
+test_equal(square_of_sum(5), 225, "square of sum 5")
+test_equal(square_of_sum(100), 25_502_500, "square of sum 100")
+
+-- Sum the squares of the numbers up to the given number
+
+test_equal(sum_of_squares(1), 1, "sum of squares 1")
+test_equal(sum_of_squares(5), 55, "sum of squares 5")
+test_equal(sum_of_squares(100), 338_350, "sum of squares 100")
+
+-- Subtract sum of squares from square of sums
+
+test_equal(difference_of_squares(1), 0, "difference of squares 1")
+test_equal(difference_of_squares(5), 170, "difference of squares 5")
+test_equal(difference_of_squares(100), 25_164_150, "difference of squares 100")
+
+test_summary()

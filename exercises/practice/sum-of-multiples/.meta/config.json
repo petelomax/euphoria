@@ -4,13 +4,13 @@
   ],
   "files": {
     "solution": [
-      "sum-of-multiples.ex"
+      "sum-of-multiples.e"
     ],
     "test": [
-      "t_sum-of-multiples.e"
+      "test.exw"
     ],
     "example": [
-      ".meta/example.ex"
+      ".meta/example.e"
     ]
   },
   "blurb": "Given a number, find the sum of all the multiples of particular numbers up to but not including that number.",

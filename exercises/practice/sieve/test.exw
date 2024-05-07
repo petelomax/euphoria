@@ -1,0 +1,10 @@
+include sieve.e
+
+set_test_verbosity(TEST_SHOW_ALL)
+test_equal(primes(1), {}, "no primes under two")
+test_equal(primes(2), {2}, "find first prime")
+test_equal(primes(10), {2,3,5,7}, "find primes up to 10")
+test_equal(primes(13), {2,3,5,7,11,13}, "limit is prime")
+test_equal(primes(1000), get_primes_le(1000), "find primes up to 1000")
+test_summary() 
+

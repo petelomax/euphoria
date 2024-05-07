@@ -1,16 +1,16 @@
 {
   "authors": [
-    "BNAndras"
+    "petelomax"
   ],
   "files": {
     "solution": [
-      "nucleotide-count.ex"
+      "nucleotide-count.e"
     ],
     "test": [
-      "t_nucleotide-count.e"
+      "test.exw"
     ],
     "example": [
-      ".meta/example.ex"
+      ".meta/example.e"
     ]
   },
   "blurb": "Given a DNA string, compute how many times each nucleotide occurs in the string.",

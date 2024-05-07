@@ -1,0 +1,10 @@
+include eliuds-eggs.e 
+
+set_test_verbosity(TEST_SHOW_ALL)
+
+test_equal(egg_count(0), 0, "0 eggs")
+test_equal(egg_count(16), 1, "1 egg")
+test_equal(egg_count(89), 4, "4 eggs")
+test_equal(egg_count(2000000000), 13, "13 eggs")
+
+test_summary() 

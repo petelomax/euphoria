@@ -1,0 +1,13 @@
+include resistor-color-duo.e
+
+set_test_verbosity(TEST_SHOW_ALL)
+
+test_equal(resistor({"brown", "black"}), 10, "Brown and black")
+test_equal(resistor({"blue", "grey"}), 68, "Blue and grey")
+test_equal(resistor({"yellow", "Violet"}), 47, "Yellow and violet")
+test_equal(resistor({"white", "red"}), 92, "White and red")
+test_equal(resistor({"Orange", "orange"}), 33, "Orange and orange")
+test_equal(resistor({"green", "brown", "orange"}), 51, "Ignore additional colors")
+test_equal(resistor({"black", "brown"}), 1, "Black and brown, one-digit")
+
+test_summary() 

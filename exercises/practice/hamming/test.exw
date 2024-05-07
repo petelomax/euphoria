@@ -1,0 +1,15 @@
+
+include hamming.e 
+
+set_test_verbosity(TEST_SHOW_ALL)
+
+test_equal(distance("",""), 0, "empty strands")
+test_equal(distance("A","A"), 0, "single letter identical strands")
+test_equal(distance("G","T"), 1, "single letter different strands")
+test_equal(distance("GGACTGAAATCTG","GGACTGAAATCTG"), 0, "long identical strands")
+test_equal(distance("GGACGGATTCTG","AGGACGGATTCT"), 9, "long different strands")
+test_equal(distance("AATG","AAA"), "left and right strands must be of equal length", "disallow first strand longer")
+test_equal(distance("","G"), "left and right strands must be of equal length", "disallow left empty strand")
+test_equal(distance("G",""), "left and right strands must be of equal length", "disallow right empty strand")
+
+test_summary() 

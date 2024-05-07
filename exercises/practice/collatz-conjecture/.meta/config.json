@@ -1,16 +1,16 @@
 {
   "authors": [
-    "axtens"
+    "petelomax"
   ],
   "files": {
     "solution": [
-      "collatz-conjecture.ex"
+      "collatz-conjecture.e"
     ],
     "test": [
-      "t_collatz-conjecture.e"
+      "test.exw"
     ],
     "example": [
-      ".meta/example.ex"
+      ".meta/example.e"
     ]
   },
   "blurb": "Calculate the number of steps to reach 1 using the Collatz conjecture.",

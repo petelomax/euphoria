@@ -1,6 +1,6 @@
 {
-  "language": "Euphoria",
-  "slug": "euphoria",
+  "language": "Phix",
+  "slug": "phix",
   "active": true,
   "status": {
     "concept_exercises": false,
@@ -8,7 +8,7 @@
     "representer": false,
     "analyzer": false
   },
-  "blurb": "Euphoria is a powerful but easy-to-learn programming language. It has a simple syntax and structure with consistent rules, and is also easy to read. You can quickly, and with little effort, develop applications, big and small, for Windows, Unix variants (Linux, FreeBSD, ...) and MacOS.",
+  "blurb": "Phix is a remarkably simple yet full-featured programming language with clear syntax and plain English errors. It was the first in which 100% of all rosettacode tasks were completed, still one of only two. A hybrid interpreter/compiler/transpiler approach allows a fast development cycle, and native executables for Windows and Linux, and html/js/css for running in a web browser.",
   "version": 3,
   "online_editor": {
     "indent_style": "space",
@@ -20,16 +20,16 @@
   },
   "files": {
     "solution": [
-      "%{kebab_slug}.ex"
+      "%{kebab_slug}.e"
     ],
     "test": [
-      "t_%{kebab_slug}.e"
+      "test.exw"
     ],
     "example": [
-      ".meta/example.ex"
+      ".meta/example.e"
     ],
     "exemplar": [
-      ".meta/exemplar.ex"
+      ".meta/exemplar.e"
     ]
   },
   "exercises": {
@@ -37,7 +37,7 @@
       {
         "slug": "armstrong-numbers",
         "name": "Armstrong Numbers",
-        "uuid": "586cc4e8-c70a-4bd5-b403-193f24c943e6",
+        "uuid": "7e734341-44b6-461b-9507-f18b133479cf",
         "practices": [],
         "prerequisites": [],
         "difficulty": 2
@@ -45,7 +45,7 @@
       {
         "slug": "binary-search",
         "name": "Binary Search",
-        "uuid": "223011f0-eb1a-4b5a-9868-6b45958c150a",
+        "uuid": "d83eb330-a39b-467e-ba81-65393d84e7d2",
         "practices": [],
         "prerequisites": [],
         "difficulty": 2
@@ -53,7 +53,7 @@
       {
         "slug": "clock",
         "name": "Clock",
-        "uuid": "0d7d895a-fd34-4997-b900-9b98f5e30372",
+        "uuid": "17a396cc-e62b-41d1-99b4-9fc00b5938db",
         "practices": [],
         "prerequisites": [],
         "difficulty": 2
@@ -61,7 +61,7 @@
       {
         "slug": "collatz-conjecture",
         "name": "Collatz Conjecture",
-        "uuid": "21d1d747-5e3d-478b-8933-c637952c9d67",
+        "uuid": "dee174d5-c059-4d2c-af1f-8f7333ab231c",
         "practices": [],
         "prerequisites": [],
         "difficulty": 2
@@ -69,7 +69,7 @@
       {
         "slug": "dnd-character",
         "name": "D&D Character",
-        "uuid": "b0798ee0-c3bc-4480-9c2e-64bd9e3b414a",
+        "uuid": "5ad45dde-0d6b-45fd-aa95-6201ccb23c65",
         "practices": [],
         "prerequisites": [],
         "difficulty": 2
@@ -77,7 +77,7 @@
       {
         "slug": "difference-of-squares",
         "name": "Difference of Squares",
-        "uuid": "06d2e882-52db-4580-bb00-4b3123a8a0eb",
+        "uuid": "2060e3f8-8784-403a-9a8e-d2eca06c7b3b",
         "practices": [],
         "prerequisites": [],
         "difficulty": 2
@@ -85,7 +85,7 @@
       {
         "slug": "eliuds-eggs",
         "name": "Eliud's Eggs",
-        "uuid": "369e4ad4-e33e-4eb2-afce-02bc307183d9",
+        "uuid": "a496289a-ebb8-4ffd-99ef-4a935f413358",
         "practices": [],
         "prerequisites": [],
         "difficulty": 2
@@ -93,7 +93,7 @@
       {
         "slug": "gigasecond",
         "name": "Gigasecond",
-        "uuid": "567c9473-26be-4350-9a12-4cb84ca22f4d",
+        "uuid": "b24f5cad-3096-4cbd-b131-348e399b849e",
         "practices": [],
         "prerequisites": [],
         "difficulty": 2
@@ -101,7 +101,7 @@
       {
         "slug": "grains",
         "name": "Grains",
-        "uuid": "e6220d03-9a9a-49d8-87e2-85dc2c4183a4",
+        "uuid": "cad24c70-f47e-4b78-95a9-9aba02263a1d",
         "practices": [],
         "prerequisites": [],
         "difficulty": 2
@@ -109,7 +109,7 @@
       {
         "slug": "hamming",
         "name": "Hamming",
-        "uuid": "8a0c101b-9cc7-4c10-be3d-fe29c618f8e8",
+        "uuid": "67f1277f-79ea-4afe-84d4-37c114a42b93",
         "practices": [],
         "prerequisites": [],
         "difficulty": 2
@@ -117,7 +117,7 @@
       {
         "slug": "hello-world",
         "name": "Hello World",
-        "uuid": "6e37e01f-324d-4a92-ae96-b1810962cc4c",
+        "uuid": "8fae0957-3dc0-4db1-8609-a7087d0126d1",
         "practices": [],
         "prerequisites": [],
         "difficulty": 2
@@ -125,7 +125,7 @@
       {
         "slug": "high-scores",
         "name": "High Scores",
-        "uuid": "c1d95abb-3524-43ff-bc9e-50a393dbb8f1",
+        "uuid": "c25788bc-ba21-4b0a-85c3-627a7e247b42",
         "practices": [],
         "prerequisites": [],
         "difficulty": 2
@@ -133,7 +133,7 @@
       {
         "slug": "isogram",
         "name": "Isogram",
-        "uuid": "ff3c2465-b540-4de7-9223-5bce2debaba9",
+        "uuid": "9381b222-1432-4cf1-8dd0-c48020f6cac3",
         "practices": [],
         "prerequisites": [],
         "difficulty": 2
@@ -141,7 +141,7 @@
       {
         "slug": "leap",
         "name": "Leap",
-        "uuid": "b2bd55e6-5efc-4014-b1ee-050ee4b120cb",
+        "uuid": "a2e0373f-3227-43ff-81ac-9fd5f13d4157",
         "practices": [],
         "prerequisites": [],
         "difficulty": 2
@@ -149,7 +149,7 @@
       {
         "slug": "list-ops",
         "name": "List Ops",
-        "uuid": "8d06cc4b-0160-4e08-96c4-b7a05455e5e5",
+        "uuid": "98383499-67e0-4b55-8777-b8868514e922",
         "practices": [],
         "prerequisites": [],
         "difficulty": 2
@@ -157,7 +157,7 @@
       {
         "slug": "nucleotide-count",
         "name": "Nucleotide Count",
-        "uuid": "1ba6a523-9e84-4150-b512-0dc77da874d0",
+        "uuid": "34243320-8549-48e4-bbbb-c9241b2d3d09",
         "practices": [],
         "prerequisites": [],
         "difficulty": 2
@@ -165,7 +165,7 @@
       {
         "slug": "pangram",
         "name": "Pangram",
-        "uuid": "c09f1c56-d265-4710-a177-95ea8cb721b4",
+        "uuid": "68418e89-eecd-4eb8-a833-cb661abf2e4e",
         "practices": [],
         "prerequisites": [],
         "difficulty": 2
@@ -173,7 +173,7 @@
       {
         "slug": "perfect-numbers",
         "name": "Perfect Numbers",
-        "uuid": "ffc6c25e-b03e-4e43-9e39-4989a799e981",
+        "uuid": "7f5023d1-03a3-4fbc-8ab6-27b795c6856a",
         "practices": [],
         "prerequisites": [],
         "difficulty": 2
@@ -181,7 +181,7 @@
       {
         "slug": "queen-attack",
         "name": "Queen Attack",
-        "uuid": "69a00ba2-0c45-459d-b9a8-c416710a16ab",
+        "uuid": "3acc8c54-46d5-41a9-b793-a986ef56b3d3",
         "practices": [],
         "prerequisites": [],
         "difficulty": 2
@@ -189,7 +189,7 @@
       {
         "slug": "rna-transcription",
         "name": "RNA Transcription",
-        "uuid": "80bf7253-c50e-4121-99c2-2458e68a1dbd",
+        "uuid": "9c734921-b6ed-4025-a136-69558734c865",
         "practices": [],
         "prerequisites": [],
         "difficulty": 2
@@ -197,7 +197,7 @@
       {
         "slug": "raindrops",
         "name": "Raindrops",
-        "uuid": "a9e6c81b-4b46-445e-a381-a2743a5d7861",
+        "uuid": "a8a854c0-8797-42cb-a277-2e52e0be2fb6",
         "practices": [],
         "prerequisites": [],
         "difficulty": 2
@@ -205,7 +205,7 @@
       {
         "slug": "resistor-color",
         "name": "Resistor Color",
-        "uuid": "96cbd8b8-0a21-4fb1-86b1-dcc29133ba46",
+        "uuid": "ad07e62e-4b1a-411a-aaa6-7cb8ea14a9bb",
         "practices": [],
         "prerequisites": [],
         "difficulty": 2
@@ -213,7 +213,7 @@
       {
         "slug": "resistor-color-duo",
         "name": "Resistor Color Duo",
-        "uuid": "9736c0c2-9c46-4562-a168-190ed0fecc29",
+        "uuid": "32b4d1b8-fb6d-48e2-81c4-cd22e47b312c",
         "practices": [],
         "prerequisites": [],
         "difficulty": 2
@@ -221,7 +221,7 @@
       {
         "slug": "reverse-string",
         "name": "Reverse String",
-        "uuid": "9ab79f5d-08b6-4e8e-a234-e529850b34dd",
+        "uuid": "1e62fd43-ef9b-4966-986d-0a972f343cbb",
         "practices": [],
         "prerequisites": [],
         "difficulty": 2
@@ -229,7 +229,7 @@
       {
         "slug": "robot-simulator",
         "name": "Robot Simulator",
-        "uuid": "ded09be2-0a3e-42c5-8397-06c84b5f1c39",
+        "uuid": "4236506c-988e-424a-bccd-c39cd24987da",
         "practices": [],
         "prerequisites": [],
         "difficulty": 2
@@ -237,7 +237,7 @@
       {
         "slug": "scrabble-score",
         "name": "Scrabble Score",
-        "uuid": "3c8ae54c-55af-46f2-bee3-80acad400e9c",
+        "uuid": "a527d034-e9b3-4955-bd19-3a222212841b",
         "practices": [],
         "prerequisites": [],
         "difficulty": 2
@@ -245,7 +245,7 @@
       {
         "slug": "secret-handshake",
         "name": "Secret Handshake",
-        "uuid": "6c3beab0-7f66-47a3-b0cf-3424cc240a03",
+        "uuid": "7f7063ee-6108-4b6c-91a5-574b323faede",
         "practices": [],
         "prerequisites": [],
         "difficulty": 2
@@ -253,7 +253,7 @@
       {
         "slug": "sieve",
         "name": "Sieve",
-        "uuid": "f80f2bc1-a03b-4c35-a07f-368eeceae7a9",
+        "uuid": "a2473f3a-7185-4c4c-ac8f-a4d74fbf0376",
         "practices": [],
         "prerequisites": [],
         "difficulty": 2
@@ -261,7 +261,7 @@
       {
         "slug": "space-age",
         "name": "Space Age",
-        "uuid": "392988de-70e0-4467-890d-32d73a0141af",
+        "uuid": "ad682c69-1152-4766-b20d-0988fcc36b54",
         "practices": [],
         "prerequisites": [],
         "difficulty": 2
@@ -269,7 +269,7 @@
       {
         "slug": "square-root",
         "name": "Square Root",
-        "uuid": "f1ffecf2-55e9-4a12-82d3-873e238a9624",
+        "uuid": "65e0c5fa-c175-4591-9d6b-4788fe55770b",
         "practices": [],
         "prerequisites": [],
         "difficulty": 2
@@ -277,7 +277,7 @@
       {
         "slug": "strain",
         "name": "Strain",
-        "uuid": "794d36e6-83c3-49a0-95a4-e065a4960dd0",
+        "uuid": "e821f485-2ecb-467f-9c7a-b8941b616344",
         "practices": [],
         "prerequisites": [],
         "difficulty": 2
@@ -285,7 +285,7 @@
       {
         "slug": "two-fer",
         "name": "Two-Fer",
-        "uuid": "86818461-e063-4009-95f2-d6d650be2118",
+        "uuid": "1b75bbbc-3b39-4c0b-9124-1ff268d51abf",
         "practices": [],
         "prerequisites": [],
         "difficulty": 2
@@ -293,7 +293,7 @@
       {
         "slug": "acronym",
         "name": "Acronym",
-        "uuid": "1e9161f9-0074-47d3-a7ae-019c3ab9bf59",
+        "uuid": "f6984a9f-94ad-44d2-beb0-b8b52fd1ddfb",
         "practices": [],
         "prerequisites": [],
         "difficulty": 5
@@ -301,7 +301,7 @@
       {
         "slug": "all-your-base",
         "name": "All Your Base",
-        "uuid": "1e594609-0060-428f-a702-88c735b1ed5f",
+        "uuid": "78bd9698-6859-422e-adba-7ba5f5c4c1b2",
         "practices": [],
         "prerequisites": [],
         "difficulty": 5
@@ -309,7 +309,7 @@
       {
         "slug": "allergies",
         "name": "Allergies",
-        "uuid": "86001345-b847-4fe5-b478-d5bc42a75964",
+        "uuid": "a0263899-06d3-4eec-a771-d17862de5a57",
         "practices": [],
         "prerequisites": [],
         "difficulty": 5
@@ -317,7 +317,7 @@
       {
         "slug": "anagram",
         "name": "Anagram",
-        "uuid": "92cc664e-fb45-4926-a4be-6761798ebb57",
+        "uuid": "4eb64d85-270b-4277-b841-a98c4a4198cc",
         "practices": [],
         "prerequisites": [],
         "difficulty": 5
@@ -325,7 +325,7 @@
       {
         "slug": "bob",
         "name": "Bob",
-        "uuid": "4e696452-1bec-4c2f-9b35-56ba9e1a3a35",
+        "uuid": "9d14e795-879e-4549-afba-9462601079e4",
         "practices": [],
         "prerequisites": [],
         "difficulty": 5
@@ -333,7 +333,7 @@
       {
         "slug": "game-of-life",
         "name": "Conway's Game of Life",
-        "uuid": "112653b0-6fad-4f6c-bc1e-998e4b04d677",
+        "uuid": "c490a182-8889-4fd7-b66e-fb7aae8e0835",
         "practices": [],
         "prerequisites": [],
         "difficulty": 5
@@ -341,7 +341,7 @@
       {
         "slug": "darts",
         "name": "Darts",
-        "uuid": "72c14717-9c99-427b-ad76-0bf3cc7e4a6b",
+        "uuid": "848e20d8-1422-441e-b05b-1a49f16ae0e0",
         "practices": [],
         "prerequisites": [],
         "difficulty": 5
@@ -349,7 +349,7 @@
       {
         "slug": "isbn-verifier",
         "name": "ISBN Verifier",
-        "uuid": "8610b4a9-9152-4e7a-b70f-8c6069c71326",
+        "uuid": "651cc4ee-b198-4baf-a70c-cca039342e9b",
         "practices": [],
         "prerequisites": [],
         "difficulty": 5
@@ -357,7 +357,7 @@
       {
         "slug": "protein-translation",
         "name": "Protein Translation",
-        "uuid": "f47ff4b6-6dc6-4ca4-a224-5e1064408cf1",
+        "uuid": "06ace46c-fe7e-482a-ba3b-412db2d90e37",
         "practices": [],
         "prerequisites": [],
         "difficulty": 5
@@ -365,7 +365,7 @@
       {
         "slug": "pythagorean-triplets",
         "name": "Pythagorean Triplets",
-        "uuid": "1a00845a-4eda-4c6e-87a4-a8d143950ab9",
+        "uuid": "bfb9b7fd-4acd-4d32-80d5-f5854e7c6478",
         "practices": [],
         "prerequisites": [],
         "difficulty": 5
@@ -373,7 +373,7 @@
       {
         "slug": "roman-numerals",
         "name": "Roman Numerals",
-        "uuid": "28214d11-66cb-4149-b274-84772130c23e",
+        "uuid": "7047cda5-3787-4cc0-86ae-fca628f798c8",
         "practices": [],
         "prerequisites": [],
         "difficulty": 5
@@ -381,7 +381,7 @@
       {
         "slug": "sum-of-multiples",
         "name": "Sum of Multiples",
-        "uuid": "75901b8d-4f43-4467-8c3a-cf5f4a12b6df",
+        "uuid": "7f6e01ee-372b-4335-9b0f-b1b8fdabc263",
         "practices": [],
         "prerequisites": [],
         "difficulty": 5
@@ -389,7 +389,7 @@
       {
         "slug": "triangle",
         "name": "Triangle",
-        "uuid": "2f56c390-14a7-4f2a-b817-890779301122",
+        "uuid": "72f20699-9260-4afa-901d-55e33efe3994",
         "practices": [],
         "prerequisites": [],
         "difficulty": 5
@@ -397,7 +397,7 @@
       {
         "slug": "yacht",
         "name": "Yacht",
-        "uuid": "3d6793fe-75c1-47de-a507-f723b98d82ec",
+        "uuid": "e3c867cc-fd9b-40a8-b925-cd2c9dc011e0",
         "practices": [],
         "prerequisites": [],
         "difficulty": 5
@@ -405,7 +405,7 @@
       {
         "slug": "forth",
         "name": "Forth",
-        "uuid": "2f40d717-4b87-43d2-a069-50029eb709b2",
+        "uuid": "b89649fd-eaa3-49ed-bf4f-f09cfbeb355b",
         "practices": [],
         "prerequisites": [],
         "difficulty": 8
@@ -413,7 +413,7 @@
       {
         "slug": "luhn",
         "name": "Luhn",
-        "uuid": "74f5aae8-c894-4ccd-b96a-6feddf1b054e",
+        "uuid": "250b07d4-1bb5-445c-a2fb-fc958b98d155",
         "practices": [],
         "prerequisites": [],
         "difficulty": 8
@@ -428,7 +428,7 @@
     },
     {
       "title": "Cross-platform",
-      "content": "Euphoria programs run under Windows, Linux, OS/X, and any platform supporting GCC.",
+      "content": "Phix programs run under Windows, Linux, and any platform with a web browser.",
       "icon": "cross-platform"
     },
     {
@@ -443,12 +443,12 @@
     },
     {
       "title": "Fast",
-      "content": "A high-performance interpreter and an optimizing translator to C.",
+      "content": "A high-performance interpreter, and compilation to native binaries.",
       "icon": "fast"
     },
     {
       "title": "Documentation",
-      "content": "Documentation is extensive, making it easy to get started with Euphoria.",
+      "content": "Documentation is extensive, making it easy to get started with Phix.",
       "icon": "documentation"
     }
   ],
@@ -458,7 +458,6 @@
     "paradigm/imperative",
     "paradigm/procedural",
     "platform/linux",
-    "platform/mac",
     "platform/windows",
     "runtime/standalone_executable",
     "typing/dynamic",

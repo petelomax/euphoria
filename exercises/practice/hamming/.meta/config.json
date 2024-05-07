@@ -1,16 +1,16 @@
 {
   "authors": [
-    "axtens"
+    "petelomax"
   ],
   "files": {
     "solution": [
-      "hamming.ex"
+      "hamming.e"
     ],
     "test": [
-      "t_hamming.e"
+      "test.exw"
     ],
     "example": [
-      ".meta/example.ex"
+      ".meta/example.e"
     ]
   },
   "blurb": "Calculate the Hamming difference between two DNA strands.",

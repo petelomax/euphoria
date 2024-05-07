@@ -1,0 +1,21 @@
+include robot-simulator.e 
+
+set_test_verbosity(TEST_SHOW_ALL)
+test_equal(move({0, 0, "north"}, "R"), {0, 0, "east"}, "Rotating clockwise changes north to east")
+test_equal(move({0, 0, "east"}, "R"), {0, 0, "south"}, "Rotating clockwise changes east to south")
+test_equal(move({0, 0, "south"}, "R"), {0, 0, "west"}, "Rotating clockwise changes south to west")
+test_equal(move({0, 0, "west"}, "R"), {0, 0, "north"}, "Rotating clockwise changes west to north")
+test_equal(move({0, 0, "north"}, "L"), {0, 0, "west"}, "Rotating counter-clockwise changes north to west")
+test_equal(move({0, 0, "west"}, "L"), {0, 0, "south"}, "Rotating counter-clockwise changes west to south")
+test_equal(move({0, 0, "south"}, "L"), {0, 0, "east"}, "Rotating counter-clockwise changes south to east")
+test_equal(move({0, 0, "east"}, "L"), {0, 0, "north"}, "Rotating counter-clockwise changes east to north")
+test_equal(move({0, 0, "north"}, "A"), {0, 1,"north"}, "Moving forward one facing north increments Y")
+test_equal(move({0, 0, "south"}, "A"), {0,-1,"south"}, "Moving forward one facing south decrements Y")
+test_equal(move({0, 0, "east" }, "A"), {1, 0, "east"}, "Moving forward one facing east increments X")
+test_equal(move({0, 0, "west"}, "A"), {-1, 0, "west"}, "Moving forward one facing west decrements X")
+test_equal(move({7, 3, "north"}, "RAALAL"), {9, 4, "west"}, "Follow series of instructions moving east and north from README")
+test_equal(move({0, 0, "north"}, "LAAARALA"), {-4, 1,"west"}, "Follow series of instructions moving west and north")
+test_equal(move({2,-7, "east"}, "RRAAAAALA"), {-3,-8,"south"}, "Follow series of instructions moving west and south")
+test_equal(move({8, 4,"south"}, "LAAARRRALLLL"), {11, 5,"north"}, "Follow series of instructions moving east and north")
+test_summary()
+

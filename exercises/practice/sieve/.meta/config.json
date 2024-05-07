@@ -1,16 +1,16 @@
 {
   "authors": [
-    "glennj"
+    "petelomax"
   ],
   "files": {
     "solution": [
-      "sieve.ex"
+      "sieve.e"
     ],
     "test": [
-      "t_sieve.e"
+      "test.exw"
     ],
     "example": [
-      ".meta/example.ex"
+      ".meta/example.e"
     ]
   },
   "blurb": "Use the Sieve of Eratosthenes to find all the primes from 2 up to a given number.",

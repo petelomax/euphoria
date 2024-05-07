@@ -1,16 +1,16 @@
 {
   "authors": [
-    "axtens"
+    "petelomax"
   ],
   "files": {
     "solution": [
-      "grains.ex"
+      "grains.e"
     ],
     "test": [
-      "t_grains.e"
+      "test.exw"
     ],
     "example": [
-      ".meta/example.ex"
+      ".meta/example.e"
     ]
   },
   "blurb": "Calculate the number of grains of wheat on a chessboard given that the number on each square doubles.",

@@ -1,0 +1,42 @@
+include pangram.e
+
+set_test_verbosity(TEST_SHOW_ALL)
+
+test_false(is_pangram(""), "empty sentence")
+test_true(is_pangram("abcdefghijklmnopqrstuvwxyz"), "perfect lower case")
+test_true(is_pangram("the quick brown fox jumps over the lazy dog"), "only lower case")
+test_false(is_pangram("a quick movement of the enemy will jeopardize five gunboats"), "missing the letter 'x'")
+test_false(is_pangram("five boxing wizards jump quickly at it"), "missing the letter 'h'")
+test_true(is_pangram("the_quick_brown_fox_jumps_over_the_lazy_dog"), "with underscores")
+test_true(is_pangram("the 1 quick brown fox jumps over the 2 lazy dogs"), "with numbers")
+test_false(is_pangram("7h3 qu1ck brown fox jumps ov3r 7h3 lazy dog"), "missing letters replaced by numbers")
+test_true(is_pangram("Five quacking Zephyrs jolt my wax bed."), "mixed case and punctuation")
+test_false(is_pangram("the quick brown fox jumps over with lazy FX"), "case insensitive")
+test_false(is_pangram("abcdefghijklm ABCDEFGHIJKLM"), "a-m and A-M are 26 different characters but not a pangram")
+
+test_summary()
+
+--/*
+Add some more tests... -- but after pEditer!
+    "Cafe XbXdXXg..z" -> true (where e is e-acute [using combining chars?])
+    "???? abcdXfg..z" -> false (where ???? contains the byte 'e' incidentally)
+(make the tests flesh out "..", why not)
+local function flesh_out(string s)
+    -- expand eg "a..z" to "abcdefghijklmnopqrstuvwxyz"
+    -- (careful validation of before & after .. omitted)
+    for dd in reverse(match_all("..",s)) do
+        s[dd..dd+1] = tagset(s[dd+2]-1,s[dd-1]+1)
+    end for
+    return s
+end function
+--?flesh_out("???? abcdXfg..z") -- "???? abcdXfghijklmnopqrstuvwxyz"
+
+"The quick brown fox jumps over the lazy dog." is a pangram.
+
+"QwErTyUiOpAsDfGhJkLzXcVbNm" is a pangram.
+
+"Not a pangram" is not a pangram.
+
+"" is not a pangram.
+
+--*/

@@ -1,0 +1,20 @@
+
+include binary-search.e
+
+set_test_verbosity(TEST_SHOW_ALL)
+
+--set_test_verbosity(TEST_SHOW_FAILED)
+test_equal(my_find({6},6),1,"finds a value in a sequence with one element")
+test_equal(my_find({1,3,4,6,8,9,11},6),4,"finds a value in the middle of a sequence")
+test_equal(my_find({1,3,4,6,8,9,11},1),1,"finds a value at the beginning of a sequence")
+test_equal(my_find({1,3,4,6,8,9,11},11),7,"finds a value at the end of a sequence")
+test_equal(my_find({1,3,5,8,13,21,34,55,89,144,233,377,634},144),10,"finds a value in a sequence of odd length")
+test_equal(my_find({1,3,5,8,13,21,34,55,89,144,233,377},21),6,"finds a value in a sequence of even length")
+test_equal(my_find({1,3,4,6,8,9,11},7),-5,"identifies that a value is not included in the sequence")
+test_equal(my_find({1,3,4,6,8,9,11},0),-1,"a value smaller than the sequence's smallest value is not found")
+test_equal(my_find({1,3,4,6,8,9,11},13),-8,"a value smaller than the sequence's largest value is not found")
+test_equal(my_find({},1),-1,"nothing is found in an empty array")
+// I don't understand what this means - ask??
+test_equal(my_find({1,2},0),-1,"nothing is found when the left and right bounds cross")
+test_summary()
+

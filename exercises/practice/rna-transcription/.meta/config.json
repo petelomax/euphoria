@@ -1,16 +1,16 @@
 {
   "authors": [
-    "BNAndras"
+    "petelomax"
   ],
   "files": {
     "solution": [
-      "rna-transcription.ex"
+      "rna-transcription.e"
     ],
     "test": [
-      "t_rna-transcription.e"
+      "test.exw"
     ],
     "example": [
-      ".meta/example.ex"
+      ".meta/example.e"
     ]
   },
   "blurb": "Given a DNA strand, return its RNA Complement Transcription.",

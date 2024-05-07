@@ -1,16 +1,16 @@
 {
   "authors": [
-    "BNAndras"
+    "petelomax"
   ],
   "files": {
     "solution": [
-      "secret-handshake.ex"
+      "secret-handshake.e"
     ],
     "test": [
-      "t_secret-handshake.e"
+      "test.exw"
     ],
     "example": [
-      ".meta/example.ex"
+      ".meta/example.e"
     ]
   },
   "blurb": "Given a decimal number, convert it to the appropriate sequence of events for a secret handshake.",

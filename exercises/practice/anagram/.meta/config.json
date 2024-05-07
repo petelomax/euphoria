@@ -1,16 +1,16 @@
 {
   "authors": [
-    "axtens"
+    "petelomax"
   ],
   "files": {
     "solution": [
-      "anagram.ex"
+      "anagram.e"
     ],
     "test": [
-      "t_anagram.e"
+      "test.exw"
     ],
     "example": [
-      ".meta/example.ex"
+      ".meta/example.e"
     ]
   },
   "blurb": "Given a word and a list of possible anagrams, select the correct sublist.",

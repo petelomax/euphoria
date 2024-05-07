@@ -1,16 +1,16 @@
 {
   "authors": [
-    "glennj"
+    "petelomax"
   ],
   "files": {
     "solution": [
-      "protein-translation.ex"
+      "protein-translation.e"
     ],
     "test": [
-      "t_protein-translation.e"
+      "test.exw"
     ],
     "example": [
-      ".meta/example.ex"
+      ".meta/example.e"
     ]
   },
   "blurb": "Translate RNA sequences into proteins.",

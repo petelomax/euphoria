@@ -1,0 +1,11 @@
+include square-root.e
+
+set_test_verbosity(TEST_SHOW_ALL)
+test_equal(square_root(1), 1, "root of 1")
+test_equal(square_root(4), 2, "root of 4")
+test_equal(square_root(25), 5, "root of 25")
+test_equal(square_root(81), 9, "root of 81")
+test_equal(square_root(196), 14, "root of 196")
+test_equal(square_root(65025), 255, "root of 65025")
+test_summary()
+

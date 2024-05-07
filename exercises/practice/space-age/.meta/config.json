@@ -1,16 +1,16 @@
 {
   "authors": [
-    "BNAndras"
+    "petelomax"
   ],
   "files": {
     "solution": [
-      "space-age.ex"
+      "space-age.e"
     ],
     "test": [
-      "t_space-age.e"
+      "test.exw"
     ],
     "example": [
-      ".meta/example.ex"
+      ".meta/example.e"
     ]
   },
   "blurb": "Given an age in seconds, calculate how old someone is in terms of a given planet's solar years.",

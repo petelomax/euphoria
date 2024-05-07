@@ -1,0 +1,17 @@
+include acronym.e
+--include .meta\example.e
+
+set_test_verbosity(TEST_SHOW_ALL)
+
+test_equal(acronym("Portable Network Graphics"), "PNG", "basic")
+test_equal(acronym("Ruby on Rails"), "ROR", "lowercase words")
+test_equal(acronym("First In, First Out"), "FIFO", "punctuation")
+test_equal(acronym("GNU Image Manipulation Program"), "GIMP", "all caps word")
+test_equal(acronym("Complementary metal-oxide semiconductor"), "CMOS", "punctuation without whitespace")
+test_equal(acronym("Rolling On The Floor Laughing So Hard That My Dogs Came Over And Licked Me"), "ROTFLSHTMDCOALM", "very long abbreviation")
+test_equal(acronym("Something - I made up from thin air"), "SIMUFTA", "consecutive delimiters")
+test_equal(acronym("Halley's Comet"), "HC", "apostrophes")
+test_equal(acronym("The Road _Not_ Taken"), "TRNT", "underscore emphasis")
+
+test_summary() 
+--wait_key()

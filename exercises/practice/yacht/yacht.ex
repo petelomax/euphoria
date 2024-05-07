@@ -1,1 +1,0 @@
---public function score(sequence roll, sequence play)

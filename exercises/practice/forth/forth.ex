@@ -1,1 +1,0 @@
--- public function evaluate(sequence instructions) 

@@ -1,1 +1,1 @@
-public enum OK, ERR
+global enum OK=true, ERROR=false

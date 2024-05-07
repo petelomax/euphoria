@@ -1,0 +1,10 @@
+include resistor-color.e
+
+set_test_verbosity(TEST_SHOW_ALL)
+
+test_equal(color_code("black"), 0, "Black")
+test_equal(color_code("white"), 9, "White")
+test_equal(color_code("orange"), 3, "Orange")
+test_equal(colors(), {"black","brown","red","orange","yellow","green","blue","violet","grey","white"}, "Colors")
+
+test_summary()

@@ -1,16 +1,16 @@
 {
   "authors": [
-    "glennj"
+    "petelomax"
   ],
   "files": {
     "solution": [
-      "all-your-base.ex"
+      "all-your-base.e"
     ],
     "test": [
-      "t_all-your-base.e"
+      "test.exw"
     ],
     "example": [
-      ".meta/example.ex"
+      ".meta/example.e"
     ],
     "editor": [
       "lib/errors.e"

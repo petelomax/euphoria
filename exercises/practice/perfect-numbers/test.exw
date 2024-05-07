@@ -1,0 +1,17 @@
+include perfect-numbers.e
+
+set_test_verbosity(TEST_SHOW_ALL)
+test_equal("perfect", classify(6),"Smallest perfect number is classified correctly")
+test_equal("perfect", classify(28),"Medium perfect number is classified correctly")
+test_equal("perfect", classify(33550336),"Large perfect number is classified correctly")
+test_equal("abundant", classify(12),"Smallest abundant number is classified correctly")
+test_equal("abundant", classify(30),"Medium abundant number is classified correctly")
+test_equal("abundant", classify(33550335),"Large abundant number is classified correctly")
+test_equal("deficient", classify(4),"Smallest deficient number is classified correctly")
+test_equal("deficient", classify(32),"Medium deficient number is classified correctly")
+test_equal("deficient", classify(33550337),"Large deficient number is classified correctly")
+test_equal("deficient", classify(1),"Edge case (no factors other than itself) is classified correctly")
+test_false(classify(0),"Zero is rejected (as it is not a positive integer)",)
+test_false(classify(-1),"Negative integer is rejected (as it is not a positive integer)")
+test_summary()
+
