@@ -1,6 +1,6 @@
 include zebra-puzzle.e
 
 set_test_verbosity(TEST_SHOW_ALL)
-test_equal(find_solution(),{"Norwegian", "Japanese"}, "natioalities of who drinks water and who owns zebra")
+test_equal(find_solution(),{"Norwegian", "Japanese"}, "nationalities of who drinks water and who owns zebra")
 test_summary()
 
