@@ -425,6 +425,22 @@
         "practices": [],
         "prerequisites": [],
         "difficulty": 8
+      },
+      {
+        "slug": "connect",
+        "name": "Connect",
+        "uuid": "e61fcd6c-ce59-488d-ab26-1711c55d6d69",
+        "practices": [],
+        "prerequisites": [],
+        "difficulty": 1
+      },
+      {
+        "slug": "react",
+        "name": "React",
+        "uuid": "d3e0fff0-ff6b-4d42-9fa0-6c072052024d",
+        "practices": [],
+        "prerequisites": [],
+        "difficulty": 1
       }
     ]
   },

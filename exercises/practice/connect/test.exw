@@ -1,0 +1,68 @@
+include connect.e
+
+-- exercise gets a space/tab-stripped sequence of strings
+constant tests = {
+{"an empty board has no winner","","""
+. . . . .
+ . . . . .
+  . . . . .
+   . . . . .
+    . . . . ."""},
+{"X can win on a 1x1 board","X","""
+X"""},
+{"O can win on a 1x1 board","O","""
+O"""},
+{"only edges does not make a winner","","""
+O O O X
+ X . . X
+  X . . X
+   X O O O"""},
+{"illegal diagonal does not make a winner","","""
+X O . .
+ O X X X
+  O X O .
+   . O X .
+    X X O O"""},
+{"nobody wins crossing adjacent angles","","""
+X . . .
+ . X O .
+  O . X O
+   . O . X
+    . . O ."""},
+{"X wins crossing from left to right","X","""
+. O . .
+ O X X X
+  O X O .
+   X X O X
+    . O X ."""},
+{"O wins crossing from top to bottom","O","""
+. O . .
+ O X X X
+  O O O .
+   X X O X
+    . O X ."""},
+{"X wins using a convoluted path","X","""
+. X X . .
+ X . X . X
+  . X . X .
+   . X X . .
+    O O O O O"""},
+{"X wins using a spiral path","X","""
+O X X X X X X X X
+ O X O O O O O O O
+  O X O X X X X X O
+   O X O X O O O X O
+    O X O X X X O X O
+     O X O O O X O X O
+      O X X X X X O X O
+       O O O O O O O X O
+        X X X X X X X X O"""}
+}
+set_test_verbosity(TEST_SHOW_ALL)
+--set_test_verbosity(TEST_SHOW_FAILED)
+for t in tests do
+    string res = result_of(split(substitute_all(t[3]," \t",{"",""}),'\n'))
+    test_equal(res,t[2],t[1])
+end for
+test_summary()
+
