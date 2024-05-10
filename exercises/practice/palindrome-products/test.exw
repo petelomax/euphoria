@@ -1,0 +1,17 @@
+include palindrome-products.e
+
+constant tests = {
+    {"valid limits 1-9",1,9,{{1,{{1,1}}},{9,{{1,9},{3,3}}}}},
+    {"valid limits 10-99",10,99,{{121,{{11,11}}},{9009,{{91,99}}}}},
+    {"valid limits 100-999",100,999,{{10201,{{101,101}}},{906609,{{913,993}}}}},
+    {"no palindromes",4,10,{{},{}}},
+    {"fmin > fmax",10,4,{{},{}}},
+}
+
+set_test_verbosity(TEST_SHOW_ALL)
+--set_test_verbosity(TEST_SHOW_FAILED)
+for t in tests do
+    test_equal(palindromic_products(t[2],t[3]),t[4],t[1])
+end for
+test_summary()
+
