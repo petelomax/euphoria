@@ -465,6 +465,142 @@
         "practices": [],
         "prerequisites": [],
         "difficulty": 1
+      },
+      {
+        "slug": "change",
+        "name": "Change",
+        "uuid": "f36e307f-e628-42b1-8daa-55ea57e2fcba",
+        "practices": [],
+        "prerequisites": [],
+        "difficulty": 1
+      },
+      {
+        "slug": "poker",
+        "name": "Poker",
+        "uuid": "f7dddeea-04f4-4fdc-a820-8e9db9c1218e",
+        "practices": [],
+        "prerequisites": [],
+        "difficulty": 1
+      },
+      {
+        "slug": "bowling",
+        "name": "Bowling",
+        "uuid": "38d2447c-b2eb-4300-b053-8ceabea59214",
+        "practices": [],
+        "prerequisites": [],
+        "difficulty": 1
+      },
+      {
+        "slug": "two-bucket",
+        "name": "Two Bucket",
+        "uuid": "44652c3c-584a-44a7-93a1-784992d00ae7",
+        "practices": [],
+        "prerequisites": [],
+        "difficulty": 1
+      },
+      {
+        "slug": "dominoes",
+        "name": "Dominoes",
+        "uuid": "80aa31dd-c5f5-4252-a25a-9fe5adcaec71",
+        "practices": [],
+        "prerequisites": [],
+        "difficulty": 1
+      },
+      {
+        "slug": "state-of-tic-tac-toe",
+        "name": "State of Tic-Tac-Toe",
+        "uuid": "648aab54-95b2-4f30-9271-f27ec4a5f9e2",
+        "practices": [],
+        "prerequisites": [],
+        "difficulty": 1
+      },
+      {
+        "slug": "variable-length-quantity",
+        "name": "Variable Length Quantity",
+        "uuid": "6e4d3336-5114-427c-bf49-f38086fde59a",
+        "practices": [],
+        "prerequisites": [],
+        "difficulty": 1
+      },
+      {
+        "slug": "rail-fence-cipher",
+        "name": "Rail Fence Cipher",
+        "uuid": "b4321bfd-1ed3-45f3-86bb-4f62d30fde1c",
+        "practices": [],
+        "prerequisites": [],
+        "difficulty": 1
+      },
+      {
+        "slug": "matching-brackets",
+        "name": "Matching Brackets",
+        "uuid": "d477f063-cfca-461a-b2fd-a758c8cade2a",
+        "practices": [],
+        "prerequisites": [],
+        "difficulty": 1
+      },
+      {
+        "slug": "transpose",
+        "name": "Transpose",
+        "uuid": "2abb1587-d181-41d8-889e-8c617e316e5a",
+        "practices": [],
+        "prerequisites": [],
+        "difficulty": 1
+      },
+      {
+        "slug": "saddle-points",
+        "name": "Saddle Points",
+        "uuid": "164eb023-6ebc-4a3c-b82a-3f53bd65f174",
+        "practices": [],
+        "prerequisites": [],
+        "difficulty": 1
+      },
+      {
+        "slug": "minesweeper",
+        "name": "Minesweeper",
+        "uuid": "c98bca5f-4788-43ea-9bca-0e02f337310a",
+        "practices": [],
+        "prerequisites": [],
+        "difficulty": 1
+      },
+      {
+        "slug": "word-search",
+        "name": "Word Search",
+        "uuid": "c1e0b196-2121-463d-97e0-865414a41b6b",
+        "practices": [],
+        "prerequisites": [],
+        "difficulty": 1
+      },
+      {
+        "slug": "spiral-matrix",
+        "name": "Spiral Matrix",
+        "uuid": "0426c933-1a6a-4396-a070-dcce009180b3",
+        "practices": [],
+        "prerequisites": [],
+        "difficulty": 1
+      },
+      {
+        "slug": "house",
+        "name": "House",
+        "uuid": "7d364dea-124d-4d1f-8d11-83b778eadff2",
+        "practices": [],
+        "prerequisites": [],
+        "difficulty": 1
+      },
+      {
+        "slug": "pig-latin",
+        "name": "Pig Latin",
+        "uuid": "270f7cd7-e92d-4ea3-af00-cdd844383705",
+        "practices": [],
+        "prerequisites": [],
+        "difficulty": 1
+      },
+      {
+        "slug": "markdown",
+        "name": "Markdown",
+        "uuid": "e770fb32-0a3e-4083-9368-df64bc4e73db",
+        "practices": [],
+        "prerequisites": [],
+        "difficulty": 1
       }
     ]
   },

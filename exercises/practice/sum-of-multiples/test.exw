@@ -17,10 +17,22 @@ constant tests = {{"no multiples within limit",{3, 5},1,0},
                   {"no factors means an empty sum",{},10000,0},
                   {"the only multiple of 0 is 0",{0},1,0},
                   {"the factor 0 does not affect the sum of multiples of other factors",{3, 0},4,3},
-                  {"solutions using include-exclude must extend to cardinality greater than 3",{2, 3, 5, 7, 11},10000,39614537}}
+                  {"solutions using include-exclude must extend to cardinality greater than 3",{2, 3, 5, 7, 11},10000,39614537},
+                  {"five factors and 1e5 limit",{2, 3, 5, 7, 11},100000,3961010983},
+                  {"five factors and 1e6 limit",{2, 3, 5, 7, 11},1000000,396103603960}, -- 0/0.2s
+                  {"five factors and 1e7 limit",{2, 3, 5, 7, 11},10000000,39610395389609}, -- 0/1.3s
+                  {"five factors and 1e8 limit",{2, 3, 5, 7, 11},100000000,3961038888961067}, -- 0/13.5s
+                  {"many factors and 1e5 limit",tagset(100),10000,49995000},
+                  {"many factors and 1e6 limit",tagset(100),100000,4999950000},
+                  {"many factors and 1e7 limit",tagset(100),1000000,499999500000}, -- 0.1s
+                  {"many factors and 1e8 limit",tagset(100),10000000,49999995000000}, -- 1.5s
+                  {"two very high factors and a pretty large limit",{32719,32749},1071579999,35078171332253}, -- 0/22.6s
+                 }
+                  -- ^^ It might be sensible to exclude the slowest few of those by default, not that I'd personally
+                  --    be upset if implementatons not using the inclusion-exclusion principle simply timed out...
 for t in tests do
-    {string desc, sequence f, integer lim, integer expected} = t
-    test_equal(sum_of_multiples(f,lim), expected, desc)
+    {string desc, sequence f, integer lim, atom expected} = t
+    test_equal(sum_of_multiples(f,lim), expected, desc, "%d")
 end for
 test_summary()
 
