@@ -1,4 +1,4 @@
-include ocr.e
+include ocr-numbers.e
 
 constant tests = {
 {"single digit - 0",`

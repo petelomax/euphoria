@@ -443,14 +443,6 @@
         "difficulty": 1
       },
       {
-        "slug": "ocr",
-        "name": "ocr",
-        "uuid": "8843fd00-3668-4544-b398-ec0912ff62b9",
-        "practices": [],
-        "prerequisites": [],
-        "difficulty": 1
-      },
-      {
         "slug": "palindrome-products",
         "name": "Palindrome Products",
         "uuid": "692eb06d-b5a0-46a8-9d5f-c2bab6b7fa14",
@@ -462,6 +454,14 @@
         "slug": "alphametics",
         "name": "Alphametics",
         "uuid": "94f5192b-d94a-4ecc-be23-e1815dd8fb34",
+        "practices": [],
+        "prerequisites": [],
+        "difficulty": 1
+      },
+      {
+        "slug": "ocr-numbers",
+        "name": "OCR Numbers",
+        "uuid": "2682f476-a306-4c95-a593-2df8e03fa786",
         "practices": [],
         "prerequisites": [],
         "difficulty": 1
