@@ -1,5 +1,5 @@
--- (No attempts of any kind made for Python,Java,JavaScript)
---/* {{trans|Go}} -- best I could do
+-- (No attempts of any kind made for Python,Java,JavaScript, just Go and rewrite here)
+--/* -- {{trans|Go}} -- as far as I could go!
 
 constant strong = {"<strong>","</strong>"},
              em = {"<em>","</em>"}
@@ -85,7 +85,7 @@ end function
 
 --*/
 
---/!* rewritten from scratch:
+--/!* -- not {{trans|anything}}, rewritten from scratch:
 local function replace_pairs(string line, markup, tag)
     integer k = match(markup,line)
     if k then

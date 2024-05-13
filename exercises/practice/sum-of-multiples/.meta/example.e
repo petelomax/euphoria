@@ -10,8 +10,8 @@ local function summ(sequence f, atom lim, d=1, k=1, res=0)
     --
     -- I trust the initial res=0 and k=1 (aka idx) make sense, 
     -- with d initially +1 for add all, then flipping sign to
-    -- alternately add/subtract that many multiples of subsequent 
-    -- recursive sets, as per the inclusion-exclusion principle.
+    -- alternately add/subtract the right number of subsequent 
+    -- recursive sets, as per inclusion-exclusion principle.
     --
     for i,m in f from k do
         if m then
@@ -34,7 +34,8 @@ global function sum_of_multiples(sequence f, integer lim)
         -- The /25 is just a wild stab at how many iterations 
         -- equate to a recursive call, which obviously has to
         -- create_frame/populate/call/cleanup/ret, and if you 
-        -- really cared you'd experiment to find best ratio.
+        -- really cared you'd experiment to find best ratio,
+        -- which could feasibly be closer to 1, or length(f).
         -- For the tests used, summ() reduces the total time 
         -- taken from around 37.5s to 1.5s, on my box anyway,
         -- and in fact the last-but-one test, which don't use 

@@ -1,9 +1,11 @@
 --
 -- You have no less than five choices here, I have translated the Python, Go, Java and JavaScript versions to Phix,
 -- trying hard not to make any of them any prettier. Refactor any one of these or even all of them - in which case
--- you will have to test them one at a time, by (re-)commenting out the others, as initially per the first one.
+-- you will have to test them one at a time, by un-commenting and (re-)commenting out the others, as per first one.
 -- Please keep the {{trans}} markers, but should you manage to make any two identical, you can merge them.
 -- When seeking mentoring, please ensure your latest submission only contains just the one you need help with.
+-- TIP: the exemplar code doesn't use regex anywhere at all (it's a band-aid/complete overkill for this, and
+--                                                           as per docs gsub/gmatch are still draft status).
 --
 
 --/!* {{trans|Python}}
@@ -197,7 +199,7 @@ end function
 
 --/* {{trans|Java}}
 
-local function parseHeader(string markdown)
+function parseHeader(string markdown)
     int count = 0;
 
     for i=1 to length(markdown) do
@@ -212,7 +214,7 @@ end function
 
 include builtins\regex.e
 
-local function parseSomeSymbols(string markdown)
+function parseSomeSymbols(string markdown)
 
     string lookingFor = "(.*)__(.+)__(.*)";
     string update = `\1<strong>\2</strong>\3`;
@@ -226,7 +228,7 @@ local function parseSomeSymbols(string markdown)
     return workingOn2
 end function
 
-local function parseListItem(string markdown)
+function parseListItem(string markdown)
     if begins("*",markdown) then
         string skipAsterisk = markdown[3..$];
         string listItemString = parseSomeSymbols(skipAsterisk);
@@ -236,7 +238,7 @@ local function parseListItem(string markdown)
     return null;
 end function
 
-local function parseParagraph(string markdown)
+function parseParagraph(string markdown)
     return "<p>" & parseSomeSymbols(markdown) & "</p>";
 end function
 
@@ -285,7 +287,7 @@ end function
 
 include builtins\regex.e
 
-local function wrap(string text, tag)
+function wrap(string text, tag)
   return sprintf(`<%s>%s</%s>`,{tag,text,tag});
 end function
 
@@ -293,7 +295,7 @@ function isTag(string text, tag)
   return begins(sprintf(`<%s>`,{tag}),text);
 end function
 
-local function parser(string markdown, delimiter, tag)
+function parser(string markdown, delimiter, tag)
   if length(match_all(delimiter,markdown))>=2 then  
     markdown = substitute(markdown, delimiter, sprintf("<%s>",{tag}),1)
     markdown = substitute(markdown, delimiter, sprintf(`</%s>`,{tag}),1)
@@ -301,15 +303,15 @@ local function parser(string markdown, delimiter, tag)
   return markdown   
 end function
 
-local function parse__(string markdown)
+function parse__(string markdown)
   return parser(markdown, "__", "strong");
 end function
 
-local function parse_(string markdown)
+function parse_(string markdown)
   return parser(markdown, "_", "em");
 end function
 
-local function parseText(string markdown, bool list)
+function parseText(string markdown, bool list)
   string parsedText = parse_(parse__(markdown));
   if (list) then
     return parsedText;
@@ -318,7 +320,7 @@ local function parseText(string markdown, bool list)
   end if
 end function
 
-local function parseHeader(string markdown, bool list)
+function parseHeader(string markdown, bool list)
   integer count = 0;
   for i=1 to length(markdown) do
     if (markdown[i] == '#')then
@@ -339,7 +341,7 @@ local function parseHeader(string markdown, bool list)
   end if
 end function
 
-local function parseLineItem(string markdown, bool list)
+function parseLineItem(string markdown, bool list)
   if begins('*',markdown) then
     string innerHtml = wrap(parseText(markdown[3..$], true), "li");
     if (list) then
@@ -351,7 +353,7 @@ local function parseLineItem(string markdown, bool list)
   return {null, list};
 end function
 
-local function parseParagraph(string markdown, bool list)
+function parseParagraph(string markdown, bool list)
   if (not list) then
     return {parseText(markdown, false), false};
   else
@@ -359,7 +361,7 @@ local function parseParagraph(string markdown, bool list)
   end if
 end function
 
-local function parseLine(string markdown, bool list)
+function parseLine(string markdown, bool list)
   {object result, bool inListAfter} = parseHeader(markdown, list);
   if (result == null) then
     {result, inListAfter} = parseLineItem(markdown, list);
@@ -396,8 +398,10 @@ end function
      //   (of course you do, I translated all that to Phix too!)
      // You should of course at least have a go at one of the above,
      //   rather than diving headfirst straight into this option.
+-- not {{trans|anything}}, rewritten from scratch:
 global function parse(string markdown)
     crash("please implement parse")
 end function
+
 --*/
 
