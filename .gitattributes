@@ -67,3 +67,7 @@
 # in Windows via a file share from Linux, the scripts will work.
 *.{cmd,[cC][mM][dD]} text eol=crlf
 *.{bat,[bB][aA][tT]} text eol=crlf
+
+*.e   linguist-language=Euphoria
+*.ex  linguist-language=Euphoria
+*.exw linguist-language=Euphoria
