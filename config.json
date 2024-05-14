@@ -609,6 +609,14 @@
         "practices": [],
         "prerequisites": [],
         "difficulty": 1
+      },
+      {
+        "slug": "annalyns-infiltration",
+        "name": "annalyns-infiltration",
+        "uuid": "cb0002fd-b869-469a-894c-9ebb247a1aae",
+        "practices": [],
+        "prerequisites": [],
+        "difficulty": 1
       }
     ]
   },

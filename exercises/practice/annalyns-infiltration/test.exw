@@ -1,0 +1,71 @@
+include annalyns-infiltration.e
+
+set_test_verbosity(TEST_SHOW_ALL)
+
+procedure test_can_fast_attack()
+    sequence tests = {{"Knight is awake",{true,false}},
+                      {"Knight is sleeping",{false,true}}}
+    for t in tests do
+        {string desc, bool {knight_is_awake, expected}} = t
+        test_equal(can_fast_attack(knight_is_awake),expected,desc)
+    end for
+end procedure
+
+procedure test_can_spy()
+    sequence tests = {{"All characters are sleeping",{false,false,false,false}},
+                      {"Knight is awake, archer and prisoner are sleeping",{true,false,false,true}},
+                      {"Knight and archer are awake, prisoner is sleeping",{true,true,false,true}},
+                      {"Knight and prisoner are awake, archer is sleeping",{true,false,true,true}},
+                      {"Archer is awake, knight and prisoner are sleeping",{false,true,false,true}},
+                      {"Archer and prisoner are awake, knight is sleeping",{false,true,true,true}},
+                      {"Prisoner is awake, knight and archer are sleeping",{false,false,true,true}},
+                      {"All characters are awake",{true,true,true,true,}}}
+    for t in tests do
+        {string desc, bool {knight_awake, archer_awake, prisoner_awake, expected}} = t
+        test_equal(can_spy(knight_awake, archer_awake, prisoner_awake),expected,desc)
+    end for
+end procedure
+
+procedure test_can_signal_prisoner()
+    sequence tests = {{"All characters are sleeping",{false,false,false}},
+                      {"Archer is sleeping, prisoner is awake",{false,true,true}},
+                      {"Archer is awake, prisoner is sleeping",{true,false,false}},
+                      {"All characters are awake",{true,true,false}}}
+    for t in tests do
+        {string desc, bool {archer_awake, prisoner_awake, expected}} = t
+        test_equal(can_signal_prisoner(archer_awake, prisoner_awake),expected,desc)
+    end for
+end procedure
+
+procedure test_can_free_prisoner()
+    sequence tests = {{"All characters are sleeping. Dog is not present.",{false,false,false,false,false}},
+                      {"All characters are sleeping. Dog is present.",{false,false,false,true,true}},
+                      {"Knight and archer are sleeping. Prisoner is awake. Dog is not present.",{false,false,true,false,true}},
+                      {"Knight and archer are sleeping. Prisoner is awake. Dog is present.",{false,false,true,true,true}},
+                      {"Knight is sleeping. Archer is awake. Prisoner is sleeping. Dog is not present.",{false,true,false,false,false}},
+                      {"Knight is sleeping. Archer is awake. Prisoner is sleeping. Dog is present.",{false,true,false,true,false}},
+                      {"Knight is sleeping. Archer is awake. Prisoner is awake. Dog is not present.",{false,true,true,false,false}},
+                      {"Knight is sleeping. Archer is awake. Prisoner is awake. Dog is present.",{false,true,true,true,false}},
+                      {"Knight is awake. Archer is sleeping. Prisoner is sleeping. Dog is not present.",{true,false,false,false,false}},
+                      {"Knight is awake. Archer is sleeping. Prisoner is sleeping. Dog is present.",{true,false,false,true,true}},
+                      {"Knight is awake. Archer is sleeping. Prisoner is awake. Dog is not present",{true,false,true,false,false}},
+                      {"Knight is awake. Archer is sleeping. Prisoner is awake. Dog is present",{true,false,true,true,true}},
+                      {"Knight and archer are awake. Prisoner is sleeping. Dog is not present",{true,true,false,false,false}},
+                      {"Knight and archer are awake. Prisoner is sleeping. Dog is present",{true,true,false,true,false}},
+                      {"Knight and archer are awake. Prisoner is awake. Dog is not present",{true,true,true,false,false}},
+                      {"Knight and archer are awake. Prisoner is awake. Dog is present",{true,true,true,true,false}},
+                      {"Knight and archer are awake. Prisoner is sleeping. Dog is not present",{true,true,false,false,false}},
+                      {"Everyone is sleeping. Dog is not present",{false,false,false,false,false}}}
+    for t in tests do
+        {string desc, bool {knight_awake, archer_awake, prisoner_awake, dog_present, expected}} = t
+        test_equal(can_free_prisoner(knight_awake, archer_awake, prisoner_awake,dog_present),expected,desc)
+    end for
+end procedure
+
+test_can_fast_attack()
+test_can_spy()
+test_can_signal_prisoner()
+test_can_free_prisoner()
+
+test_summary()
+

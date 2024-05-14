@@ -82,11 +82,13 @@ procedure process()
     end for
     if begins_3
     or begins_hat then
+        -- compilation error
         status = "error"
         if begins_3=0 then begins_3 = begins_hat end if
         -- We might want to limit this to, say, 8 lines?
         message = join(filter(lines[1..begins_3],"!=",""),'\n')
     else
+        -- check for unit test errors or success
         integer first_failure = 0
         lines = filter(lines,"!=","")
         for i,l in lines do
@@ -110,6 +112,7 @@ procedure process()
     object pjres = print_json(ofn, json) -- (separate line so available for debugging)
     assert(pjres!=0,"bad json??")
     close(ofn)
+--temp:
 {} = print_json(1,json)
 
 end procedure
