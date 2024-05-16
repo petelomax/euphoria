@@ -617,6 +617,30 @@
         "practices": [],
         "prerequisites": [],
         "difficulty": 1
+      },
+      {
+        "slug": "atbash-cipher",
+        "name": "Atbash Cipher",
+        "uuid": "04511727-ca46-4926-bfe5-c9c83cdc1ae0",
+        "practices": [],
+        "prerequisites": [],
+        "difficulty": 1
+      },
+      {
+        "slug": "bank-account",
+        "name": "Bank Account",
+        "uuid": "cb4f143e-5667-400b-97a0-c63c73920a5c",
+        "practices": [],
+        "prerequisites": [],
+        "difficulty": 1
+      },
+      {
+        "slug": "binary-search-tree",
+        "name": "Binary Search Tree",
+        "uuid": "73628676-5309-4265-90bb-2042a6de3e97",
+        "practices": [],
+        "prerequisites": [],
+        "difficulty": 1
       }
     ]
   },
