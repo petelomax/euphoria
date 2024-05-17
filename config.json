@@ -432,7 +432,7 @@
         "uuid": "e61fcd6c-ce59-488d-ab26-1711c55d6d69",
         "practices": [],
         "prerequisites": [],
-        "difficulty": 1
+        "difficulty": 5
       },
       {
         "slug": "react",
@@ -440,7 +440,7 @@
         "uuid": "d3e0fff0-ff6b-4d42-9fa0-6c072052024d",
         "practices": [],
         "prerequisites": [],
-        "difficulty": 1
+        "difficulty": 8
       },
       {
         "slug": "palindrome-products",
@@ -448,7 +448,7 @@
         "uuid": "692eb06d-b5a0-46a8-9d5f-c2bab6b7fa14",
         "practices": [],
         "prerequisites": [],
-        "difficulty": 1
+        "difficulty": 5
       },
       {
         "slug": "alphametics",
@@ -456,7 +456,7 @@
         "uuid": "94f5192b-d94a-4ecc-be23-e1815dd8fb34",
         "practices": [],
         "prerequisites": [],
-        "difficulty": 1
+        "difficulty": 7
       },
       {
         "slug": "ocr-numbers",
@@ -464,7 +464,7 @@
         "uuid": "2682f476-a306-4c95-a593-2df8e03fa786",
         "practices": [],
         "prerequisites": [],
-        "difficulty": 1
+        "difficulty": 4
       },
       {
         "slug": "change",
@@ -472,7 +472,7 @@
         "uuid": "f36e307f-e628-42b1-8daa-55ea57e2fcba",
         "practices": [],
         "prerequisites": [],
-        "difficulty": 1
+        "difficulty": 5
       },
       {
         "slug": "poker",
@@ -480,7 +480,7 @@
         "uuid": "f7dddeea-04f4-4fdc-a820-8e9db9c1218e",
         "practices": [],
         "prerequisites": [],
-        "difficulty": 1
+        "difficulty": 4
       },
       {
         "slug": "bowling",
@@ -488,7 +488,7 @@
         "uuid": "38d2447c-b2eb-4300-b053-8ceabea59214",
         "practices": [],
         "prerequisites": [],
-        "difficulty": 1
+        "difficulty": 6
       },
       {
         "slug": "two-bucket",
@@ -496,7 +496,7 @@
         "uuid": "44652c3c-584a-44a7-93a1-784992d00ae7",
         "practices": [],
         "prerequisites": [],
-        "difficulty": 1
+        "difficulty": 5
       },
       {
         "slug": "dominoes",
@@ -504,7 +504,7 @@
         "uuid": "80aa31dd-c5f5-4252-a25a-9fe5adcaec71",
         "practices": [],
         "prerequisites": [],
-        "difficulty": 1
+        "difficulty": 6
       },
       {
         "slug": "state-of-tic-tac-toe",
@@ -512,7 +512,7 @@
         "uuid": "648aab54-95b2-4f30-9271-f27ec4a5f9e2",
         "practices": [],
         "prerequisites": [],
-        "difficulty": 1
+        "difficulty": 4
       },
       {
         "slug": "variable-length-quantity",
@@ -520,7 +520,7 @@
         "uuid": "6e4d3336-5114-427c-bf49-f38086fde59a",
         "practices": [],
         "prerequisites": [],
-        "difficulty": 1
+        "difficulty": 5
       },
       {
         "slug": "rail-fence-cipher",
@@ -528,7 +528,7 @@
         "uuid": "b4321bfd-1ed3-45f3-86bb-4f62d30fde1c",
         "practices": [],
         "prerequisites": [],
-        "difficulty": 1
+        "difficulty": 4
       },
       {
         "slug": "matching-brackets",
@@ -536,7 +536,7 @@
         "uuid": "d477f063-cfca-461a-b2fd-a758c8cade2a",
         "practices": [],
         "prerequisites": [],
-        "difficulty": 1
+        "difficulty": 3
       },
       {
         "slug": "transpose",
@@ -544,7 +544,7 @@
         "uuid": "2abb1587-d181-41d8-889e-8c617e316e5a",
         "practices": [],
         "prerequisites": [],
-        "difficulty": 1
+        "difficulty": 4
       },
       {
         "slug": "saddle-points",
@@ -552,7 +552,7 @@
         "uuid": "164eb023-6ebc-4a3c-b82a-3f53bd65f174",
         "practices": [],
         "prerequisites": [],
-        "difficulty": 1
+        "difficulty": 5
       },
       {
         "slug": "minesweeper",
@@ -560,7 +560,7 @@
         "uuid": "c98bca5f-4788-43ea-9bca-0e02f337310a",
         "practices": [],
         "prerequisites": [],
-        "difficulty": 1
+        "difficulty": 5
       },
       {
         "slug": "word-search",
@@ -568,7 +568,7 @@
         "uuid": "c1e0b196-2121-463d-97e0-865414a41b6b",
         "practices": [],
         "prerequisites": [],
-        "difficulty": 1
+        "difficulty": 4
       },
       {
         "slug": "spiral-matrix",
@@ -576,7 +576,7 @@
         "uuid": "0426c933-1a6a-4396-a070-dcce009180b3",
         "practices": [],
         "prerequisites": [],
-        "difficulty": 1
+        "difficulty": 4
       },
       {
         "slug": "house",
@@ -584,7 +584,7 @@
         "uuid": "7d364dea-124d-4d1f-8d11-83b778eadff2",
         "practices": [],
         "prerequisites": [],
-        "difficulty": 1
+        "difficulty": 5
       },
       {
         "slug": "pig-latin",
@@ -592,7 +592,7 @@
         "uuid": "270f7cd7-e92d-4ea3-af00-cdd844383705",
         "practices": [],
         "prerequisites": [],
-        "difficulty": 1
+        "difficulty": 4
       },
       {
         "slug": "markdown",
@@ -600,7 +600,7 @@
         "uuid": "e770fb32-0a3e-4083-9368-df64bc4e73db",
         "practices": [],
         "prerequisites": [],
-        "difficulty": 1
+        "difficulty": 6
       },
       {
         "slug": "robot-name",
@@ -608,7 +608,7 @@
         "uuid": "b275046e-caa4-4efd-96e0-7222f7d03be9",
         "practices": [],
         "prerequisites": [],
-        "difficulty": 1
+        "difficulty": 6
       },
       {
         "slug": "annalyns-infiltration",
@@ -624,7 +624,7 @@
         "uuid": "04511727-ca46-4926-bfe5-c9c83cdc1ae0",
         "practices": [],
         "prerequisites": [],
-        "difficulty": 1
+        "difficulty": 3
       },
       {
         "slug": "bank-account",
@@ -632,12 +632,44 @@
         "uuid": "cb4f143e-5667-400b-97a0-c63c73920a5c",
         "practices": [],
         "prerequisites": [],
-        "difficulty": 1
+        "difficulty": 7
       },
       {
         "slug": "binary-search-tree",
         "name": "Binary Search Tree",
         "uuid": "73628676-5309-4265-90bb-2042a6de3e97",
+        "practices": [],
+        "prerequisites": [],
+        "difficulty": 4
+      },
+      {
+        "slug": "book-store",
+        "name": "Book Store",
+        "uuid": "74ceda2f-e529-4862-9d85-aef47f85f9a5",
+        "practices": [],
+        "prerequisites": [],
+        "difficulty": 8
+      },
+      {
+        "slug": "bottle-song",
+        "name": "Bottle Song",
+        "uuid": "c5cf5edf-369c-42fe-aa64-05eb42b6905f",
+        "practices": [],
+        "prerequisites": [],
+        "difficulty": 1
+      },
+      {
+        "slug": "circular-buffer",
+        "name": "Circular Buffer",
+        "uuid": "f19f0d60-04c4-4145-a9a8-9c04deb5f8dd",
+        "practices": [],
+        "prerequisites": [],
+        "difficulty": 1
+      },
+      {
+        "slug": "complex-numbers",
+        "name": "Complex Numbers",
+        "uuid": "7e91305f-cac8-4974-a8a6-d1b643ae4419",
         "practices": [],
         "prerequisites": [],
         "difficulty": 1
