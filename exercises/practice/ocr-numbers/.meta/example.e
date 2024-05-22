@@ -34,5 +34,6 @@ global function recognize(string s)
         res = append(res, r)
     end for
     return res      
+--  return join(res,",")
 end function
 

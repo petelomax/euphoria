@@ -1,5 +1,9 @@
 include strain.e
 
+--<do not edit>
+--ignore canonical_data.e
+--</do not edit>
+
 set_test_verbosity(TEST_SHOW_ALL)
 
 function always_true(object /*x*/) return true end function

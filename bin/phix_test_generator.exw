@@ -1,0 +1,1242 @@
+--
+-- phix_test_generator.exw
+-- =======================
+--
+--constant prob_spec_dir = `F:\misc\phix\problem-specifications` -- (an xpEditor setting)
+constant exercise_specs = `F:\misc\phix\problem-specifications\exercises\`
+-- canonicalDataURL = "https://raw.githubusercontent.com/exercism/problem-specifications/master/exercises/%s/canonical-data.json"
+constant phix_exercises = `F:\misc\phix\phix\exercises\practice\` -- ("")
+
+include sets.e
+--with trace
+include json.e
+
+function xyd(sequence json) // for robot-simulator
+    assert(json[1]=JSON_OBJECT)
+    sequence posn = extract_json_field(json,"position")
+    integer x = extract_json_field(posn,"x"),
+            y = extract_json_field(posn,"y")
+    string dstr = extract_json_field(json,"direction")
+    return {x,y,dstr}
+end function
+
+function rm2(sequence json) // for flatten-array
+    -- recursively remove all JSON_ARRAY and
+    -- replace any {-3,`null`} with -1
+    if json={-3,`null`} then return -1 end if
+    assert(json[1]=JSON_ARRAY)
+    json = json[2..$]
+    for i,j in json do
+        if sequence(j) then json[i] = rm2(j) end if
+    end for
+    return json
+end function
+
+-- Exercises that involve calling different routines in a specific order, threads, etc.
+--  are generally best done "by hand", this is more for call the one routine 138 ways.
+--  One exception is custom-set.
+
+function generate_tests(string slug, sequence json)
+    string res = "", desc
+    assert(extract_json_field(json,"exercise")==slug)
+    sequence cases = extract_json_field(json,"cases"),
+             jo,jg
+    assert(cases[1]=JSON_ARRAY)
+
+    -- merge what you can, try and keep similar-ish things nearby:
+    -- (aside: note the heavy use of %v to preserve quotation marks)
+    -- (ps: don't blame me for this, I didn't design that json format)
+    -- (pps: no doubt oop-heads will have a fit over this, but one huge
+    --       switch is far easier than 140 scattered classes, imnsho..)
+
+    integer k = find(slug,{`acronym`,`bob`,`crypto-square`,`markdown`,
+                           `rna-transcription`}),
+           k2 = find(slug,{`book-store`,`bowling`}),
+           k4 = find(slug,{`isbn-verifier`,`isogram`,`luhn`,
+                           `matching-brackets`,`pangram`}),
+           k5 = find(slug,{`collatz-conjecture`,`eliuds-eggs`,
+                           `square-root`})
+    if k then                                                                   -- string input, expected, description format:
+        string what = {`phrase`,`heyBob`,`plaintext`,`markdown`,`dna`}[k]
+        for jo in cases from 2 do
+            sequence joi = extract_json_field(jo,"input")
+            string input = extract_json_field(joi,what),
+                  expect = extract_json_field(jo,"expected")
+            desc = extract_json_field(jo,"description")
+            res &= sprintf("{%v,%v,%v},\n",{input,expect,desc})
+        end for
+    elsif slug="zebra-puzzle" then                                              -- string property, expected, desc
+        for jo in cases from 2 do
+            string property = extract_json_field(jo,"property"),
+                     expect = extract_json_field(jo,"expected")
+            desc = extract_json_field(jo,"description")
+            res &= sprintf("{%v,%v,%v},\n",{property,expect,desc})
+        end for
+--/*
+constant canonical_data = {
+{-1,
+ {`exercise`, ``},
+ {`cases`,
+  {-2,
+   {-1, {`uuid`, `16efb4e4-8ad7-4d5e-ba96-e5537b66fd42`},
+    {`description`, `resident who drinks water`},
+    {`property`, `drinksWater`}, {`input`, {-1}}, {`expected`, `Norwegian`}},
+   {-1, {`uuid`, `084d5b8b-24e2-40e6-b008-c800da8cd257`},
+    {`description`, `resident who owns zebra`}, {`property`, `ownsZebra`},
+    {`input`, {-1}}, {`expected`, `Japanese`}}}}}
+}
+--*/
+
+    elsif slug="pig-latin" then                                                 -- string phrase, expected, desc; with extra nesting flattened
+        for jg in cases from 2 do
+            sequence inner_cases = extract_json_field(jg,"cases")
+            for jo in inner_cases from 2 do
+                sequence input = extract_json_field(jo,"input")
+                string phrase = extract_json_field(input,"phrase"),
+                     expected = extract_json_field(jo,"expected")
+                desc = extract_json_field(jo,"description")
+                res &= sprintf("{%v,%v,%v},\n",{phrase,expected,desc})
+            end for
+        end for
+    elsif slug="atbash-cipher" then                                             -- string phrase, expected, desc; with extra nesting flipped
+        -- didn't get this to work, in the end (this output is fine, just not used)
+        for j,jg in cases from 2 do
+            sequence inner_cases = extract_json_field(jg,"cases")
+            for jo in inner_cases from 2 do
+                sequence input = extract_json_field(jo,"input")
+                string phrase = extract_json_field(input,"phrase"),
+                     expected = extract_json_field(jo,"expected")
+                if j=3 then {phrase,expected} = {expected,phrase} end if
+                desc = extract_json_field(jo,"description")
+                res &= sprintf("{%v,%v,%v},\n",{phrase,expected,desc})
+            end for
+        end for
+    elsif slug="rail-fence-cipher" then                                         -- string phrase, integer rails, string expected, desc; with extra nesting flipped
+        for j,jg in cases from 2 do
+            sequence inner_cases = extract_json_field(jg,"cases")
+            for jo in inner_cases from 2 do
+                sequence input = extract_json_field(jo,"input")
+                string msg = extract_json_field(input,"msg"),
+                  expected = extract_json_field(jo,"expected")
+                desc = extract_json_field(jo,"description")
+                if j=3 then {msg,expected} = {expected,msg} end if
+                integer rails = extract_json_field(input,"rails")
+                res &= sprintf("{%v,%d,%v,%v},\n",{msg,rails,expected,desc})
+            end for
+        end for
+    elsif k2 then                                                               -- []int input, int expected, string desc:
+        string what = {"basket","previousRolls"}[k2]
+        for jo in cases from 2 do
+            sequence ib = extract_json_field(jo,"input"),
+                 thingy = extract_json_field(ib,what)[2..$]
+            object enumb = extract_json_field(jo,"expected")
+            desc = extract_json_field(jo,"description")
+            res &= sprintf("{%v,%v,%v},\n",{thingy,enumb,desc})
+        end for
+    elsif slug="change" then                                                    -- []int coins, int tgt, bool|[]int expected:
+        for jo in cases from 2 do
+            sequence ct = extract_json_field(jo,"input"),
+                  coins = extract_json_field(ct,"coins")[2..$],
+               expected = extract_json_field(jo,"expected")
+            desc = extract_json_field(jo,"description")
+            integer tgt = extract_json_field(ct,"target")
+            bool err = expected[1]=JSON_OBJECT
+            string estr = iff(err?"false":sprintf("%v",{expected[2..$]}))
+            res &= sprintf("{%v,%d,%s,%v},\n",{coins,tgt,estr,desc})
+        end for
+    elsif slug="sum-of-multiples" then                                          -- []int factors, int limit, int expected:
+        for jo in cases from 2 do
+            sequence fl = extract_json_field(jo,"input"),
+                  facts = extract_json_field(fl,"factors")[2..$]
+            desc = extract_json_field(jo,"description")
+            integer limit = extract_json_field(fl,"limit"),
+                 expected = extract_json_field(jo,"expected")
+            res &= sprintf("{%v,%d,%d,%v},\n",{facts,limit,expected,desc})
+        end for
+    elsif slug="sieve" then                                                     -- int limit, []int expected, desc
+        for jo in cases from 2 do
+            sequence input = extract_json_field(jo,"input"),
+                    expect = extract_json_field(jo,"expected")[2..$]
+            desc = extract_json_field(jo,"description")
+            integer limit = extract_json_field(input,"limit")
+            expect = ppf(expect)
+            res &= sprintf("{%d,%s,%v},\n",{limit,expect,desc})
+        end for
+    elsif k4 then                                                               -- string input, bool expected:
+        string what = {`isbn`,`phrase`,`value`,
+                       `value`,`sentence`}[k4]
+        for jo in cases from 2 do
+            sequence input = extract_json_field(jo,"input")
+            string thing = extract_json_field(input,what),
+                  expect = extract_json_field(jo,"expected")[2]
+            desc = extract_json_field(jo,"description")
+            res &= sprintf("{%v,%s,%v},\n",{thing,expect,desc})
+        end for
+    elsif slug="scrabble-score" then                                            -- string word, int expected
+        for jo in cases from 2 do
+            sequence input = extract_json_field(jo,"input")
+            string word = extract_json_field(input,"word")
+            desc = extract_json_field(jo,"description")
+            integer expect = extract_json_field(jo,"expected")
+            res &= sprintf("{%v,%d,%v},\n",{word,expect,desc})
+        end for
+    elsif slug="space-age" then                                                 -- string planet, int seconds, atom expected
+        for jo in cases from 2 do
+            sequence input = extract_json_field(jo,"input")
+            string planet = extract_json_field(input,"planet")
+            desc = extract_json_field(jo,"description")
+            atom seconds = extract_json_field(input,"seconds")
+            object expect = extract_json_field(jo,"expected")
+            if not atom(expect) then expect = false end if --==0
+            res &= sprintf("{%v,%d,%g,%v},\n",{planet,seconds,expect,desc})
+        end for
+    elsif k5 then                                                               -- int steps, int|str expected:
+        string what = {"number","number","radicand"}[k5]                        --     (or atom n, int res for eliuds-eggs)
+        for jo in cases from 2 do                                               --    (and int radicand, res for square-root)
+            sequence io = extract_json_field(jo,"input")
+            atom input = extract_json_field(io,what)
+            desc = extract_json_field(jo,"description")
+            object expect = extract_json_field(jo,"expected")
+            if not integer(expect) then
+                expect = extract_json_field(expect,"error")
+            end if
+            res &= sprintf("{%d,%v,%v},\n",{input,expect,desc})
+        end for
+    elsif find(slug,{"raindrops","roman-numerals"}) then                        -- int n, string expected:
+        for jo in cases from 2 do
+            sequence iy = extract_json_field(jo,"input")
+            integer n = extract_json_field(iy,"number")
+            string expected = extract_json_field(jo,"expected")
+            desc = extract_json_field(jo,"description")
+            res &= sprintf("{%d,%v,%v},\n",{n,expected,desc})
+        end for
+    elsif slug="leap" then                                                      -- int year, bool expected:
+        for jo in cases from 2 do
+            sequence iy = extract_json_field(jo,"input")
+            integer year = extract_json_field(iy,"year")
+            string expected = extract_json_field(jo,"expected")[2]
+            desc = extract_json_field(jo,"description")
+            res &= sprintf("{%d,%s,%v},\n",{year,expected,desc})
+        end for
+    elsif slug="perfect-numbers" then                                           -- int n, string expected|bool error, with extra nesting
+        for jg in cases from 2 do
+            sequence inner_cases = extract_json_field(jg,"cases")
+            for jo in inner_cases from 2 do
+                sequence input = extract_json_field(jo,"input")
+                integer n = extract_json_field(input,"number")
+                object expected = extract_json_field(jo,"expected")
+                desc = extract_json_field(jo,"description")
+                if string(expected) then
+                    expected = sprintf(`%v`,{expected}) -- (add quotes)
+                else
+                    expected = "false"
+                end if
+                res &= sprintf("{%d,%s,%v},\n",{n,expected,desc})
+            end for
+        end for
+    elsif slug="all-your-base" then                                             -- int inbase, int[] digits, int outbase, {OK []int}|{ERROR,string}:
+        for jo in cases from 2 do
+            sequence ido = extract_json_field(jo,"input"),
+                  digits = extract_json_field(ido,"digits")[2..$],
+                  expect = extract_json_field(jo,"expected"),
+                 {e,exv} = iff(expect[1]=JSON_ARRAY
+                         ? {"OK",expect[2..$]}
+                         : {"ERROR",extract_json_field(expect,"error")})
+            integer inb = extract_json_field(ido,"inputBase"),
+                   outb = extract_json_field(ido,"outputBase")
+            desc = extract_json_field(jo,"description")
+            res &= sprintf("{%d,%v,%d,{%s,%v},%v},\n",{inb,digits,outb,e,exv,desc})
+        end for
+    elsif slug="anagram" then                                                   -- string subject, {candidates}, {expected}:
+        for jo in cases from 2 do
+            sequence sc = extract_json_field(jo,"input"),
+                subject = extract_json_field(sc,"subject"),
+             candidates = extract_json_field(sc,"candidates")[2..$],
+               expected = extract_json_field(jo,"expected")[2..$]
+            desc = extract_json_field(jo,"description")
+            res &= sprintf("{%v,%v,%v,%v},\n",{subject,candidates,expected,desc})
+        end for
+    elsif slug="nucleotide-count" then                                          -- string strand, string err|sequence {{char c, int n}}:
+        for jo in cases from 2 do
+            sequence sc = extract_json_field(jo,"input"),
+                 strand = extract_json_field(sc,"strand"),
+               expected = extract_json_field(jo,"expected")[2..$]
+            desc = extract_json_field(jo,"description")
+            if expected[1][1]=`error` then
+                expected = "false"
+            else
+                expected = join(expected,",",fmt:="{'%s',%d}") -- (str->char)
+                expected = "{"&expected&"}"
+            end if
+            res &= sprintf("{%v,%s,%v},\n",{strand,expected,desc})
+        end for
+    elsif slug="protein-translation" then                                       -- string strand, string err|[]string expected:
+        for jo in cases from 2 do
+            sequence sc = extract_json_field(jo,"input"),
+                 strand = extract_json_field(sc,"strand"),
+               expected = extract_json_field(jo,"expected")
+            desc = extract_json_field(jo,"description")
+            if expected[1]=JSON_OBJECT then
+                expected = extract_json_field(expected,"error")
+            else
+                assert(expected[1]=JSON_ARRAY)
+                expected = expected[2..$]
+            end if
+            res &= sprintf("{%v,%v,%v},\n",{strand,expected,desc})
+        end for
+    elsif slug="connect" then                                                   -- string board(joined), expected:
+        for jo in cases from 2 do
+            sequence input = extract_json_field(jo,"input"),
+                     board = extract_json_field(input,"board")[2..$]
+            string expect = extract_json_field(jo,"expected")
+            desc = extract_json_field(jo,"description")
+            board = join(board,"\n")
+            res &= sprintf("{%s\n%s%s,%v,%v},\n",{`"""`,board,`"""`,expect,desc})
+        end for
+    elsif slug="darts" then                                                     -- atom {x,y}, expected:
+        for jo in cases from 2 do
+            sequence input = extract_json_field(jo,"input")
+            atom x = extract_json_field(input,"x"),
+                 y = extract_json_field(input,"y"),
+            expect = extract_json_field(jo,"expected")
+            desc = extract_json_field(jo,"description")
+            res &= sprintf("{{%g,%g},%d,%v},\n",{x,y,expect,desc})
+        end for
+    elsif slug="dominoes" then                                                  -- {{int a,b}}, bool expected:
+        for jo in cases from 2 do
+            sequence input = extract_json_field(jo,"input"),
+                  dominoes = vslice(extract_json_field(input,"dominoes")[2..$],{2,3})
+            string expect = extract_json_field(jo,"expected")[2]
+            desc = extract_json_field(jo,"description")
+            res &= sprintf("{%v,%s,%v},\n",{dominoes,expect,desc})
+        end for
+    elsif slug="forth" then                                                     -- []string code, []int res, string error, with extra nesting
+        for jg in cases from 2 do
+            sequence inner_cases = extract_json_field(jg,"cases")
+            for jo in inner_cases from 2 do
+                sequence input = extract_json_field(jo,"input"),
+                          code = extract_json_field(input,"instructions",{0})[2..$],
+                      expected = extract_json_field(jo,"expected")
+                string error = ""
+                desc = extract_json_field(jo,"description")
+                if expected[1]=JSON_ARRAY then
+                    expected = expected[2..$]
+                else
+                    error = extract_json_field(expected,"error")
+                    expected = {}
+                end if
+                if code={} then
+                    for i,ii in {"instructionsFirst","instructionsSecond"} do
+                        code = extract_json_field(input,ii)[2..$]
+                        res &= sprintf("{%v,%v,%v,%v},\n",{code,expected[i][2..$],error,desc})
+                    end for
+                else
+                    res &= sprintf("{%v,%v,%v,%v},\n",{code,expected,error,desc})
+                end if
+            end for
+        end for
+    elsif slug="game-of-life" then                                              -- [][]int board, expected
+        for jo in cases from 2 do
+            sequence input = extract_json_field(jo,"input"),
+                     board = extract_json_field(input,"matrix")[2..$],
+                    expect = extract_json_field(jo,"expected")[2..$]
+            desc = extract_json_field(jo,"description")
+            integer lb = length(board)
+            if lb=0 then
+                res &= sprintf("{%v,%v,%v},\n",{board,expect,desc})
+            else
+                board = join(apply(vslice(board,{2,lb+1}),sprint),",\n  ")
+                expect = join(apply(vslice(expect,{2,lb+1}),sprint),",\n"&repeat(' ',lb*2+6))
+                res &= sprintf("{{%s},{%s},%v},\n",{board,expect,desc})
+            end if
+        end for
+    elsif slug="pythagorean-triplet" then                                       -- int perim, [][]int expected, desc
+        for jo in cases from 2 do
+            sequence input = extract_json_field(jo,"input"),
+                    expect = extract_json_field(jo,"expected")[2..$]
+            desc = extract_json_field(jo,"description")
+            integer perim = extract_json_field(input,"n")
+            expect = vslice(expect,{2,4})
+            res &= sprintf("{%d,%v,%v},\n",{perim,expect,desc})
+        end for
+    elsif slug="spiral-matrix" then                                             -- int n, [][]int expected, desc
+        for jo in cases from 2 do
+            sequence input = extract_json_field(jo,"input"),
+                    expect = extract_json_field(jo,"expected")[2..$]
+            desc = extract_json_field(jo,"description")
+            integer n = extract_json_field(input,"size")
+            if expect!={} then
+                for i=1 to length(expect) do
+                    expect[i] = join(expect[i][2..$],",",fmt:="%2d")
+                end for
+                expect = "{"&join(expect,"},\n    {")&"}"
+            end if
+            res &= sprintf("{%d,{%s},%v},\n",{n,expect,desc})
+        end for
+    elsif slug="hamming" then                                                   -- string strand1, strand2, int|str expected:
+        for jo in cases from 2 do
+            sequence input = extract_json_field(jo,"input")
+            string s1 = extract_json_field(input,"strand1"),
+                   s2 = extract_json_field(input,"strand2")
+            object expect = extract_json_field(jo,"expected")
+            if not atom(expect) then
+                expect = extract_json_field(expect,"error")
+            end if
+            desc = extract_json_field(jo,"description")
+            res &= sprintf("{%v,%v,%v,%v},\n",{s1,s2,expect,desc})
+        end for
+    elsif slug="hello-world" then                                               -- just the one expected (and a description)
+        assert(length(cases)=2)
+        string expect = extract_json_field(cases[2],"expected")
+        desc = extract_json_field(cases[2],"description")
+        res &= sprintf("{%v,%v},\n",{expect,desc})
+    elsif slug="minesweeper" then                                               -- columnized([]string minefield, expected), desc
+        for jo in cases from 2 do
+            sequence input = extract_json_field(jo,"input"),
+                 minefield = extract_json_field(input,"minefield")[2..$],
+                    expect = extract_json_field(jo,"expected")[2..$],
+                        me = columnize({minefield,expect})
+            string mes = join(me,",\n  ",fmt:="{%v,%v}")
+            desc = extract_json_field(jo,"description")
+            res &= sprintf("{{%s},%v},\n",{mes,desc})
+        end for
+    elsif slug="transpose" then                                                 -- []string lines, expected, desc
+        for jo in cases from 2 do
+            sequence input = extract_json_field(jo,"input"),
+                     lines = extract_json_field(input,"lines")[2..$],
+                    expect = extract_json_field(jo,"expected")[2..$]
+            for i,l in lines do
+                lines[i] = sprintf("%v",{l})
+            end for
+            for i,e in expect do
+                expect[i] = sprintf("%v",{e})
+            end for
+            desc = extract_json_field(jo,"description")
+            res &= sprintf("{{%s},\n {%s},%v},\n",{join(lines,",\n  "),join(expect,",\n  "),desc})
+        end for
+    elsif slug="state-of-tic-tac-toe" then                                      -- []string board, string expected, desc, with extra nesting
+        for j in cases from 2 do
+          sequence inner_cases = extract_json_field(j,"cases")
+          for jo in inner_cases from 2 do
+            sequence input = extract_json_field(jo,"input"),
+                     board = extract_json_field(input,"board")[2..$]
+            object expect = extract_json_field(jo,"expected")
+            if not string(expect) then expect = "invalid" end if
+            desc = extract_json_field(jo,"description")
+            for i,r in board do
+                board[i] = sprintf("%v",{r})
+            end for
+            board = join(board,",\n  ")
+            res &= sprintf("{{%s},%v,%v},\n",{board,expect,desc})
+          end for
+        end for
+    elsif slug="diamond" then                                                   -- char letter, []string expected, desc
+        for jo in cases from 2 do
+            sequence input = extract_json_field(jo,"input"),
+                    expect = extract_json_field(jo,"expected")[2..$]
+            integer letter = extract_json_field(input,"letter")[1]
+            desc = extract_json_field(jo,"description")
+            res &= sprintf("{'%c',%n{`%s`},%v},\n",{letter,letter>'A',join(expect,"`,\n `"),desc})
+        end for
+    elsif slug="palindrome-products" then                                       -- int imin, imax, {int n, []int factors}, string desc
+        res &= "**NB** CONVERSION FROM JSON INCOMPLETE.\n"
+        res &= " (also splits smallest?/largest? whereas I want {lo,hi}?)\n"
+        for jo in cases from 2 do
+            sequence input = extract_json_field(jo,"input"),
+                    expect = extract_json_field(jo,"expected")
+            integer imin = extract_json_field(input,"min"),
+                    imax = extract_json_field(input,"max")
+            desc = extract_json_field(jo,"description")
+            res &= sprintf("{%d,%d,%v,%v},\n",{imin,imax,expect,desc})
+        end for
+    elsif slug="poker" then                                                     -- []string hands, expected, string desc
+        for jo in cases from 2 do
+            sequence input = extract_json_field(jo,"input"),
+                     hands = extract_json_field(input,"hands")[2..$],
+                    expect = extract_json_field(jo,"expected")[2..$]
+            desc = extract_json_field(jo,"description")
+            res &= sprintf("{%v,%v,%v},\n",{hands,expect,desc})
+        end for
+    elsif slug="resistor-color" then                                            -- string colour, int expected (first set),
+                                                                                --       0, []string expected (second set)
+        for j,jo in cases from 2 do
+            if j=2 then 
+                sequence inner_cases = extract_json_field(jo,"cases")
+                for jk in inner_cases from 2 do
+                    sequence input = extract_json_field(jk,"input")
+                    string color = extract_json_field(input,"color")
+                    desc = extract_json_field(jk,"description")
+                    integer expect = extract_json_field(jk,"expected")
+                    res &= sprintf("{%v,%d,%v},\n",{color,expect,desc})
+                end for
+            else
+                sequence expected = extract_json_field(jo,"expected")[2..$]
+                desc = extract_json_field(jo,"description")
+                res &= sprintf("{0,%v,%v},\n",{expected,desc})
+            end if
+        end for
+    elsif slug="resistor-color-duo" then                                        -- []string colors, int expected, string desc
+        for jo in cases from 2 do
+            sequence input = extract_json_field(jo,"input"),
+                    colors = extract_json_field(input,"colors")[2..$]
+            integer expect = extract_json_field(jo,"expected")
+            desc = extract_json_field(jo,"description")
+            res &= sprintf("{%v,%v,%v},\n",{colors,expect,desc})
+        end for
+    elsif slug="robot-simulator" then                                           -- xyd robot, string instructions, xyd expected, desc, with extra nesting
+                                                                                -- where xyd is {int x, y string dstr} as per routine above,
+        for jg in cases from 2 do
+            sequence inner_cases = extract_json_field(jg,"cases")
+            for jo in inner_cases from 2 do
+                sequence input = extract_json_field(jo,"input"),
+                          ixyd = xyd(input),
+                          exyd = xyd(extract_json_field(jo,"expected"))
+                string instruct = extract_json_field(input,"instructions","")
+                desc = extract_json_field(jo,"description")
+                res &= sprintf("{%v,%v,%v,%v},\n",{ixyd,instruct,exyd,desc})
+            end for
+        end for
+    elsif slug="saddle-points" then                                             -- [][]int matrix, [][2]int expected, string desc
+        for jo in cases from 2 do
+            sequence input = extract_json_field(jo,"input"),
+                    matrix = extract_json_field(input,"matrix")[2..$],
+                    expect = extract_json_field(jo,"expected")[2..$]
+            desc = extract_json_field(jo,"description")
+            for i=1 to length(matrix) do
+                matrix[i] = matrix[i][2..$]
+            end for
+            for i,rc in expect do
+                integer r = extract_json_field(rc,"row"),
+                        c = extract_json_field(rc,"column")
+                expect[i] = {r,c}
+            end for
+            expect = sort(expect)
+            res &= sprintf("{%v,%v,%v},\n",{matrix,expect,desc})
+        end for
+    elsif slug="secret-handshake" then                                          -- int code, []string expected, string desc
+        for jo in cases from 2 do
+            sequence input = extract_json_field(jo,"input"),
+                    expect = extract_json_field(jo,"expected")[2..$]
+            integer code = extract_json_field(input,"number")
+            desc = extract_json_field(jo,"description")
+            res &= sprintf("{%d,%v,%v},\n",{code,expect,desc})
+        end for
+    elsif slug="two-bucket" then                                                -- int b1, b2, goal, string startbucket, \
+                                                                                --   {string goalbucket, int moves, other}|string err
+        for jo in cases from 2 do
+            sequence input = extract_json_field(jo,"input"),
+                    expect = extract_json_field(jo,"expected")
+            integer b1 = extract_json_field(input,"bucketOne"),
+                    b2 = extract_json_field(input,"bucketTwo"),
+                  goal = extract_json_field(input,"goal")
+            string sb = extract_json_field(input,"startBucket")
+            desc = extract_json_field(jo,"description")
+            if expect[2][1] = `error` then
+                expect = expect[2][2]
+            else
+                integer moves = extract_json_field(expect,"moves"),
+                        other = extract_json_field(expect,"otherBucket")
+                string gb = extract_json_field(expect,"goalBucket")
+                expect = {gb,moves,other}
+            end if
+            res &= sprintf("{%d,%d,%d,%v,%v,%v},\n",{b1,b2,goal,sb,expect,desc})
+        end for
+    elsif slug="variable-length-quantity" then                                  -- ([]int decoded|string err), []int encoded, string desc; with extra nesting flipped
+        for j,jg in cases from 2 do
+            sequence inner_cases = extract_json_field(jg,"cases")
+            for jo in inner_cases from 2 do
+                sequence input = extract_json_field(jo,"input"),
+                       decoded = extract_json_field(input,"integers"),
+                       encoded = extract_json_field(jo,"expected")
+                desc = extract_json_field(jo,"description")
+                if j=3 then {decoded,encoded} = {encoded,decoded} end if
+                if decoded[1]=JSON_OBJECT then
+                    decoded = "\"crash(`incomplete`)\""
+                else
+                    decoded = "{"&join(decoded[2..$],",",fmt:="0x%X")&"}"
+                end if
+                encoded = "{"&join(encoded[2..$],",",fmt:="0x%X")&"}"
+                res &= sprintf("{%s,%s,%v},\n",{decoded,encoded,desc})
+            end for
+        end for
+    elsif slug="yacht" then                                                     -- []int dice, string category, int expected, string desc
+        for jo in cases from 2 do
+            sequence input = extract_json_field(jo,"input"),
+                      dice = extract_json_field(input,"dice")[2..$]
+            integer expect = extract_json_field(jo,"expected")
+            string category = extract_json_field(input,"category")
+            desc = extract_json_field(jo,"description")
+            res &= sprintf("{%v,%v,%d,%v},\n",{dice,category,expect,desc})
+        end for
+    elsif slug="custom-set" then                                                -- string prop, then: (with extra nesting flattened out)
+                                                                                --      "empty": []int set, bool expected
+                                                                                --   "contains": []int set, int element, bool expected
+                                                                                --     "subset": []int set, set2, bool expected (ditto disj/eq)
+                                                                                --        "add": []int set, int element, []int expected
+                                                                                --       "diff": []int set, set2, []int expected
+        --
+        -- Note: I'm not a math-head, and I don't subscribe to the idea that a set can contain 7 copies of 2, or be out-of-order.
+        --       Of course I get that someone is just trying to make up tests that "look good", but non-sets are still not sets.
+        --       Likewise I realise ordered sets will horrify some, but unordered sets with no lookup index horrify me, so there.
+        --       (Of course a key-only dictionary is automatically a set, with somewhat lower costs of insertion and deletion.)
+        --       Anyway, that's why there are several sort()/unique() in the following, and some output is less "good looking".
+        --
+        for j,jg in cases from 2 do
+            sequence inner_cases = extract_json_field(jg,"cases")
+            for jo in inner_cases from 2 do
+                sequence input = extract_json_field(jo,"input"),
+                        expect = extract_json_field(jo,"expected"),
+                           set, set2
+                desc = extract_json_field(jo,"description")
+                string prop = extract_json_field(jo,"property")
+                if prop="intersection" then prop = "intersect" end if -- (just a bit prettier)
+                integer element
+                switch prop do
+                    case "empty":       set = extract_json_field(input,"set")[2..$]
+                                        res &= sprintf("{%v,%v,%s,%v},\n",{prop,set,expect[2],desc})
+                    case "contains":    set = extract_json_field(input,"set")[2..$]
+                                        element = extract_json_field(input,"element")
+                                        res &= sprintf("{%v,%v,%d,%s,%v},\n",{prop,set,element,expect[2],desc})
+                    case "subset",
+                       "disjoint",
+                          "equal":      set = extract_json_field(input,"set1")[2..$]
+                                        set2 = extract_json_field(input,"set2")[2..$]
+                                        res &= sprintf("{%v,%v,%v,%s,%v},\n",{prop,set,set2,expect[2],desc})
+                    case "add":         set = extract_json_field(input,"set")[2..$]
+                                        element = extract_json_field(input,"element")
+                                        res &= sprintf("{%v,%v,%d,%v,%v},\n",{prop,set,element,expect[2..$],desc})
+                    case "difference",
+                          "intersect",
+                              "union":  set = sort(extract_json_field(input,"set1")[2..$])
+                                        set2 = sort(extract_json_field(input,"set2")[2..$])
+                                        res &= sprintf("{%v,%v,%v,%v,%v},\n",{prop,set,set2,sort(expect[2..$]),desc})
+                end switch
+            end for
+        end for
+    elsif slug="etl" then                                                       -- []{int, string} input, []{char, int} expected, desc
+        for jo in cases from 2 do
+            sequence input = extract_json_field(jo,"input"),
+                    expect = extract_json_field(jo,"expected")[2..$]
+            input = extract_json_field(input,"legacy")[2..$]
+            for i,l in input do
+                l[2] = join(l[2][2..$],"")
+                input[i] = sprintf("{%s,%v}",l)
+            end for
+            for i,e in expect do
+                expect[i] = sprintf("{'%s',%d}",e)
+            end for
+            desc = extract_json_field(jo,"description")
+            res &= sprintf("{{%s},{%s},%v},\n",{join(input,","),join(expect,","),desc})
+        end for
+
+    elsif slug="flatten-array" then                                             -- sequence input, expected, string desc
+        for jo in cases from 2 do
+            sequence input = extract_json_field(jo,"input"),
+                     array = rm2(extract_json_field(input,"array")),
+                    expect = extract_json_field(jo,"expected")[2..$]
+            desc = extract_json_field(jo,"description")
+            res &= sprintf("{%v,%v,%v},\n",{array,expect,desc})
+        end for
+    elsif slug="grep" then                                                      -- string filename, filetext,
+                                                                                -- then (of length 5 not 2):
+                                                                                -- string pattern, []string flags, files, expected, string desc
+                                                                                --      (with extra nesting flattened out)
+        sequence comments = extract_json_field(json,"comments")[2..$]
+        for i,c in comments do
+            if match(".txt",c) then
+                res &= sprintf(`{%v,"""%n`,{trim(c),true})
+                for j,c in comments from i+2 do
+                    bool bEnd = comments[j+1]=comments[i+1]
+                    string e = iff(bEnd?`"""},`:"")
+                    res &= sprintf("%s%s\n",{trim(c," |"),e})
+                    if bEnd then exit end if
+                end for
+            end if
+        end for
+        for j,jg in cases from 2 do
+            sequence inner_cases = extract_json_field(jg,"cases")
+            for jo in inner_cases from 2 do
+                sequence input = extract_json_field(jo,"input"),
+                         flags = extract_json_field(input,"flags")[2..$],
+                         files = extract_json_field(input,"files")[2..$],
+                        expect = extract_json_field(jo,"expected")[2..$]
+                string pattern = extract_json_field(input,"pattern")
+                desc = extract_json_field(jo,"description")
+                expect = iff(length(expect)?sprintf("`%s`",{join(expect,"`,\n `")}):"")
+                res &= sprintf("{%v,%v,%v,\n{%s},%v},\n",{pattern,flags,files,expect,desc})
+            end for
+        end for
+
+--/*
+--<do not edit>
+constant canonical_data = {
+{-1,
+ {`exercise`, `grep`},
+ {`comments`,
+  {-2, ` JSON doesn't allow for multi-line strings, so all   `,
+   ` outputs are presented here as arrays of strings.    `,
+   ` It's up to the test generator to join the lines     `,
+   ` together with line breaks.                          `,
+   `                                                     `,
+   ` The tests are divided into two groups:              `,
+   `  - Grepping a single file                           `,
+   `  - Grepping multiple files at once                  `,
+   `                                                     `,
+   ` The language track implementing this exercise       `,
+   ` should ensure that when the tests run, three files  `,
+   ` are created with the following contents. The file   `,
+   ` names and their contents are listed below:          `,
+   `                                                     `,
+   ` iliad.txt                                           `,
+   `   ---------------------------------------------     `,
+   `   |Achilles sing, O Goddess! Peleus' son;     |     `,
+   `   |His wrath pernicious, who ten thousand woes|     `,
+   `   |Caused to Achaia's host, sent many a soul  |     `,
+   `   |Illustrious into Ades premature,           |     `,
+   `   |And Heroes gave (so stood the will of Jove)|     `,
+   `   |To dogs and to all ravening fowls a prey,  |     `,
+   `   |When fierce dispute had separated once     |     `,
+   `   |The noble Chief Achilles from the son      |     `,
+   `   |Of Atreus, Agamemnon, King of men.         |     `,
+   `   ---------------------------------------------     `,
+   `                                                     `,
+   ` midsummer-night.txt                                 `,
+   `   -----------------------------------------------   `,
+   `   |I do entreat your grace to pardon me.        |   `,
+   `   |I know not by what power I am made bold,     |   `,
+   `   |Nor how it may concern my modesty,           |   `,
+   `   |In such a presence here to plead my thoughts;|   `,
+   `   |But I beseech your grace that I may know     |   `,
+   `   |The worst that may befall me in this case,   |   `,
+   `   |If I refuse to wed Demetrius.                |   `,
+   `   -----------------------------------------------   `,
+   `                                                     `,
+   ` paradise-lost.txt                                   `,
+   `   ------------------------------------------------- `,
+   `   |Of Mans First Disobedience, and the Fruit      | `,
+   `   |Of that Forbidden Tree, whose mortal tast      | `,
+   `   |Brought Death into the World, and all our woe, | `,
+   `   |With loss of Eden, till one greater Man        | `,
+   `   |Restore us, and regain the blissful Seat,      | `,
+   `   |Sing Heav'nly Muse, that on the secret top     | `,
+   `   |Of Oreb, or of Sinai, didst inspire            | `,
+   `   |That Shepherd, who first taught the chosen Seed| `,
+   `   ------------------------------------------------- `}},
+ {`cases`,
+  {-2,
+   {-1, {`description`, `Test grepping a single file`},
+    {`cases`,
+     {-2,
+      {-1, {`uuid`, `9049fdfd-53a7-4480-a390-375203837d09`},
+       {`description`, `One file, one match, no flags`},
+       {`property`, `grep`},
+       {`input`,
+        {-1, {`pattern`, `Agamemnon`}, {`flags`, {-2}},
+         {`files`, {-2, `iliad.txt`}}}},
+       {`expected`, {-2, `Of Atreus, Agamemnon, King of men.`}}},
+      {-1, {`uuid`, `76519cce-98e3-46cd-b287-aac31b1d77d6`},
+       {`description`, `One file, one match, print line numbers flag`},
+       {`property`, `grep`},
+       {`input`,
+        {-1, {`pattern`, `Forbidden`}, {`flags`, {-2, `-n`}},
+         {`files`, {-2, `paradise-lost.txt`}}}},
+       {`expected`, {-2, `2:Of that Forbidden Tree, whose mortal tast`}}},
+      {-1, {`uuid`, `af0b6d3c-e0e8-475e-a112-c0fc10a1eb30`},
+       {`description`, `One file, one match, case-insensitive flag`},
+       {`property`, `grep`},
+       {`input`,
+        {-1, {`pattern`, `FORBIDDEN`}, {`flags`, {-2, `-i`}},
+         {`files`, {-2, `paradise-lost.txt`}}}},
+       {`expected`, {-2, `Of that Forbidden Tree, whose mortal tast`}}},
+      {-1, {`uuid`, `ff7af839-d1b8-4856-a53e-99283579b672`},
+       {`description`, `One file, one match, print file names flag`},
+       {`property`, `grep`},
+       {`input`,
+        {-1, {`pattern`, `Forbidden`}, {`flags`, {-2, `-l`}},
+         {`files`, {-2, `paradise-lost.txt`}}}},
+       {`expected`, {-2, `paradise-lost.txt`}}},
+      {-1, {`uuid`, `8625238a-720c-4a16-81f2-924ec8e222cb`},
+       {`description`, `One file, one match, match entire lines flag`},
+       {`property`, `grep`},
+       {`input`,
+        {-1, {`pattern`, `With loss of Eden, till one greater Man`},
+         {`flags`, {-2, `-x`}}, {`files`, {-2, `paradise-lost.txt`}}}},
+       {`expected`, {-2, `With loss of Eden, till one greater Man`}}},
+      {-1, {`uuid`, `2a6266b3-a60f-475c-a5f5-f5008a717d3e`},
+       {`description`, `One file, one match, multiple flags`},
+       {`property`, `grep`},
+       {`input`,
+        {-1, {`pattern`, `OF ATREUS, Agamemnon, KIng of MEN.`},
+         {`flags`, {-2, `-n`, `-i`, `-x`}}, {`files`, {-2, `iliad.txt`}}}},
+       {`expected`, {-2, `9:Of Atreus, Agamemnon, King of men.`}}},
+      {-1, {`uuid`, `842222da-32e8-4646-89df-0d38220f77a1`},
+       {`description`, `One file, several matches, no flags`},
+       {`property`, `grep`},
+       {`input`,
+        {-1, {`pattern`, `may`}, {`flags`, {-2}},
+         {`files`, {-2, `midsummer-night.txt`}}}},
+       {`expected`,
+        {-2, `Nor how it may concern my modesty,`,
+         `But I beseech your grace that I may know`,
+         `The worst that may befall me in this case,`}}},
+      {-1, {`uuid`, `4d84f45f-a1d8-4c2e-a00e-0b292233828c`},
+       {`description`, `One file, several matches, print line numbers flag`},
+       {`property`, `grep`},
+       {`input`,
+        {-1, {`pattern`, `may`}, {`flags`, {-2, `-n`}},
+         {`files`, {-2, `midsummer-night.txt`}}}},
+       {`expected`,
+        {-2, `3:Nor how it may concern my modesty,`,
+         `5:But I beseech your grace that I may know`,
+         `6:The worst that may befall me in this case,`}}},
+      {-1, {`uuid`, `0a483b66-315b-45f5-bc85-3ce353a22539`},
+       {`description`, `One file, several matches, match entire lines flag`},
+       {`property`, `grep`},
+       {`input`,
+        {-1, {`pattern`, `may`}, {`flags`, {-2, `-x`}},
+         {`files`, {-2, `midsummer-night.txt`}}}}, {`expected`, {-2}}},
+      {-1, {`uuid`, `3d2ca86a-edd7-494c-8938-8eeed1c61cfa`},
+       {`description`, `One file, several matches, case-insensitive flag`},
+       {`property`, `grep`},
+       {`input`,
+        {-1, {`pattern`, `ACHILLES`}, {`flags`, {-2, `-i`}},
+         {`files`, {-2, `iliad.txt`}}}},
+       {`expected`,
+        {-2, `Achilles sing, O Goddess! Peleus' son;`,
+         `The noble Chief Achilles from the son`}}},
+      {-1, {`uuid`, `1f52001f-f224-4521-9456-11120cad4432`},
+       {`description`, `One file, several matches, inverted flag`},
+       {`property`, `grep`},
+       {`input`,
+        {-1, {`pattern`, `Of`}, {`flags`, {-2, `-v`}},
+         {`files`, {-2, `paradise-lost.txt`}}}},
+       {`expected`,
+        {-2, `Brought Death into the World, and all our woe,`,
+         `With loss of Eden, till one greater Man`,
+         `Restore us, and regain the blissful Seat,`,
+         `Sing Heav'nly Muse, that on the secret top`,
+         `That Shepherd, who first taught the chosen Seed`}}},
+      {-1, {`uuid`, `7a6ede7f-7dd5-4364-8bf8-0697c53a09fe`},
+       {`description`, `One file, no matches, various flags`},
+       {`property`, `grep`},
+       {`input`,
+        {-1, {`pattern`, `Gandalf`},
+         {`flags`, {-2, `-n`, `-l`, `-x`, `-i`}},
+         {`files`, {-2, `iliad.txt`}}}}, {`expected`, {-2}}},
+      {-1, {`uuid`, `3d3dfc23-8f2a-4e34-abd6-7b7d140291dc`},
+       {`description`,
+        `One file, one match, file flag takes precedence over line flag`},
+       {`property`, `grep`},
+       {`input`,
+        {-1, {`pattern`, `ten`}, {`flags`, {-2, `-n`, `-l`}},
+         {`files`, {-2, `iliad.txt`}}}}, {`expected`, {-2, `iliad.txt`}}},
+      {-1, {`uuid`, `87b21b24-b788-4d6e-a68b-7afe9ca141fe`},
+       {`description`,
+        `One file, several matches, inverted and match entire lines flags`},
+       {`property`, `grep`},
+       {`input`,
+        {-1, {`pattern`, `Illustrious into Ades premature,`},
+         {`flags`, {-2, `-x`, `-v`}}, {`files`, {-2, `iliad.txt`}}}},
+       {`expected`,
+        {-2, `Achilles sing, O Goddess! Peleus' son;`,
+         `His wrath pernicious, who ten thousand woes`,
+         `Caused to Achaia's host, sent many a soul`,
+         `And Heroes gave (so stood the will of Jove)`,
+         `To dogs and to all ravening fowls a prey,`,
+         `When fierce dispute had separated once`,
+         `The noble Chief Achilles from the son`,
+         `Of Atreus, Agamemnon, King of men.`}}}}}},
+   {-1, {`description`, `Test grepping multiples files at once`},
+    {`cases`,
+     {-2,
+      {-1, {`uuid`, `ba496a23-6149-41c6-a027-28064ed533e5`},
+       {`description`, `Multiple files, one match, no flags`},
+       {`property`, `grep`},
+       {`input`,
+        {-1, {`pattern`, `Agamemnon`}, {`flags`, {-2}},
+         {`files`,
+          {-2, `iliad.txt`, `midsummer-night.txt`, `paradise-lost.txt`}}}},
+       {`expected`, {-2, `iliad.txt:Of Atreus, Agamemnon, King of men.`}}},
+      {-1, {`uuid`, `4539bd36-6daa-4bc3-8e45-051f69f5aa95`},
+       {`description`, `Multiple files, several matches, no flags`},
+       {`property`, `grep`},
+       {`input`,
+        {-1, {`pattern`, `may`}, {`flags`, {-2}},
+         {`files`,
+          {-2, `iliad.txt`, `midsummer-night.txt`, `paradise-lost.txt`}}}},
+       {`expected`,
+        {-2, `midsummer-night.txt:Nor how it may concern my modesty,`,
+         `midsummer-night.txt:But I beseech your grace that I may know`,
+         `midsummer-night.txt:The worst that may befall me in this case,`}}},
+      {-1, {`uuid`, `9fb4cc67-78e2-4761-8e6b-a4b57aba1938`},
+       {`description`,
+        `Multiple files, several matches, print line numbers flag`},
+       {`property`, `grep`},
+       {`input`,
+        {-1, {`pattern`, `that`}, {`flags`, {-2, `-n`}},
+         {`files`,
+          {-2, `iliad.txt`, `midsummer-night.txt`, `paradise-lost.txt`}}}},
+       {`expected`,
+        {-2,
+         `midsummer-night.txt:5:But I beseech your grace that I may know`,
+         `midsummer-night.txt:6:The worst that may befall me in this case,`,
+         `paradise-lost.txt:2:Of that Forbidden Tree, whose mortal tast`,
+         `paradise-lost.txt:6:Sing Heav'nly Muse, that on the secret top`}}},
+      {-1, {`uuid`, `aeee1ef3-93c7-4cd5-af10-876f8c9ccc73`},
+       {`description`, `Multiple files, one match, print file names flag`},
+       {`property`, `grep`},
+       {`input`,
+        {-1, {`pattern`, `who`}, {`flags`, {-2, `-l`}},
+         {`files`,
+          {-2, `iliad.txt`, `midsummer-night.txt`, `paradise-lost.txt`}}}},
+       {`expected`, {-2, `iliad.txt`, `paradise-lost.txt`}}},
+      {-1, {`uuid`, `d69f3606-7d15-4ddf-89ae-01df198e6b6c`},
+       {`description`,
+        `Multiple files, several matches, case-insensitive flag`},
+       {`property`, `grep`},
+       {`input`,
+        {-1, {`pattern`, `TO`}, {`flags`, {-2, `-i`}},
+         {`files`,
+          {-2, `iliad.txt`, `midsummer-night.txt`, `paradise-lost.txt`}}}},
+       {`expected`,
+        {-2, `iliad.txt:Caused to Achaia's host, sent many a soul`,
+         `iliad.txt:Illustrious into Ades premature,`,
+         `iliad.txt:And Heroes gave (so stood the will of Jove)`,
+         `iliad.txt:To dogs and to all ravening fowls a prey,`,
+         `midsummer-night.txt:I do entreat your grace to pardon me.`,
+         `midsummer-night.txt:In such a presence here to plead my thoughts;`,
+         `midsummer-night.txt:If I refuse to wed Demetrius.`,
+         `paradise-lost.txt:Brought Death into the World, and all our woe,`,
+         `paradise-lost.txt:Restore us, and regain the blissful Seat,`,
+         `paradise-lost.txt:Sing Heav'nly Muse, that on the secret top`}}},
+      {-1, {`uuid`, `82ef739d-6701-4086-b911-007d1a3deb21`},
+       {`description`, `Multiple files, several matches, inverted flag`},
+       {`property`, `grep`},
+       {`input`,
+        {-1, {`pattern`, `a`}, {`flags`, {-2, `-v`}},
+         {`files`,
+          {-2, `iliad.txt`, `midsummer-night.txt`, `paradise-lost.txt`}}}},
+       {`expected`,
+        {-2, `iliad.txt:Achilles sing, O Goddess! Peleus' son;`,
+         `iliad.txt:The noble Chief Achilles from the son`,
+         `midsummer-night.txt:If I refuse to wed Demetrius.`}}},
+      {-1, {`uuid`, `77b2eb07-2921-4ea0-8971-7636b44f5d29`},
+       {`description`, `Multiple files, one match, match entire lines flag`},
+       {`property`, `grep`},
+       {`input`,
+        {-1, {`pattern`, `But I beseech your grace that I may know`},
+         {`flags`, {-2, `-x`}},
+         {`files`,
+          {-2, `iliad.txt`, `midsummer-night.txt`, `paradise-lost.txt`}}}},
+       {`expected`,
+        {-2, `midsummer-night.txt:But I beseech your grace that I may know`}}},
+      {-1, {`uuid`, `e53a2842-55bb-4078-9bb5-04ac38929989`},
+       {`description`, `Multiple files, one match, multiple flags`},
+       {`property`, `grep`},
+       {`input`,
+        {-1, {`pattern`, `WITH LOSS OF EDEN, TILL ONE GREATER MAN`},
+         {`flags`, {-2, `-n`, `-i`, `-x`}},
+         {`files`,
+          {-2, `iliad.txt`, `midsummer-night.txt`, `paradise-lost.txt`}}}},
+       {`expected`,
+        {-2, `paradise-lost.txt:4:With loss of Eden, till one greater Man`}}},
+      {-1, {`uuid`, `9c4f7f9a-a555-4e32-bb06-4b8f8869b2cb`},
+       {`description`, `Multiple files, no matches, various flags`},
+       {`property`, `grep`},
+       {`input`,
+        {-1, {`pattern`, `Frodo`}, {`flags`, {-2, `-n`, `-l`, `-x`, `-i`}},
+         {`files`,
+          {-2, `iliad.txt`, `midsummer-night.txt`, `paradise-lost.txt`}}}},
+       {`expected`, {-2}}},
+      {-1, {`uuid`, `ba5a540d-bffd-481b-bd0c-d9a30f225e01`},
+       {`description`,
+        `Multiple files, several matches, file flag takes precedence over line number flag`},
+       {`property`, `grep`},
+       {`input`,
+        {-1, {`pattern`, `who`}, {`flags`, {-2, `-n`, `-l`}},
+         {`files`,
+          {-2, `iliad.txt`, `midsummer-night.txt`, `paradise-lost.txt`}}}},
+       {`expected`, {-2, `iliad.txt`, `paradise-lost.txt`}}},
+      {-1, {`uuid`, `ff406330-2f0b-4b17-9ee4-4b71c31dd6d2`},
+       {`description`,
+        `Multiple files, several matches, inverted and match entire lines flags`},
+       {`property`, `grep`},
+       {`input`,
+        {-1, {`pattern`, `Illustrious into Ades premature,`},
+         {`flags`, {-2, `-x`, `-v`}},
+         {`files`,
+          {-2, `iliad.txt`, `midsummer-night.txt`, `paradise-lost.txt`}}}},
+       {`expected`,
+        {-2, `iliad.txt:Achilles sing, O Goddess! Peleus' son;`,
+         `iliad.txt:His wrath pernicious, who ten thousand woes`,
+         `iliad.txt:Caused to Achaia's host, sent many a soul`,
+         `iliad.txt:And Heroes gave (so stood the will of Jove)`,
+         `iliad.txt:To dogs and to all ravening fowls a prey,`,
+         `iliad.txt:When fierce dispute had separated once`,
+         `iliad.txt:The noble Chief Achilles from the son`,
+         `iliad.txt:Of Atreus, Agamemnon, King of men.`,
+         `midsummer-night.txt:I do entreat your grace to pardon me.`,
+         `midsummer-night.txt:I know not by what power I am made bold,`,
+         `midsummer-night.txt:Nor how it may concern my modesty,`,
+         `midsummer-night.txt:In such a presence here to plead my thoughts;`,
+         `midsummer-night.txt:But I beseech your grace that I may know`,
+         `midsummer-night.txt:The worst that may befall me in this case,`,
+         `midsummer-night.txt:If I refuse to wed Demetrius.`,
+         `paradise-lost.txt:Of Mans First Disobedience, and the Fruit`,
+         `paradise-lost.txt:Of that Forbidden Tree, whose mortal tast`,
+         `paradise-lost.txt:Brought Death into the World, and all our woe,`,
+         `paradise-lost.txt:With loss of Eden, till one greater Man`,
+         `paradise-lost.txt:Restore us, and regain the blissful Seat,`,
+         `paradise-lost.txt:Sing Heav'nly Muse, that on the secret top`,
+         `paradise-lost.txt:Of Oreb, or of Sinai, didst inspire`,
+         `paradise-lost.txt:That Shepherd, who first taught the chosen Seed`}}}}}}}}}
+}
+--</do not edit>
+--*/
+    else
+        res = ppf(json,{pp_Nest,1})
+--      res = print_json("",json)
+    end if
+    return res
+end function
+
+function s(integer n,f=true) return iff((n=1)=f?"":"s") end function
+
+function read_dir(string fullpath)
+    object d = dir(fullpath)
+    if d=-1 then throw("cannot read "&fullpath) end if
+    return filter(vslice(d,1),"out",{".",".."})
+end function
+
+function strip_reimplements(sequence json, string slug)
+    integer lj = length(json)
+    if json[1]=JSON_OBJECT then -- top_level
+        assert(lj>=3)
+        assert(json[2][1]=`exercise`)
+        assert(json[2][2]=slug)
+        integer l = iff(json[3][1]=`comments`?4:3)
+        assert(lj=l)
+        assert(json[l][1]=`cases`)
+        json[l][2]=strip_reimplements(json[l][2],slug)
+    elsif json[1]=JSON_ARRAY then -- cases set
+        sequence reimplemented = repeat(false,lj),
+                 uuids = repeat(0,lj),
+                 reimplements = repeat(0,lj)
+        bool second_pass_rqd = false
+        for i,ji in json from 2 do
+            assert(ji[1]=JSON_OBJECT)
+            string ji21 = ji[2][1]
+            if ji21=`uuid` then
+                uuids[i] = ji[2][2]
+                if ji[3][1]=`reimplements` then
+                    -- aside: sgf-parsing reimplements [26] in [25]...
+                    second_pass_rqd = true
+                    reimplements[i] = ji[3][2]      -- save
+                    json[i] = ji[1..2] & ji[4..$]   -- bin
+                end if
+            else
+                assert(ji21=`description`)
+                integer sk = iff(ji[3][1]=`comments`?4:3),
+                       lji = length(ji)
+                ji = 0 -- (kill refcount)
+                for k=sk to lji do
+                    assert(json[i][k][1]=`cases`)
+                    json[i][k][2] = strip_reimplements(json[i][k][2],slug)
+                end for
+            end if
+        end for
+        if second_pass_rqd then
+            for i,ri in reimplements do
+                if ri!=0 then
+                    integer k = find(ri,uuids)
+                    reimplemented[k] = true
+                end if
+            end for
+            sequence nj = {}
+            for i,ji in json do
+                if not reimplemented[i] then
+                    nj = append(nj,ji)
+                end if
+            end for
+            assert(nj[1]=JSON_ARRAY)    
+            json = nj
+        end if
+    else
+        ?9/0
+    end if
+    return json
+end function
+
+constant cd_hdr = """
+-- created automatically by the test generator and brutally overwritten on a regular basis.
+-- To permanently mark a test as ignoring all of this copy the following into test.exw:
+--<do not edit>
+--ignore canonical_data.e
+--</do not edit>
+-- Otherwise copy/paste this lot (rather than include, so it can verify up-to-date-ness):
+--  **NB** If this begins {-1,{`exercise`,`<slug_name>`, then it's still raw json, and the
+--          test generator needs updating to munge it, or you can just ignore it as above.
+--<do not edit>
+constant canonical_data = {
+""",
+cd_tail = """
+}
+--</do not edit>
+
+"""
+
+
+procedure test()
+--DEV rework this: start from phix_exercises, fetch from prob_spec_dir on demand..
+    sequence ped = read_dir(phix_exercises),
+             esd = read_dir(exercise_specs),
+         ignored = difference(ped,esd,false)
+    integer le = length(esd),
+            lp = length(ped),
+            li = length(ignored)
+    if li then -- error??
+        printf(1,"%d ignored exercise%s\n",{li,s(li)})
+        ?ignored
+        ped = difference(ped,ignored,false)
+    end if
+    sequence deprecated = {},
+             wo_canonic = {},
+             with_canon = {},
+             canon_json = {}
+
+    for es in esd do
+        string dot_deprec = join_path({exercise_specs,es,".deprecated"}),
+               canon_data = join_path({exercise_specs,es,"canonical-data.json"})
+        if file_exists(dot_deprec) then
+            deprecated &= {es}
+        elsif not file_exists(canon_data) then
+            wo_canonic &= {es}  
+        else
+            with_canon &= {es}
+            object json = parse_json(get_text(canon_data))
+            if json={JSON_INVALID} then
+                crash("INVALID_JSON:%s\n",{canon_data})
+            end if
+            json = strip_reimplements(json,es)
+            canon_json &= {json}
+        end if
+    end for
+    sequence ipd = intersection(ped,deprecated),
+             ipo = intersection(ped,wo_canonic),
+             ipw = sort(intersection(ped,with_canon)),
+         non_dep = difference(esd,deprecated), -- == sort(union(ipo,ipw))
+        not_phix = difference(non_dep,ped,false)
+    li = length(ipd)
+    if li then -- error?
+--      printf(1,"%d deprecated phix exercise%s\n",{ld,s(ld)})
+        throw("%d deprecated phix exercise%s",{li,s(li)})
+    end if
+    integer ld = length(deprecated),
+            lo = length(wo_canonic),
+            lw = length(with_canon),
+            po = length(ipo),
+            pw = length(ipw),
+            np = length(not_phix)
+--  ?deprecated
+    printf(1,"%d exercise spec%s loaded (%d active)\n",{le,s(le),le-ld})
+    printf(1,"%d deprecated exercise%s (0 phix)\n",{ld,s(ld)})
+    printf(1,"%d phix exercise%s implemented\n",{lp,s(lp)})
+    printf(1,"%d exercise%s not implemented in phix\n",{np,s(np)})
+--  ?not_phix -- good, 48 -- run (eg) F:\misc\phix\phix>bin\configlet create --practice-exercise zipper
+--/*
+{"affine-cipher","dot-dsl","error-handling","etl","flatten-array","food-chain",
+ "go-counting","grade-school","grep","hangman","killer-sudoku-helper","kindergarten-garden","knapsack",
+ "largest-series-product","ledger","lens-person","linked-list","matrix","meetup","micro-blog","nth-prime",
+ "paasio","parallel-letter-frequency","pascals-triangle","phone-number","pov","prime-factors","proverb",
+ "rational-numbers","rectangles","resistor-color-trio","rest-api","rotational-cipher","run-length-encoding",
+ "satellite","say","series","sgf-parsing","simple-cipher","simple-linked-list","sublist","tournament",
+ "tree-building","twelve-days","word-count","wordy","zipper"}
+--*/
+    printf(1,"%d exercise%s without canonical data\n",{lo,s(lo)})
+    printf(1,"%d phix exercise%s without canonical data\n",{po,s(po)})
+--  ?ipo -- (robot-name)
+    printf(1,"%d exercise%s with canonical data\n",{lw,s(lw)})
+    printf(1,"%d phix exercise%s with canonical data\n",{pw,s(pw)})
+--  ?wo_canonic -- (includes robot_name)
+    -- (but the following breakdown is of ipw, not ped aka ipo&ipw:)
+    sequence no_can = {},
+             ig_can = {},
+            in_date = {},
+           out_date = {} 
+    for pe in ipw do
+        string test_exw = join_path({phix_exercises,pe,"test.exw"}),
+                canon_e = join_path({phix_exercises,pe,"canonical_data.e"})
+        integer cdx = find(pe,with_canon)
+        assert(cdx!=0)
+        integer fn = open(canon_e,"w")
+        puts(fn,cd_hdr)
+        string cds = generate_tests(pe,canon_json[cdx])
+--      string cds = ppf(canon_json[cdx],{pp_Nest,1})
+        puts(fn,cds)
+        puts(fn,cd_tail)
+        close(fn)
+--?{pe,cdx}
+        if not file_exists(test_exw) then
+            crash("file does not exist: "&test_exw)
+--no: always write, then no_can if test_exw contains no <do not edit> markers,
+-- in_date if that matches what we just wrote, and out_date should it not.
+--Note this ignores tests.toml and any include=false that might contain.
+--Instead, test.exw should explicitly skip any tests it must by name, and the
+--maintainer of test.exw should manually keep said flag in tests.toml in sync 
+--but nothing at all even tries to automatically verify that. New unseen test
+--names suddenly appearing in tests.exw should be expected to cause a hiccup,
+--caught soon after you *manually* copy/paste canonical_data.e into test.exw.
+--Any "include canonical_data.e" statement found triggers a fatal error - if
+--that were allowed tests would get updated, but never actually tested - the
+--latter should of course be done manually after any manual edit of test.exw.
+--      elsif not file_exists(canon_e) then
+--          no_can &= {pe}  
+        else
+            string tt = get_text(test_exw)
+            tt = substitute(tt,"\r\n","\n")
+            sequence lines = split(tt,"\n")
+            for line in lines do
+                if begins("include",line)
+                and match("canonical_data.e",line) then
+                    crash("include canonical_data.e not permitted")
+                end if
+            end for
+            integer dne = match("--<do not edit>",tt)
+            if dne then
+                integer edn = match("--</do not edit>",tt,dne)
+                assert(edn!=0)
+                tt = trim(tt[find('>',tt,dne)+1..edn-1])
+                if begins("constant canonical_data = {",tt) then
+                    assert(tt[$]='}')
+                    tt = tt[find('{',tt)+1..$-1]
+                end if
+            end if
+            if tt="--ignore canonical_data.e" then
+                ig_can &= {pe}
+            elsif dne=0 then -- needs work!
+                no_can &= {pe}
+            elsif trim(tt)=trim(cds) then
+                in_date &= {pe}
+            else
+--?shorten(tt)
+--?shorten(cds)
+                out_date &= {pe}
+            end if  
+        end if  
+    end for
+    integer lnc = length(no_can),
+            lig = length(ig_can),
+            lid = length(in_date),
+            lod = length(out_date)
+--  ?ped
+    printf(1,"%d phix exercise%s deliberately ignore%s canonical data\n",{lig,s(lig),s(lig,false)})
+    printf(1,"%d phix exercise%s not using canonical data\n",{lnc,s(lnc)})
+    if lnc then ?no_can end if  -- should really be empty
+    printf(1,"%d phix exercise%s up to date\n",{lid,s(lid)})
+    printf(1,"%d phix exercise%s out of date\n",{lod,s(lod)})
+    if lod then ?out_date end if
+    ?"done"
+    wait_key()
+end procedure
+test()
+

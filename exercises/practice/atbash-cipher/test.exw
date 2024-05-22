@@ -1,4 +1,9 @@
 include atbash-cipher.e
+
+-- (I gave it a go, but...)
+--<do not edit>
+--ignore canonical_data.e
+--</do not edit>
                                                                                                                                                     
 constant tests = {
     {"encode yes","yes","bvh"},
@@ -13,7 +18,7 @@ constant tests = {
 
 set_test_verbosity(TEST_SHOW_ALL)
 for t in tests do
-    string{desc,phrase,expected} = t
+    string {desc,phrase,expected} = t
     test_equal(atbash(phrase),expected,desc)
     test_equal(filter(atbash(expected),"out"," "),
                filter(lower(phrase),"out"," ,."),desc)

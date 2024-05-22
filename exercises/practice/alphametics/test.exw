@@ -1,5 +1,9 @@
 include alphametics.e
 
+--<do not edit>
+--ignore canonical_data.e
+--</do not edit>
+
 constant tests = {
     {"I + BB == ILL",
      "1 + 99 == 100"},

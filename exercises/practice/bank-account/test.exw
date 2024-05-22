@@ -1,5 +1,9 @@
 include bank-account.e
                                                                                                                                                     
+--<do not edit>
+--ignore canonical_data.e
+--</do not edit>
+
 procedure test_sequential_open_balance_close()
     // open account
     integer amt = 10

@@ -1,55 +1,50 @@
 include minesweeper.e
 
-constant tests = {{"no rows",{}},
-                  {"no columns",{{"", ""}}},
-                  {"no mines",                 {{"...", "..."},
-                                                {"...", "..."},
-                                                {"...", "..."}}},
+--<do not edit>
+constant canonical_data = {
+{{},"no rows"},
+{{{"",""}},"no columns"},
+{{{"   ","   "},
+  {"   ","   "},
+  {"   ","   "}},"no mines"},
+{{{"***","***"},
+  {"***","***"},
+  {"***","***"}},"minefield with only mines"},
+{{{"   ","111"},
+  {" * ","1*1"},
+  {"   ","111"}},"mine surrounded by spaces"},
+{{{"***","***"},
+  {"* *","*8*"},
+  {"***","***"}},"space surrounded by mines"},
+{{{" * * ","1*2*1"}},"horizontal line"},
+{{{"*   *","*1 1*"}},"horizontal line, mines at edges"},
+{{{" ","1"},
+  {"*","*"},
+  {" ","2"},
+  {"*","*"},
+  {" ","1"}},"vertical line"},
+{{{"*","*"},
+  {" ","1"},
+  {" "," "},
+  {" ","1"},
+  {"*","*"}},"vertical line, mines at edges"},
+{{{"  *  "," 2*2 "},
+  {"  *  ","25*52"},
+  {"*****","*****"},
+  {"  *  ","25*52"},
+  {"  *  "," 2*2 "}},"cross"},
+{{{" *  * ","1*22*1"},
+  {"  *   ","12*322"},
+  {"    * "," 123*2"},
+  {"   * *","112*4*"},
+  {" *  * ","1*22*2"},
+  {"      ","111111"}},"large minefield"},
+}
+--</do not edit>
 
-                  {"minefield with only mines",{{"***", "***"},
-                                                {"***", "***"},
-                                                {"***", "***"}}},
-
-                  {"mine surrounded by spaces",{{"...", "111"},
-                                                {".*.", "1*1"},
-                                                {"...", "111"}}},
-
-                  {"space surrounded by mines",{{"***", "***"},
-                                                {"*.*", "*8*"},
-                                                {"***", "***"}}},
-
-                  {"horizontal line",                {{".*.*.", "1*2*1"}}},
-
-                  {"horizontal line, mines at edges",{{"*...*", "*1.1*"}}},
-
-                  {"vertical line",                {{".", "1"},
-                                                    {"*", "*"},
-                                                    {".", "2"},
-                                                    {"*", "*"},
-                                                    {".", "1"}}},
-
-                  {"vertical line, mines at edges",{{"*", "*"},
-                                                    {".", "1"},
-                                                    {".", "."},
-                                                    {".", "1"},
-                                                    {"*", "*"}}},
-
-                  {"cross",           {{"..*..", ".2*2."},
-                                       {"..*..", "25*52"},
-                                       {"*****", "*****"},
-                                       {"..*..", "25*52"},
-                                       {"..*..", ".2*2."}}},
-
-                  {"large minefield",{{".*..*.", "1*22*1"},
-                                      {"..*...", "12*322"},
-                                      {"....*.", ".123*2"},
-                                      {"...*.*", "112*4*"},
-                                      {".*..*.", "1*22*2"},
-                                      {"......", "111111"}}}}
-                    
 set_test_verbosity(TEST_SHOW_ALL)
-for t in tests do
-    {string desc, sequence be} = t
+for t in canonical_data do
+    {sequence be, string desc} = t
     sequence {board,expect} = columnize(be,{1,2})
     test_equal(annotate(board),expect,desc)
 end for

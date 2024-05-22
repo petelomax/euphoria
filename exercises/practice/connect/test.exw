@@ -1,53 +1,53 @@
 include connect.e
 
--- exercise gets a space/tab-stripped sequence of strings
-constant tests = {
-{"an empty board has no winner","","""
+--<do not edit>
+constant canonical_data = {
+{"""
 . . . . .
  . . . . .
   . . . . .
    . . . . .
-    . . . . ."""},
-{"X can win on a 1x1 board","X","""
-X"""},
-{"O can win on a 1x1 board","O","""
-O"""},
-{"only edges does not make a winner","","""
+    . . . . .""","","an empty board has no winner"},
+{"""
+X""","X","X can win on a 1x1 board"},
+{"""
+O""","O","O can win on a 1x1 board"},
+{"""
 O O O X
  X . . X
   X . . X
-   X O O O"""},
-{"illegal diagonal does not make a winner","","""
+   X O O O""","","only edges does not make a winner"},
+{"""
 X O . .
  O X X X
   O X O .
    . O X .
-    X X O O"""},
-{"nobody wins crossing adjacent angles","","""
+    X X O O""","","illegal diagonal does not make a winner"},
+{"""
 X . . .
  . X O .
   O . X O
    . O . X
-    . . O ."""},
-{"X wins crossing from left to right","X","""
+    . . O .""","","nobody wins crossing adjacent angles"},
+{"""
 . O . .
  O X X X
   O X O .
    X X O X
-    . O X ."""},
-{"O wins crossing from top to bottom","O","""
+    . O X .""","X","X wins crossing from left to right"},
+{"""
 . O . .
  O X X X
   O O O .
    X X O X
-    . O X ."""},
-{"X wins using a convoluted path","X","""
+    . O X .""","O","O wins crossing from top to bottom"},
+{"""
 . X X . .
  X . X . X
   . X . X .
    . X X . .
-    O O O O O"""},
-{"X wins using a spiral path","X","""
+    O O O O O""","X","X wins using a convoluted path"},
+{"""
 O X X X X X X X X
  O X O O O O O O O
   O X O X X X X X O
@@ -56,13 +56,16 @@ O X X X X X X X X
      O X O O O X O X O
       O X X X X X O X O
        O O O O O O O X O
-        X X X X X X X X O"""}
+        X X X X X X X X O""","X","X wins using a spiral path"},
 }
+--</do not edit>
+
 set_test_verbosity(TEST_SHOW_ALL)
---set_test_verbosity(TEST_SHOW_FAILED)
-for t in tests do
-    string res = result_of(split(substitute_all(t[3]," \t",{"",""}),'\n'))
-    test_equal(res,t[2],t[1])
+for t in canonical_data do
+    string {board,expect,desc} = t
+    -- exercise gets a space/tab-stripped sequence of strings:
+    sequence brd = split(substitute_all(board," \t",{"",""}),'\n')
+    test_equal(result_of(brd),expect,desc)
 end for
 test_summary()
 

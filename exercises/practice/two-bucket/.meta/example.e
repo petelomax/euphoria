@@ -6,8 +6,8 @@ function solve_rec(integer c1, c2, steps)
     -- used to index seen, and steps is a simple counter
     object soln = false
     if not seen[c1+1,c2+1] then
-        if c1=goal then return {"one",steps,c2,""} end if
-        if c2=goal then return {"two",steps,c1,""} end if
+        if c1=goal then return {"one",steps,c2} end if
+        if c2=goal then return {"two",steps,c1} end if
         integer a1 = min(c1,s2-c2),
                 a2 = min(c2,s1-c1)
         sequence actions = {{a1>0,c1-a1,c2+a1}, -- pour b1 into b2?
@@ -31,7 +31,6 @@ function solve_rec(integer c1, c2, steps)
 end function
 
 global function solve(integer sizeBucketOne, sizeBucketTwo, goalAmount, string startBucket)
---  crash("please implement solve")
     seen = repeat(repeat(false,sizeBucketTwo+1),sizeBucketOne+1)
     integer c1=0, c2=0
     if startBucket="one" then
@@ -44,7 +43,7 @@ global function solve(integer sizeBucketOne, sizeBucketTwo, goalAmount, string s
     {goal,s1,s2} = {goalAmount,sizeBucketOne,sizeBucketTwo}
     object res = solve_rec(c1,c2,1)
     if not sequence(res) then
-        res = {"",0,0,"impossible"}
+        res = "impossible"
     end if
     return res
 end function

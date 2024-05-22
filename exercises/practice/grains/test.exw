@@ -1,5 +1,9 @@
 include grains.e
 
+--<do not edit>
+--ignore canonical_data.e
+--</do not edit>
+
 set_test_verbosity(TEST_SHOW_ALL)
 --set_test_verbosity(TEST_SHOW_FAILED)
 procedure test_equal_str(object a, b, string desc)
@@ -13,7 +17,7 @@ test_equal_str(square(3),4,"grains on square 3")
 test_equal_str(square(4),8,"grains on square 4")
 test_equal_str(square(16),32768,"grains on square 16") 
 test_equal_str(square(32),2147483648,"grains on square 32") 
---test_equal(square(64),9223372036854775808,"grains on square 64") -- nah
+--test_equal(square(64),9223372036854775808,"grains on square 64") -- nah (fine on 64bit)
 --test_equal_str(square(64),#8000000000000000,"grains on square 64") -- ok
 --test_equal_str(square(64),"9223372036854775808","grains on square 64") --ok
 test_equal_str(square(64),power(2,63),"grains on square 64") -- but best

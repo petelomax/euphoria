@@ -1,5 +1,9 @@
 include clock.e
 
+--<do not edit>
+--ignore canonical_data.e
+--</do not edit>
+
 set_test_verbosity(TEST_SHOW_ALL)
 procedure testequal(string b,a,d) test_equal(a,b,d) end procedure
 testequal("08:00",clock_str(create_clock(8, 0)),"Create a new clock with an initial time - on the hour")

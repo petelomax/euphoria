@@ -1,5 +1,9 @@
 include word-search.e
 
+--<do not edit>
+--ignore canonical_data.e
+--</do not edit>
+
 set_test_verbosity(TEST_SHOW_ALL)
 
 function eri(sequence o, e, r) return reinstate(o,r,extract(o,e)) end function

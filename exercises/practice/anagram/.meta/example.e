@@ -9,6 +9,6 @@ global function find_anagrams(string subject, sequence candidates)
             matching = append(matching, candidates[i])
         end if
     end for
-    matching = sort(matching)
+--  matching = sort(matching)
     return matching
 end function

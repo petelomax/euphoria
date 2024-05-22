@@ -21,6 +21,7 @@ end function
 
 global function make_chain(sequence dominoes)
     integer l = length(dominoes)
+    if l=0 then return {null,true} end if // stupid test
     return chain_wrec({},dominoes,repeat(false,l),-1,0,l)
 end function
 

@@ -1,5 +1,9 @@
 include dnd-character.e
 
+--<do not edit>
+--ignore canonical_data.e
+--</do not edit>
+
 set_test_verbosity(TEST_SHOW_ALL)
 --set_test_verbosity(TEST_SHOW_FAILED)
 test_equal(modifier(3),-4,"ability modifier for score 3 is -4")

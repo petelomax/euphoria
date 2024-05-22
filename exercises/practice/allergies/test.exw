@@ -1,5 +1,9 @@
 include allergies.e
 
+--<do not edit>
+--ignore canonical_data.e
+--</do not edit>
+
 set_test_verbosity(TEST_SHOW_ALL)
 --set_test_verbosity(TEST_SHOW_FAILED)
 

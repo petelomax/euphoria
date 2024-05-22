@@ -1,5 +1,18 @@
 include difference-of-squares.e
 
+--<do not edit>
+--ignore canonical_data.e
+--</do not edit>
+
+-- now, if I could construct this from the above...
+--  constant canonical_data = {
+--  {1,1,1,0},
+--  {5,225,55,170},
+--  {100,25502500,338350,25164150},
+--  }
+-- and maybe {"square of sum","sum of squares","difference of squares"}, but we'd
+-- need a matching {square_of_sum,sum_of_squares,difference_of_squares} anyway.
+
 set_test_verbosity(TEST_SHOW_ALL)
 
 -- Square the sum of the numbers up to the given number

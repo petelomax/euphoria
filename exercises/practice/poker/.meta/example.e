@@ -19,7 +19,7 @@ local function poker(string hand)
             two_pair = find(2,ranks,pair+1),
             rank3 = find(3,ranks)
     bool straight = match({1,1,1,1,1},ranks) or
-      (maxranks=1 and match({0,0,0,0,0,0,0,0},ranks)),
+      (maxranks=1 and match({0,0,0,0,0,0,0,0},ranks)=5),
          is_flush = max(suits)==5,
          full_house = maxranks=3 and pair
     if straight and ranks[1]!=0 then 
@@ -30,11 +30,11 @@ local function poker(string hand)
     if straight and is_flush    then return {9,"straight flush", high_card} end if
     if maxranks=4               then return {8,"four of a kind", find(4,ranks),rank1} end if
     if full_house               then return {7,"full house", rank3,pair} end if
-    if is_flush                 then return {6,"flush", high_card} end if
+    if is_flush                 then return {6,"flush", high_card, rr} end if
     if straight                 then return {5,"straight", high_card} end if
     if maxranks=3               then return {4,"three of a kind", rank3,rr} end if
     if pair and two_pair        then return {3,"two pair", two_pair,pair,rank1} end if
-    if pair                     then return {2,"one pair", pair} end if
+    if pair                     then return {2,"one pair", pair, rr} end if
                                      return {1,"high card",high_card,rr}
 end function
  

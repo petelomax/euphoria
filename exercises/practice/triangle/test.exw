@@ -1,5 +1,9 @@
 include triangle.e
 
+--<do not edit>
+--ignore canonical_data.e
+--</do not edit>
+
 set_test_verbosity(TEST_SHOW_ALL)
 
 test_true(is_equilateral({2,2,2}), "all sides are equal")

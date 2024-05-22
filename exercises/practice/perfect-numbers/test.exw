@@ -1,17 +1,27 @@
 include perfect-numbers.e
 
+--<do not edit>
+constant canonical_data = {
+{6,"perfect","Smallest perfect number is classified correctly"},
+{28,"perfect","Medium perfect number is classified correctly"},
+{33550336,"perfect","Large perfect number is classified correctly"},
+{12,"abundant","Smallest abundant number is classified correctly"},
+{30,"abundant","Medium abundant number is classified correctly"},
+{33550335,"abundant","Large abundant number is classified correctly"},
+{2,"deficient","Smallest prime deficient number is classified correctly"},
+{4,"deficient","Smallest non-prime deficient number is classified correctly"},
+{32,"deficient","Medium deficient number is classified correctly"},
+{33550337,"deficient","Large deficient number is classified correctly"},
+{1,"deficient","Edge case (no factors other than itself) is classified correctly"},
+{0,false,"Zero is rejected (as it is not a positive integer)"},
+{-1,false,"Negative integer is rejected (as it is not a positive integer)"},
+}
+--</do not edit>
+
 set_test_verbosity(TEST_SHOW_ALL)
-test_equal("perfect", classify(6),"Smallest perfect number is classified correctly")
-test_equal("perfect", classify(28),"Medium perfect number is classified correctly")
-test_equal("perfect", classify(33550336),"Large perfect number is classified correctly")
-test_equal("abundant", classify(12),"Smallest abundant number is classified correctly")
-test_equal("abundant", classify(30),"Medium abundant number is classified correctly")
-test_equal("abundant", classify(33550335),"Large abundant number is classified correctly")
-test_equal("deficient", classify(4),"Smallest deficient number is classified correctly")
-test_equal("deficient", classify(32),"Medium deficient number is classified correctly")
-test_equal("deficient", classify(33550337),"Large deficient number is classified correctly")
-test_equal("deficient", classify(1),"Edge case (no factors other than itself) is classified correctly")
-test_false(classify(0),"Zero is rejected (as it is not a positive integer)",)
-test_false(classify(-1),"Negative integer is rejected (as it is not a positive integer)")
+for t in canonical_data do
+    {integer n, object expected, string desc} = t
+    test_equal(classify(n),expected,desc)
+end for
 test_summary()
 

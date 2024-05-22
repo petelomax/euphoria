@@ -1,6 +1,12 @@
 
 include binary-search.e
 
+-- (expected is instead as per builtin binary_search(), ie -ve where it would go, 
+--  and certainly not 0-based indicies or their stupid -1 == "not found", hence:)
+--<do not edit>
+--ignore canonical_data.e
+--</do not edit>
+
 set_test_verbosity(TEST_SHOW_ALL)
 test_equal(my_find({6},6),1,"finds a value in a sequence with one element")
 test_equal(my_find({1,3,4,6,8,9,11},6),4,"finds a value in the middle of a sequence")
@@ -12,7 +18,7 @@ test_equal(my_find({1,3,4,6,8,9,11},7),-5,"identifies that a value is not includ
 test_equal(my_find({1,3,4,6,8,9,11},0),-1,"a value smaller than the sequence's smallest value is not found")
 test_equal(my_find({1,3,4,6,8,9,11},13),-8,"a value smaller than the sequence's largest value is not found")
 test_equal(my_find({},1),-1,"nothing is found in an empty array")
-// I don't understand what this means - ask??
+// I really don't understand what this means...
 test_equal(my_find({1,2},0),-1,"nothing is found when the left and right bounds cross")
 test_summary()
 

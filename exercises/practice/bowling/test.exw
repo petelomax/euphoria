@@ -1,5 +1,9 @@
 include bowling.e
 
+--<do not edit>
+--ignore canonical_data.e
+--</do not edit>
+
 constant roll_tests = {
     {{},-1,"invalid","rolls cannot score negative points"},
     {{},11,"exceeds pins","a roll cannot score more than 10 points"},

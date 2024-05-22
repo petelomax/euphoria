@@ -1,6 +1,14 @@
 include queen-attack.e
 
+-- I'm using "c3" not {2,2}, "here" not {-2,2},
+--  and type queen so t/f not 0/"error", plus
+--  several tests not in the canonical data.
+--<do not edit>
+--ignore canonical_data.e
+--</do not edit>
+
 set_test_verbosity(TEST_SHOW_ALL)
+
 test_false(queen("b9"),"off board")
 test_false(queen("a0"),"off board")
 test_false(queen("i5"),"off board")

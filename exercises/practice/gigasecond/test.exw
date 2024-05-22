@@ -1,6 +1,10 @@
 requires ("1.0.5") -- (bugfix: adjust_timedate() with len(td)<7)
 include gigasecond.e 
 
+--<do not edit>
+--ignore canonical_data.e
+--</do not edit>
+
 set_test_verbosity(TEST_SHOW_ALL)
 test_equal({2043,1,1,1,46,40}, add_gigasecond({2011,4,25,0,0,0}), "date only specification of time")
 test_equal({2009,2,19,1,46,40}, add_gigasecond({1977,6,13,0,0,0}), "second test for date only specification of time")

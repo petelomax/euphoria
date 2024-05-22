@@ -1,33 +1,35 @@
 include pig-latin.e
 
-constant tests = {
- {"word beginning with a", "apple", "appleay"},
- {"word beginning with e", "ear", "earay"},
- {"word beginning with i", "igloo", "iglooay"},
- {"word beginning with o", "object", "objectay"},
- {"word beginning with u", "under", "underay"},
- {"word beginning with a vowel and followed by a qu", "equal", "equalay"},
- {"word beginning with p", "pig", "igpay"},
- {"word beginning with k", "koala", "oalakay"},
- {"word beginning with x", "xenon", "enonxay"},
- {"word beginning with q without a following u", "qat", "atqay"},
- {"word beginning with ch", "chair", "airchay"},
- {"word beginning with qu", "queen", "eenquay"},
- {"word beginning with qu and a preceding consonant", "square", "aresquay"},
- {"word beginning with th", "therapy", "erapythay"},
- {"word beginning with thr", "thrush", "ushthray"},
- {"word beginning with sch", "school", "oolschay"},
- {"word beginning with yt", "yttria", "yttriaay"},
- {"word beginning with xr", "xray", "xrayay"},
- {"y is treated like a consonant at the beginning of a word", "yellow", "ellowyay"},
- {"y is treated like a vowel at the end of a consonant cluster", "rhythm", "ythmrhay"},
- {"y as second letter in two letter word", "my", "ymay"},
- {"a whole phrase", "quick fast run", "ickquay astfay unray"}
+--<do not edit>
+constant canonical_data = {
+{"apple","appleay","word beginning with a"},
+{"ear","earay","word beginning with e"},
+{"igloo","iglooay","word beginning with i"},
+{"object","objectay","word beginning with o"},
+{"under","underay","word beginning with u"},
+{"equal","equalay","word beginning with a vowel and followed by a qu"},
+{"pig","igpay","word beginning with p"},
+{"koala","oalakay","word beginning with k"},
+{"xenon","enonxay","word beginning with x"},
+{"qat","atqay","word beginning with q without a following u"},
+{"chair","airchay","word beginning with ch"},
+{"queen","eenquay","word beginning with qu"},
+{"square","aresquay","word beginning with qu and a preceding consonant"},
+{"therapy","erapythay","word beginning with th"},
+{"thrush","ushthray","word beginning with thr"},
+{"school","oolschay","word beginning with sch"},
+{"yttria","yttriaay","word beginning with yt"},
+{"xray","xrayay","word beginning with xr"},
+{"yellow","ellowyay","y is treated like a consonant at the beginning of a word"},
+{"rhythm","ythmrhay","y is treated like a vowel at the end of a consonant cluster"},
+{"my","ymay","y as second letter in two letter word"},
+{"quick fast run","ickquay astfay unray","a whole phrase"},
 }
+--</do not edit>
 
 set_test_verbosity(TEST_SHOW_ALL)
-for t in tests do
-    string {desc, input, expected} = t
+for t in canonical_data do
+    string {input, expected, desc} = t
     test_equal(sentence(input),expected,desc)
 end for
 test_summary()

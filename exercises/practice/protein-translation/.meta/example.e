@@ -16,9 +16,9 @@ global function proteins(string strand)
     integer l = length(strand)
     sequence res = {}
     for i=1 to l by 3 do
-        if i+2>l then return "incomplete" end if
+        if i+2>l then return "Invalid codon" end if
         string protein = rna_to_protein(strand[i..i+2])
-        if protein="ERR" then return "unknown codon" end if
+        if protein="ERR" then return "Invalid codon" end if
         if protein="STOP" then exit end if
         res = append(res, protein)
     end for

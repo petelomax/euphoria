@@ -1,5 +1,9 @@
 include binary-search-tree.e
 
+--<do not edit>
+--ignore canonical_data.e
+--</do not edit>
+
 local function bst_size(binary_search_tree bst)
     if bst == null then return 0 end if
     return 1 + bst_size(bst.left) + bst_size(bst.right)

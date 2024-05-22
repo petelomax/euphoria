@@ -43,7 +43,7 @@ global function sum_of_multiples(sequence f, integer lim)
         --
         return summ(f,lim)
     end if
-    -- brute force approach (sometimes simply faster):
+    -- brute force approach (as above sometimes simply faster):
     atom res = 0
     for n=1 to lim-1 do
         for k in f do 

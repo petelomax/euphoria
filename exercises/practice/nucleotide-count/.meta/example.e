@@ -6,6 +6,8 @@ global function counts(sequence nucleotides)
     if getd_index(n,d)==NULL then return false end if
     setd(n,getd(n,d)+1,d)
   end for
-  return d
+  sequence res = pairs(d)
+  destroy_dict(d)
+  return res
 end function
 

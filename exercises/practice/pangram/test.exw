@@ -1,24 +1,31 @@
 include pangram.e
 
+--<do not edit>
+constant canonical_data = {
+{"",false,"empty sentence"},
+{"abcdefghijklmnopqrstuvwxyz",true,"perfect lower case"},
+{"the quick brown fox jumps over the lazy dog",true,"only lower case"},
+{"a quick movement of the enemy will jeopardize five gunboats",false,`missing the letter 'x'`},
+{"five boxing wizards jump quickly at it",false,`missing the letter 'h'`},
+{"the_quick_brown_fox_jumps_over_the_lazy_dog",true,"with underscores"},
+{"the 1 quick brown fox jumps over the 2 lazy dogs",true,"with numbers"},
+{"7h3 qu1ck brown fox jumps ov3r 7h3 lazy dog",false,"missing letters replaced by numbers"},
+{`"Five quacking Zephyrs jolt my wax bed."`,true,"mixed case and punctuation"},
+{"abcdefghijklm ABCDEFGHIJKLM",false,"a-m and A-M are 26 different characters but not a pangram"},
+}
+--</do not edit>
+
 set_test_verbosity(TEST_SHOW_ALL)
 
-test_false(is_pangram(""), "empty sentence")
-test_true(is_pangram("abcdefghijklmnopqrstuvwxyz"), "perfect lower case")
-test_true(is_pangram("the quick brown fox jumps over the lazy dog"), "only lower case")
-test_false(is_pangram("a quick movement of the enemy will jeopardize five gunboats"), "missing the letter 'x'")
-test_false(is_pangram("five boxing wizards jump quickly at it"), "missing the letter 'h'")
-test_true(is_pangram("the_quick_brown_fox_jumps_over_the_lazy_dog"), "with underscores")
-test_true(is_pangram("the 1 quick brown fox jumps over the 2 lazy dogs"), "with numbers")
-test_false(is_pangram("7h3 qu1ck brown fox jumps ov3r 7h3 lazy dog"), "missing letters replaced by numbers")
-test_true(is_pangram("Five quacking Zephyrs jolt my wax bed."), "mixed case and punctuation")
-test_false(is_pangram("the quick brown fox jumps over with lazy FX"), "case insensitive")
-test_false(is_pangram("abcdefghijklm ABCDEFGHIJKLM"), "a-m and A-M are 26 different characters but not a pangram")
-
+for t in canonical_data do
+    {string sentence, bool expected, string desc} = t
+    test_equal(is_pangram(sentence),expected,desc)
+end for
 test_summary()
 
 --/*
 Add some more tests... -- but after pEditer!
-    "Cafe XbXdXXg..z" -> true (where e is e-acute [using combining chars?])
+    "Cafe XbXdXXg..z" -> true (where e is e-acute [using combining chars and/or a single unicode point?])
     "???? abcdXfg..z" -> false (where ???? contains the byte 'e' incidentally)
 (make the tests flesh out "..", why not)
 local function flesh_out(string s)

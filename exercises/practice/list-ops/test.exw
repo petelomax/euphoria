@@ -1,5 +1,9 @@
 include list-ops.e
 
+--<do not edit>
+--ignore canonical_data.e
+--</do not edit>
+
 set_test_verbosity(TEST_SHOW_ALL)
 function add_one(integer n) return n + 1 end function
 function add_two(integer n1, n2) return n1 + n2 end function
