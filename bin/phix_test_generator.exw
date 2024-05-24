@@ -32,36 +32,57 @@ function rm2(sequence json) // for flatten-array
     return json
 end function
 
+function kg_extract(sequence jo) // for kindergarten-garden
+    sequence input = extract_json_field(jo,"input"),
+          expected = extract_json_field(jo,"expected")[2..$]
+    string diagram = extract_json_field(input,"diagram"),
+           student = extract_json_field(input,"student"),
+              desc = extract_json_field(jo,"description")
+    return sprintf("{%v,%v,%v,%v},\n",{diagram,student,expected,desc})
+end function
+
 -- Exercises that involve calling different routines in a specific order, threads, etc.
 --  are generally best done "by hand", this is more for call the one routine 138 ways.
 --  One exception is custom-set.
 
 function generate_tests(string slug, sequence json)
-    string res = "", desc
+    string res = "", desc, what
     assert(extract_json_field(json,"exercise")==slug)
     sequence cases = extract_json_field(json,"cases"),
-             jo,jg
+             jo,jg, inner_cases
     assert(cases[1]=JSON_ARRAY)
 
-    -- merge what you can, try and keep similar-ish things nearby:
-    -- (aside: note the heavy use of %v to preserve quotation marks)
-    -- (ps: don't blame me for this, I didn't design that json format)
-    -- (pps: no doubt oop-heads will have a fit over this, but one huge
-    --       switch is far easier than 140 scattered classes, imnsho..)
+    -- merge what you can, try and keep similar-ish signatures (rhs comments) in
+    -- some semblance of order, since that's more useful than, say, alphabetical
+    -- ordering by slug name would be, and it helps to keep similar code nearby.
+    -- aside: note the heavy use of %v to preserve quotation marks
+    -- tip: if you want to see original input, deliberately mis-spell 
+    --      the slug name and reload it's canonical_data.e after run.
+    -- ps: don't blame me for this, I didn't design that json format
+    -- pps: no doubt oop-heads will have a fit over this, but one huge
+    --       switch is far easier than 140 scattered classes, imnsho..
 
     integer k = find(slug,{`acronym`,`bob`,`crypto-square`,`markdown`,
-                           `rna-transcription`}),
+                           `rna-transcription`,`phone-number`}),
            k2 = find(slug,{`book-store`,`bowling`}),
-           k4 = find(slug,{`isbn-verifier`,`isogram`,`luhn`,
+           k3 = find(slug,{`sieve`,`prime-factors`}),
+           k4 = find(slug,{`spiral-matrix`,`pascals-triangle`}),
+           k5 = find(slug,{`space-age`,`largest-series-product`}),
+           k6 = find(slug,{`isbn-verifier`,`isogram`,`luhn`,
                            `matching-brackets`,`pangram`}),
-           k5 = find(slug,{`collatz-conjecture`,`eliuds-eggs`,
-                           `square-root`})
+           k7 = find(slug,{`collatz-conjecture`,`eliuds-eggs`,
+                           `square-root`,`nth-prime`}),
+           k8 = find(slug,{`transpose`,`proverb`})
+
     if k then                                                                   -- string input, expected, description format:
-        string what = {`phrase`,`heyBob`,`plaintext`,`markdown`,`dna`}[k]
+        what = {`phrase`,`heyBob`,`plaintext`,`markdown`,`dna`,`phrase`}[k]
         for jo in cases from 2 do
-            sequence joi = extract_json_field(jo,"input")
-            string input = extract_json_field(joi,what),
+            sequence joi = extract_json_field(jo,"input"),
                   expect = extract_json_field(jo,"expected")
+            if not string(expect) then
+                expect = extract_json_field(expect,"error")
+            end if
+            string input = extract_json_field(joi,what)
             desc = extract_json_field(jo,"description")
             res &= sprintf("{%v,%v,%v},\n",{input,expect,desc})
         end for
@@ -72,24 +93,9 @@ function generate_tests(string slug, sequence json)
             desc = extract_json_field(jo,"description")
             res &= sprintf("{%v,%v,%v},\n",{property,expect,desc})
         end for
---/*
-constant canonical_data = {
-{-1,
- {`exercise`, ``},
- {`cases`,
-  {-2,
-   {-1, {`uuid`, `16efb4e4-8ad7-4d5e-ba96-e5537b66fd42`},
-    {`description`, `resident who drinks water`},
-    {`property`, `drinksWater`}, {`input`, {-1}}, {`expected`, `Norwegian`}},
-   {-1, {`uuid`, `084d5b8b-24e2-40e6-b008-c800da8cd257`},
-    {`description`, `resident who owns zebra`}, {`property`, `ownsZebra`},
-    {`input`, {-1}}, {`expected`, `Japanese`}}}}}
-}
---*/
-
     elsif slug="pig-latin" then                                                 -- string phrase, expected, desc; with extra nesting flattened
         for jg in cases from 2 do
-            sequence inner_cases = extract_json_field(jg,"cases")
+            inner_cases = extract_json_field(jg,"cases")
             for jo in inner_cases from 2 do
                 sequence input = extract_json_field(jo,"input")
                 string phrase = extract_json_field(input,"phrase"),
@@ -98,10 +104,24 @@ constant canonical_data = {
                 res &= sprintf("{%v,%v,%v},\n",{phrase,expected,desc})
             end for
         end for
+    elsif slug="kindergarten-garden" then                                       -- string diagram, student, []string expected, string desc; 
+        for jg in cases from 2 do                                               --  with extra nested flattened nesting flattened(!)
+            inner_cases = extract_json_field(jg,"cases")
+            for jo in inner_cases from 2 do
+                if length(jo)=3 then -- cases within cases within cases...
+                    sequence iic = extract_json_field(jo,"cases")
+                    for ji in iic from 2 do
+                        res &= kg_extract(ji)
+                    end for
+                else
+                    res &= kg_extract(jo)
+                end if
+            end for
+        end for
     elsif slug="atbash-cipher" then                                             -- string phrase, expected, desc; with extra nesting flipped
         -- didn't get this to work, in the end (this output is fine, just not used)
         for j,jg in cases from 2 do
-            sequence inner_cases = extract_json_field(jg,"cases")
+            inner_cases = extract_json_field(jg,"cases")
             for jo in inner_cases from 2 do
                 sequence input = extract_json_field(jo,"input")
                 string phrase = extract_json_field(input,"phrase"),
@@ -113,7 +133,7 @@ constant canonical_data = {
         end for
     elsif slug="rail-fence-cipher" then                                         -- string phrase, integer rails, string expected, desc; with extra nesting flipped
         for j,jg in cases from 2 do
-            sequence inner_cases = extract_json_field(jg,"cases")
+            inner_cases = extract_json_field(jg,"cases")
             for jo in inner_cases from 2 do
                 sequence input = extract_json_field(jo,"input")
                 string msg = extract_json_field(input,"msg"),
@@ -125,7 +145,7 @@ constant canonical_data = {
             end for
         end for
     elsif k2 then                                                               -- []int input, int expected, string desc:
-        string what = {"basket","previousRolls"}[k2]
+        what = {"basket","previousRolls"}[k2]
         for jo in cases from 2 do
             sequence ib = extract_json_field(jo,"input"),
                  thingy = extract_json_field(ib,what)[2..$]
@@ -153,18 +173,106 @@ constant canonical_data = {
                  expected = extract_json_field(jo,"expected")
             res &= sprintf("{%v,%d,%d,%v},\n",{facts,limit,expected,desc})
         end for
-    elsif slug="sieve" then                                                     -- int limit, []int expected, desc
+    elsif k3 then                                                               -- atom n, []int expected, desc
+        what = {`limit`,`value`}[k3]
         for jo in cases from 2 do
             sequence input = extract_json_field(jo,"input"),
                     expect = extract_json_field(jo,"expected")[2..$]
             desc = extract_json_field(jo,"description")
-            integer limit = extract_json_field(input,"limit")
+            atom n = extract_json_field(input,what)
             expect = ppf(expect)
-            res &= sprintf("{%d,%s,%v},\n",{limit,expect,desc})
+            res &= sprintf("{%d,%s,%v},\n",{n,expect,desc})
         end for
-    elsif k4 then                                                               -- string input, bool expected:
-        string what = {`isbn`,`phrase`,`value`,
-                       `value`,`sentence`}[k4]
+    elsif k4 then                                                               -- int n, [][]int expected, desc
+        what = {`size`,`count`}[k4]
+        string f = {`%2d`,`%d`}[k4]
+        for jo in cases from 2 do
+            sequence input = extract_json_field(jo,"input"),
+                    expect = extract_json_field(jo,"expected")[2..$]
+            desc = extract_json_field(jo,"description")
+            integer n = extract_json_field(input,what)
+            if expect!={} then
+                for i=1 to length(expect) do
+                    expect[i] = join(expect[i][2..$],",",fmt:=f)
+                end for
+                expect = "{"&join(expect,"},\n"&repeat(' ',4+(n>9))&"{")&"}"
+            end if
+            res &= sprintf("{%d,{%s},%v},\n",{n,expect,desc})
+        end for
+    elsif k5 then                                                               -- string, int, atom expected
+        what = {"planet","digits"}[k5]
+        string arg2 = {"seconds","span"}[k5]
+        for jo in cases from 2 do
+            sequence input = extract_json_field(jo,"input")
+            string thing = extract_json_field(input,what) -- planet/digits
+            desc = extract_json_field(jo,"description")
+            atom thingy = extract_json_field(input,arg2) -- seconds/span
+            object expect = extract_json_field(jo,"expected")
+            if not atom(expect) then expect = false end if --==0
+            res &= sprintf("{%v,%d,%g,%v},\n",{thing,thingy,expect,desc})
+        end for
+    elsif slug="rotational-cipher" then                                         -- string, int, string expected
+        for jo in cases from 2 do
+            sequence tk = extract_json_field(jo,"input")
+            string text = extract_json_field(tk,"text"),
+                 expect = extract_json_field(jo,"expected")
+            integer shift = extract_json_field(tk,"shiftKey")
+            desc = extract_json_field(jo,"description")
+            res &= sprintf("{%v,%d,%v,%v},\n",{text,shift,expect,desc})
+        end for
+--/*
+--<do not edit>
+constant canonical_data = {
+{-1,
+ {`exercise`, `rotational-cipher`},
+ {`comments`, {-2, `The tests are a series of rotation tests: `}},
+ {`cases`,
+  {-2,
+   {-1, {`uuid`, `74e58a38-e484-43f1-9466-877a7515e10f`},
+    {`description`, `rotate a by 0, same output as input`},
+    {`property`, `rotate`}, {`input`, {-1, {`text`, `a`}, {`shiftKey`, 0}}},
+    {`expected`, `a`}},
+   {-1, {`uuid`, `7ee352c6-e6b0-4930-b903-d09943ecb8f5`},
+    {`description`, `rotate a by 1`}, {`property`, `rotate`},
+    {`input`, {-1, {`text`, `a`}, {`shiftKey`, 1}}}, {`expected`, `b`}},
+   {-1, {`uuid`, `edf0a733-4231-4594-a5ee-46a4009ad764`},
+    {`description`, `rotate a by 26, same output as input`},
+    {`property`, `rotate`},
+    {`input`, {-1, {`text`, `a`}, {`shiftKey`, 26}}}, {`expected`, `a`}},
+   {-1, {`uuid`, `e3e82cb9-2a5b-403f-9931-e43213879300`},
+    {`description`, `rotate m by 13`}, {`property`, `rotate`},
+    {`input`, {-1, {`text`, `m`}, {`shiftKey`, 13}}}, {`expected`, `z`}},
+   {-1, {`uuid`, `19f9eb78-e2ad-4da4-8fe3-9291d47c1709`},
+    {`description`, `rotate n by 13 with wrap around alphabet`},
+    {`property`, `rotate`},
+    {`input`, {-1, {`text`, `n`}, {`shiftKey`, 13}}}, {`expected`, `a`}},
+   {-1, {`uuid`, `a116aef4-225b-4da9-884f-e8023ca6408a`},
+    {`description`, `rotate capital letters`}, {`property`, `rotate`},
+    {`input`, {-1, {`text`, `OMG`}, {`shiftKey`, 5}}}, {`expected`, `TRL`}},
+   {-1, {`uuid`, `71b541bb-819c-4dc6-a9c3-132ef9bb737b`},
+    {`description`, `rotate spaces`}, {`property`, `rotate`},
+    {`input`, {-1, {`text`, `O M G`}, {`shiftKey`, 5}}},
+    {`expected`, `T R L`}},
+   {-1, {`uuid`, `ef32601d-e9ef-4b29-b2b5-8971392282e6`},
+    {`description`, `rotate numbers`}, {`property`, `rotate`},
+    {`input`, {-1, {`text`, `Testing 1 2 3 testing`}, {`shiftKey`, 4}}},
+    {`expected`, `Xiwxmrk 1 2 3 xiwxmrk`}},
+   {-1, {`uuid`, `32dd74f6-db2b-41a6-b02c-82eb4f93e549`},
+    {`description`, `rotate punctuation`}, {`property`, `rotate`},
+    {`input`, {-1, {`text`, `Let's eat, Grandma!`}, {`shiftKey`, 21}}},
+    {`expected`, `Gzo'n zvo, Bmviyhv!`}},
+   {-1, {`uuid`, `9fb93fe6-42b0-46e6-9ec1-0bf0a062d8c9`},
+    {`description`, `rotate all letters`}, {`property`, `rotate`},
+    {`input`,
+     {-1, {`text`, `The quick brown fox jumps over the lazy dog.`},
+      {`shiftKey`, 13}}},
+    {`expected`, `Gur dhvpx oebja sbk whzcf bire gur ynml qbt.`}}}}}
+}
+--</do not edit>
+
+--*/
+    elsif k6 then                                                               -- string input, bool expected:
+        what = {`isbn`,`phrase`,`value`, `value`,`sentence`}[k6]
         for jo in cases from 2 do
             sequence input = extract_json_field(jo,"input")
             string thing = extract_json_field(input,what),
@@ -180,18 +288,8 @@ constant canonical_data = {
             integer expect = extract_json_field(jo,"expected")
             res &= sprintf("{%v,%d,%v},\n",{word,expect,desc})
         end for
-    elsif slug="space-age" then                                                 -- string planet, int seconds, atom expected
-        for jo in cases from 2 do
-            sequence input = extract_json_field(jo,"input")
-            string planet = extract_json_field(input,"planet")
-            desc = extract_json_field(jo,"description")
-            atom seconds = extract_json_field(input,"seconds")
-            object expect = extract_json_field(jo,"expected")
-            if not atom(expect) then expect = false end if --==0
-            res &= sprintf("{%v,%d,%g,%v},\n",{planet,seconds,expect,desc})
-        end for
-    elsif k5 then                                                               -- int steps, int|str expected:
-        string what = {"number","number","radicand"}[k5]                        --     (or atom n, int res for eliuds-eggs)
+    elsif k7 then                                                               -- int steps, int|str expected:
+        what = {"number","number","radicand","number"}[k7]                      --     (or atom n, int res for eliuds-eggs)
         for jo in cases from 2 do                                               --    (and int radicand, res for square-root)
             sequence io = extract_json_field(jo,"input")
             atom input = extract_json_field(io,what)
@@ -220,7 +318,7 @@ constant canonical_data = {
         end for
     elsif slug="perfect-numbers" then                                           -- int n, string expected|bool error, with extra nesting
         for jg in cases from 2 do
-            sequence inner_cases = extract_json_field(jg,"cases")
+            inner_cases = extract_json_field(jg,"cases")
             for jo in inner_cases from 2 do
                 sequence input = extract_json_field(jo,"input")
                 integer n = extract_json_field(input,"number")
@@ -312,7 +410,7 @@ constant canonical_data = {
         end for
     elsif slug="forth" then                                                     -- []string code, []int res, string error, with extra nesting
         for jg in cases from 2 do
-            sequence inner_cases = extract_json_field(jg,"cases")
+            inner_cases = extract_json_field(jg,"cases")
             for jo in inner_cases from 2 do
                 sequence input = extract_json_field(jo,"input"),
                           code = extract_json_field(input,"instructions",{0})[2..$],
@@ -359,19 +457,18 @@ constant canonical_data = {
             expect = vslice(expect,{2,4})
             res &= sprintf("{%d,%v,%v},\n",{perim,expect,desc})
         end for
-    elsif slug="spiral-matrix" then                                             -- int n, [][]int expected, desc
+    elsif slug="matrix" then                                                    -- [][]int matrix, int rc, idx, []int expected, desc
         for jo in cases from 2 do
             sequence input = extract_json_field(jo,"input"),
+                    matrix = split(extract_json_field(input,"string"),'\n'),
                     expect = extract_json_field(jo,"expected")[2..$]
+            integer rc = extract_json_field(jo,"property")[1],
+                   idx = extract_json_field(input,"index")
             desc = extract_json_field(jo,"description")
-            integer n = extract_json_field(input,"size")
-            if expect!={} then
-                for i=1 to length(expect) do
-                    expect[i] = join(expect[i][2..$],",",fmt:="%2d")
-                end for
-                expect = "{"&join(expect,"},\n    {")&"}"
-            end if
-            res &= sprintf("{%d,{%s},%v},\n",{n,expect,desc})
+            for i,row in matrix do
+                matrix[i] = apply(split(row),to_integer)
+            end for
+            res &= sprintf("{%v,'%c',%d,%v,%v},\n",{matrix,rc,idx,expect,desc})
         end for
     elsif slug="hamming" then                                                   -- string strand1, strand2, int|str expected:
         for jo in cases from 2 do
@@ -400,10 +497,11 @@ constant canonical_data = {
             desc = extract_json_field(jo,"description")
             res &= sprintf("{{%s},%v},\n",{mes,desc})
         end for
-    elsif slug="transpose" then                                                 -- []string lines, expected, desc
+    elsif k8 then                                                               -- []string lines, expected, desc
+        what = {`lines`,`strings`}[k8]
         for jo in cases from 2 do
             sequence input = extract_json_field(jo,"input"),
-                     lines = extract_json_field(input,"lines")[2..$],
+                     lines = extract_json_field(input,what)[2..$],
                     expect = extract_json_field(jo,"expected")[2..$]
             for i,l in lines do
                 lines[i] = sprintf("%v",{l})
@@ -416,7 +514,7 @@ constant canonical_data = {
         end for
     elsif slug="state-of-tic-tac-toe" then                                      -- []string board, string expected, desc, with extra nesting
         for j in cases from 2 do
-          sequence inner_cases = extract_json_field(j,"cases")
+          inner_cases = extract_json_field(j,"cases")
           for jo in inner_cases from 2 do
             sequence input = extract_json_field(jo,"input"),
                      board = extract_json_field(input,"board")[2..$]
@@ -461,7 +559,7 @@ constant canonical_data = {
                                                                                 --       0, []string expected (second set)
         for j,jo in cases from 2 do
             if j=2 then 
-                sequence inner_cases = extract_json_field(jo,"cases")
+                inner_cases = extract_json_field(jo,"cases")
                 for jk in inner_cases from 2 do
                     sequence input = extract_json_field(jk,"input")
                     string color = extract_json_field(input,"color")
@@ -483,10 +581,20 @@ constant canonical_data = {
             desc = extract_json_field(jo,"description")
             res &= sprintf("{%v,%v,%v},\n",{colors,expect,desc})
         end for
+    elsif slug="resistor-color-trio" then                                       -- []string colors, string expected, desc
+        for jo in cases from 2 do
+            sequence input = extract_json_field(jo,"input"),
+                    colors = extract_json_field(input,"colors")[2..$],
+                    expect = extract_json_field(jo,"expected")
+            integer ei = extract_json_field(expect,"value")
+            string eu = extract_json_field(expect,"unit")
+            desc = extract_json_field(jo,"description")
+            res &= sprintf("{%v,`%d %s`,%v},\n",{colors,ei,eu,desc})
+        end for
     elsif slug="robot-simulator" then                                           -- xyd robot, string instructions, xyd expected, desc, with extra nesting
                                                                                 -- where xyd is {int x, y string dstr} as per routine above,
         for jg in cases from 2 do
-            sequence inner_cases = extract_json_field(jg,"cases")
+            inner_cases = extract_json_field(jg,"cases")
             for jo in inner_cases from 2 do
                 sequence input = extract_json_field(jo,"input"),
                           ixyd = xyd(input),
@@ -543,7 +651,7 @@ constant canonical_data = {
         end for
     elsif slug="variable-length-quantity" then                                  -- ([]int decoded|string err), []int encoded, string desc; with extra nesting flipped
         for j,jg in cases from 2 do
-            sequence inner_cases = extract_json_field(jg,"cases")
+            inner_cases = extract_json_field(jg,"cases")
             for jo in inner_cases from 2 do
                 sequence input = extract_json_field(jo,"input"),
                        decoded = extract_json_field(input,"integers"),
@@ -582,14 +690,14 @@ constant canonical_data = {
         --       Anyway, that's why there are several sort()/unique() in the following, and some output is less "good looking".
         --
         for j,jg in cases from 2 do
-            sequence inner_cases = extract_json_field(jg,"cases")
+            inner_cases = extract_json_field(jg,"cases")
             for jo in inner_cases from 2 do
                 sequence input = extract_json_field(jo,"input"),
                         expect = extract_json_field(jo,"expected"),
                            set, set2
                 desc = extract_json_field(jo,"description")
                 string prop = extract_json_field(jo,"property")
-                if prop="intersection" then prop = "intersect" end if -- (just a bit prettier)
+                if prop="intersection" then prop = "intersect" end if -- (just a smidge prettier)
                 integer element
                 switch prop do
                     case "empty":       set = extract_json_field(input,"set")[2..$]
@@ -629,7 +737,7 @@ constant canonical_data = {
             res &= sprintf("{{%s},{%s},%v},\n",{join(input,","),join(expect,","),desc})
         end for
 
-    elsif slug="flatten-array" then                                             -- sequence input, expected, string desc
+    elsif slug="flatten-array" then                                             -- sequence [nested] input, expected, string desc
         for jo in cases from 2 do
             sequence input = extract_json_field(jo,"input"),
                      array = rm2(extract_json_field(input,"array")),
@@ -654,7 +762,7 @@ constant canonical_data = {
             end if
         end for
         for j,jg in cases from 2 do
-            sequence inner_cases = extract_json_field(jg,"cases")
+            inner_cases = extract_json_field(jg,"cases")
             for jo in inner_cases from 2 do
                 sequence input = extract_json_field(jo,"input"),
                          flags = extract_json_field(input,"flags")[2..$],
@@ -666,332 +774,19 @@ constant canonical_data = {
                 res &= sprintf("{%v,%v,%v,\n{%s},%v},\n",{pattern,flags,files,expect,desc})
             end for
         end for
-
+    elsif slug="meetup" then                                                -- {enum week, dayofweek, int month, year}, string expected, desc
+        for jo in cases from 2 do
+            sequence input = extract_json_field(jo,"input")
+            integer year = extract_json_field(input,"year"),
+                   month = extract_json_field(input,"month")
+            string week = extract_json_field(input,"week"),
+              dayofweek = extract_json_field(input,"dayofweek"),
+                 expect = extract_json_field(jo,"expected")
+            desc = extract_json_field(jo,"description")
+            res &= sprintf("{{%s,%s,%d,%d},%v,%v},\n",{week,dayofweek,month,year,expect,desc})
+        end for
 --/*
---<do not edit>
-constant canonical_data = {
-{-1,
- {`exercise`, `grep`},
- {`comments`,
-  {-2, ` JSON doesn't allow for multi-line strings, so all   `,
-   ` outputs are presented here as arrays of strings.    `,
-   ` It's up to the test generator to join the lines     `,
-   ` together with line breaks.                          `,
-   `                                                     `,
-   ` The tests are divided into two groups:              `,
-   `  - Grepping a single file                           `,
-   `  - Grepping multiple files at once                  `,
-   `                                                     `,
-   ` The language track implementing this exercise       `,
-   ` should ensure that when the tests run, three files  `,
-   ` are created with the following contents. The file   `,
-   ` names and their contents are listed below:          `,
-   `                                                     `,
-   ` iliad.txt                                           `,
-   `   ---------------------------------------------     `,
-   `   |Achilles sing, O Goddess! Peleus' son;     |     `,
-   `   |His wrath pernicious, who ten thousand woes|     `,
-   `   |Caused to Achaia's host, sent many a soul  |     `,
-   `   |Illustrious into Ades premature,           |     `,
-   `   |And Heroes gave (so stood the will of Jove)|     `,
-   `   |To dogs and to all ravening fowls a prey,  |     `,
-   `   |When fierce dispute had separated once     |     `,
-   `   |The noble Chief Achilles from the son      |     `,
-   `   |Of Atreus, Agamemnon, King of men.         |     `,
-   `   ---------------------------------------------     `,
-   `                                                     `,
-   ` midsummer-night.txt                                 `,
-   `   -----------------------------------------------   `,
-   `   |I do entreat your grace to pardon me.        |   `,
-   `   |I know not by what power I am made bold,     |   `,
-   `   |Nor how it may concern my modesty,           |   `,
-   `   |In such a presence here to plead my thoughts;|   `,
-   `   |But I beseech your grace that I may know     |   `,
-   `   |The worst that may befall me in this case,   |   `,
-   `   |If I refuse to wed Demetrius.                |   `,
-   `   -----------------------------------------------   `,
-   `                                                     `,
-   ` paradise-lost.txt                                   `,
-   `   ------------------------------------------------- `,
-   `   |Of Mans First Disobedience, and the Fruit      | `,
-   `   |Of that Forbidden Tree, whose mortal tast      | `,
-   `   |Brought Death into the World, and all our woe, | `,
-   `   |With loss of Eden, till one greater Man        | `,
-   `   |Restore us, and regain the blissful Seat,      | `,
-   `   |Sing Heav'nly Muse, that on the secret top     | `,
-   `   |Of Oreb, or of Sinai, didst inspire            | `,
-   `   |That Shepherd, who first taught the chosen Seed| `,
-   `   ------------------------------------------------- `}},
- {`cases`,
-  {-2,
-   {-1, {`description`, `Test grepping a single file`},
-    {`cases`,
-     {-2,
-      {-1, {`uuid`, `9049fdfd-53a7-4480-a390-375203837d09`},
-       {`description`, `One file, one match, no flags`},
-       {`property`, `grep`},
-       {`input`,
-        {-1, {`pattern`, `Agamemnon`}, {`flags`, {-2}},
-         {`files`, {-2, `iliad.txt`}}}},
-       {`expected`, {-2, `Of Atreus, Agamemnon, King of men.`}}},
-      {-1, {`uuid`, `76519cce-98e3-46cd-b287-aac31b1d77d6`},
-       {`description`, `One file, one match, print line numbers flag`},
-       {`property`, `grep`},
-       {`input`,
-        {-1, {`pattern`, `Forbidden`}, {`flags`, {-2, `-n`}},
-         {`files`, {-2, `paradise-lost.txt`}}}},
-       {`expected`, {-2, `2:Of that Forbidden Tree, whose mortal tast`}}},
-      {-1, {`uuid`, `af0b6d3c-e0e8-475e-a112-c0fc10a1eb30`},
-       {`description`, `One file, one match, case-insensitive flag`},
-       {`property`, `grep`},
-       {`input`,
-        {-1, {`pattern`, `FORBIDDEN`}, {`flags`, {-2, `-i`}},
-         {`files`, {-2, `paradise-lost.txt`}}}},
-       {`expected`, {-2, `Of that Forbidden Tree, whose mortal tast`}}},
-      {-1, {`uuid`, `ff7af839-d1b8-4856-a53e-99283579b672`},
-       {`description`, `One file, one match, print file names flag`},
-       {`property`, `grep`},
-       {`input`,
-        {-1, {`pattern`, `Forbidden`}, {`flags`, {-2, `-l`}},
-         {`files`, {-2, `paradise-lost.txt`}}}},
-       {`expected`, {-2, `paradise-lost.txt`}}},
-      {-1, {`uuid`, `8625238a-720c-4a16-81f2-924ec8e222cb`},
-       {`description`, `One file, one match, match entire lines flag`},
-       {`property`, `grep`},
-       {`input`,
-        {-1, {`pattern`, `With loss of Eden, till one greater Man`},
-         {`flags`, {-2, `-x`}}, {`files`, {-2, `paradise-lost.txt`}}}},
-       {`expected`, {-2, `With loss of Eden, till one greater Man`}}},
-      {-1, {`uuid`, `2a6266b3-a60f-475c-a5f5-f5008a717d3e`},
-       {`description`, `One file, one match, multiple flags`},
-       {`property`, `grep`},
-       {`input`,
-        {-1, {`pattern`, `OF ATREUS, Agamemnon, KIng of MEN.`},
-         {`flags`, {-2, `-n`, `-i`, `-x`}}, {`files`, {-2, `iliad.txt`}}}},
-       {`expected`, {-2, `9:Of Atreus, Agamemnon, King of men.`}}},
-      {-1, {`uuid`, `842222da-32e8-4646-89df-0d38220f77a1`},
-       {`description`, `One file, several matches, no flags`},
-       {`property`, `grep`},
-       {`input`,
-        {-1, {`pattern`, `may`}, {`flags`, {-2}},
-         {`files`, {-2, `midsummer-night.txt`}}}},
-       {`expected`,
-        {-2, `Nor how it may concern my modesty,`,
-         `But I beseech your grace that I may know`,
-         `The worst that may befall me in this case,`}}},
-      {-1, {`uuid`, `4d84f45f-a1d8-4c2e-a00e-0b292233828c`},
-       {`description`, `One file, several matches, print line numbers flag`},
-       {`property`, `grep`},
-       {`input`,
-        {-1, {`pattern`, `may`}, {`flags`, {-2, `-n`}},
-         {`files`, {-2, `midsummer-night.txt`}}}},
-       {`expected`,
-        {-2, `3:Nor how it may concern my modesty,`,
-         `5:But I beseech your grace that I may know`,
-         `6:The worst that may befall me in this case,`}}},
-      {-1, {`uuid`, `0a483b66-315b-45f5-bc85-3ce353a22539`},
-       {`description`, `One file, several matches, match entire lines flag`},
-       {`property`, `grep`},
-       {`input`,
-        {-1, {`pattern`, `may`}, {`flags`, {-2, `-x`}},
-         {`files`, {-2, `midsummer-night.txt`}}}}, {`expected`, {-2}}},
-      {-1, {`uuid`, `3d2ca86a-edd7-494c-8938-8eeed1c61cfa`},
-       {`description`, `One file, several matches, case-insensitive flag`},
-       {`property`, `grep`},
-       {`input`,
-        {-1, {`pattern`, `ACHILLES`}, {`flags`, {-2, `-i`}},
-         {`files`, {-2, `iliad.txt`}}}},
-       {`expected`,
-        {-2, `Achilles sing, O Goddess! Peleus' son;`,
-         `The noble Chief Achilles from the son`}}},
-      {-1, {`uuid`, `1f52001f-f224-4521-9456-11120cad4432`},
-       {`description`, `One file, several matches, inverted flag`},
-       {`property`, `grep`},
-       {`input`,
-        {-1, {`pattern`, `Of`}, {`flags`, {-2, `-v`}},
-         {`files`, {-2, `paradise-lost.txt`}}}},
-       {`expected`,
-        {-2, `Brought Death into the World, and all our woe,`,
-         `With loss of Eden, till one greater Man`,
-         `Restore us, and regain the blissful Seat,`,
-         `Sing Heav'nly Muse, that on the secret top`,
-         `That Shepherd, who first taught the chosen Seed`}}},
-      {-1, {`uuid`, `7a6ede7f-7dd5-4364-8bf8-0697c53a09fe`},
-       {`description`, `One file, no matches, various flags`},
-       {`property`, `grep`},
-       {`input`,
-        {-1, {`pattern`, `Gandalf`},
-         {`flags`, {-2, `-n`, `-l`, `-x`, `-i`}},
-         {`files`, {-2, `iliad.txt`}}}}, {`expected`, {-2}}},
-      {-1, {`uuid`, `3d3dfc23-8f2a-4e34-abd6-7b7d140291dc`},
-       {`description`,
-        `One file, one match, file flag takes precedence over line flag`},
-       {`property`, `grep`},
-       {`input`,
-        {-1, {`pattern`, `ten`}, {`flags`, {-2, `-n`, `-l`}},
-         {`files`, {-2, `iliad.txt`}}}}, {`expected`, {-2, `iliad.txt`}}},
-      {-1, {`uuid`, `87b21b24-b788-4d6e-a68b-7afe9ca141fe`},
-       {`description`,
-        `One file, several matches, inverted and match entire lines flags`},
-       {`property`, `grep`},
-       {`input`,
-        {-1, {`pattern`, `Illustrious into Ades premature,`},
-         {`flags`, {-2, `-x`, `-v`}}, {`files`, {-2, `iliad.txt`}}}},
-       {`expected`,
-        {-2, `Achilles sing, O Goddess! Peleus' son;`,
-         `His wrath pernicious, who ten thousand woes`,
-         `Caused to Achaia's host, sent many a soul`,
-         `And Heroes gave (so stood the will of Jove)`,
-         `To dogs and to all ravening fowls a prey,`,
-         `When fierce dispute had separated once`,
-         `The noble Chief Achilles from the son`,
-         `Of Atreus, Agamemnon, King of men.`}}}}}},
-   {-1, {`description`, `Test grepping multiples files at once`},
-    {`cases`,
-     {-2,
-      {-1, {`uuid`, `ba496a23-6149-41c6-a027-28064ed533e5`},
-       {`description`, `Multiple files, one match, no flags`},
-       {`property`, `grep`},
-       {`input`,
-        {-1, {`pattern`, `Agamemnon`}, {`flags`, {-2}},
-         {`files`,
-          {-2, `iliad.txt`, `midsummer-night.txt`, `paradise-lost.txt`}}}},
-       {`expected`, {-2, `iliad.txt:Of Atreus, Agamemnon, King of men.`}}},
-      {-1, {`uuid`, `4539bd36-6daa-4bc3-8e45-051f69f5aa95`},
-       {`description`, `Multiple files, several matches, no flags`},
-       {`property`, `grep`},
-       {`input`,
-        {-1, {`pattern`, `may`}, {`flags`, {-2}},
-         {`files`,
-          {-2, `iliad.txt`, `midsummer-night.txt`, `paradise-lost.txt`}}}},
-       {`expected`,
-        {-2, `midsummer-night.txt:Nor how it may concern my modesty,`,
-         `midsummer-night.txt:But I beseech your grace that I may know`,
-         `midsummer-night.txt:The worst that may befall me in this case,`}}},
-      {-1, {`uuid`, `9fb4cc67-78e2-4761-8e6b-a4b57aba1938`},
-       {`description`,
-        `Multiple files, several matches, print line numbers flag`},
-       {`property`, `grep`},
-       {`input`,
-        {-1, {`pattern`, `that`}, {`flags`, {-2, `-n`}},
-         {`files`,
-          {-2, `iliad.txt`, `midsummer-night.txt`, `paradise-lost.txt`}}}},
-       {`expected`,
-        {-2,
-         `midsummer-night.txt:5:But I beseech your grace that I may know`,
-         `midsummer-night.txt:6:The worst that may befall me in this case,`,
-         `paradise-lost.txt:2:Of that Forbidden Tree, whose mortal tast`,
-         `paradise-lost.txt:6:Sing Heav'nly Muse, that on the secret top`}}},
-      {-1, {`uuid`, `aeee1ef3-93c7-4cd5-af10-876f8c9ccc73`},
-       {`description`, `Multiple files, one match, print file names flag`},
-       {`property`, `grep`},
-       {`input`,
-        {-1, {`pattern`, `who`}, {`flags`, {-2, `-l`}},
-         {`files`,
-          {-2, `iliad.txt`, `midsummer-night.txt`, `paradise-lost.txt`}}}},
-       {`expected`, {-2, `iliad.txt`, `paradise-lost.txt`}}},
-      {-1, {`uuid`, `d69f3606-7d15-4ddf-89ae-01df198e6b6c`},
-       {`description`,
-        `Multiple files, several matches, case-insensitive flag`},
-       {`property`, `grep`},
-       {`input`,
-        {-1, {`pattern`, `TO`}, {`flags`, {-2, `-i`}},
-         {`files`,
-          {-2, `iliad.txt`, `midsummer-night.txt`, `paradise-lost.txt`}}}},
-       {`expected`,
-        {-2, `iliad.txt:Caused to Achaia's host, sent many a soul`,
-         `iliad.txt:Illustrious into Ades premature,`,
-         `iliad.txt:And Heroes gave (so stood the will of Jove)`,
-         `iliad.txt:To dogs and to all ravening fowls a prey,`,
-         `midsummer-night.txt:I do entreat your grace to pardon me.`,
-         `midsummer-night.txt:In such a presence here to plead my thoughts;`,
-         `midsummer-night.txt:If I refuse to wed Demetrius.`,
-         `paradise-lost.txt:Brought Death into the World, and all our woe,`,
-         `paradise-lost.txt:Restore us, and regain the blissful Seat,`,
-         `paradise-lost.txt:Sing Heav'nly Muse, that on the secret top`}}},
-      {-1, {`uuid`, `82ef739d-6701-4086-b911-007d1a3deb21`},
-       {`description`, `Multiple files, several matches, inverted flag`},
-       {`property`, `grep`},
-       {`input`,
-        {-1, {`pattern`, `a`}, {`flags`, {-2, `-v`}},
-         {`files`,
-          {-2, `iliad.txt`, `midsummer-night.txt`, `paradise-lost.txt`}}}},
-       {`expected`,
-        {-2, `iliad.txt:Achilles sing, O Goddess! Peleus' son;`,
-         `iliad.txt:The noble Chief Achilles from the son`,
-         `midsummer-night.txt:If I refuse to wed Demetrius.`}}},
-      {-1, {`uuid`, `77b2eb07-2921-4ea0-8971-7636b44f5d29`},
-       {`description`, `Multiple files, one match, match entire lines flag`},
-       {`property`, `grep`},
-       {`input`,
-        {-1, {`pattern`, `But I beseech your grace that I may know`},
-         {`flags`, {-2, `-x`}},
-         {`files`,
-          {-2, `iliad.txt`, `midsummer-night.txt`, `paradise-lost.txt`}}}},
-       {`expected`,
-        {-2, `midsummer-night.txt:But I beseech your grace that I may know`}}},
-      {-1, {`uuid`, `e53a2842-55bb-4078-9bb5-04ac38929989`},
-       {`description`, `Multiple files, one match, multiple flags`},
-       {`property`, `grep`},
-       {`input`,
-        {-1, {`pattern`, `WITH LOSS OF EDEN, TILL ONE GREATER MAN`},
-         {`flags`, {-2, `-n`, `-i`, `-x`}},
-         {`files`,
-          {-2, `iliad.txt`, `midsummer-night.txt`, `paradise-lost.txt`}}}},
-       {`expected`,
-        {-2, `paradise-lost.txt:4:With loss of Eden, till one greater Man`}}},
-      {-1, {`uuid`, `9c4f7f9a-a555-4e32-bb06-4b8f8869b2cb`},
-       {`description`, `Multiple files, no matches, various flags`},
-       {`property`, `grep`},
-       {`input`,
-        {-1, {`pattern`, `Frodo`}, {`flags`, {-2, `-n`, `-l`, `-x`, `-i`}},
-         {`files`,
-          {-2, `iliad.txt`, `midsummer-night.txt`, `paradise-lost.txt`}}}},
-       {`expected`, {-2}}},
-      {-1, {`uuid`, `ba5a540d-bffd-481b-bd0c-d9a30f225e01`},
-       {`description`,
-        `Multiple files, several matches, file flag takes precedence over line number flag`},
-       {`property`, `grep`},
-       {`input`,
-        {-1, {`pattern`, `who`}, {`flags`, {-2, `-n`, `-l`}},
-         {`files`,
-          {-2, `iliad.txt`, `midsummer-night.txt`, `paradise-lost.txt`}}}},
-       {`expected`, {-2, `iliad.txt`, `paradise-lost.txt`}}},
-      {-1, {`uuid`, `ff406330-2f0b-4b17-9ee4-4b71c31dd6d2`},
-       {`description`,
-        `Multiple files, several matches, inverted and match entire lines flags`},
-       {`property`, `grep`},
-       {`input`,
-        {-1, {`pattern`, `Illustrious into Ades premature,`},
-         {`flags`, {-2, `-x`, `-v`}},
-         {`files`,
-          {-2, `iliad.txt`, `midsummer-night.txt`, `paradise-lost.txt`}}}},
-       {`expected`,
-        {-2, `iliad.txt:Achilles sing, O Goddess! Peleus' son;`,
-         `iliad.txt:His wrath pernicious, who ten thousand woes`,
-         `iliad.txt:Caused to Achaia's host, sent many a soul`,
-         `iliad.txt:And Heroes gave (so stood the will of Jove)`,
-         `iliad.txt:To dogs and to all ravening fowls a prey,`,
-         `iliad.txt:When fierce dispute had separated once`,
-         `iliad.txt:The noble Chief Achilles from the son`,
-         `iliad.txt:Of Atreus, Agamemnon, King of men.`,
-         `midsummer-night.txt:I do entreat your grace to pardon me.`,
-         `midsummer-night.txt:I know not by what power I am made bold,`,
-         `midsummer-night.txt:Nor how it may concern my modesty,`,
-         `midsummer-night.txt:In such a presence here to plead my thoughts;`,
-         `midsummer-night.txt:But I beseech your grace that I may know`,
-         `midsummer-night.txt:The worst that may befall me in this case,`,
-         `midsummer-night.txt:If I refuse to wed Demetrius.`,
-         `paradise-lost.txt:Of Mans First Disobedience, and the Fruit`,
-         `paradise-lost.txt:Of that Forbidden Tree, whose mortal tast`,
-         `paradise-lost.txt:Brought Death into the World, and all our woe,`,
-         `paradise-lost.txt:With loss of Eden, till one greater Man`,
-         `paradise-lost.txt:Restore us, and regain the blissful Seat,`,
-         `paradise-lost.txt:Sing Heav'nly Muse, that on the secret top`,
-         `paradise-lost.txt:Of Oreb, or of Sinai, didst inspire`,
-         `paradise-lost.txt:That Shepherd, who first taught the chosen Seed`}}}}}}}}}
-}
---</do not edit>
+
 --*/
     else
         res = ppf(json,{pp_Nest,1})

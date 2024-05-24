@@ -1,5 +1,7 @@
 {
-  "authors": [],
+  "authors": [
+    "petelomax"
+  ],
   "files": {
     "solution": [
       "prime-factors.e"

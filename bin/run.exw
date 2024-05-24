@@ -66,7 +66,7 @@ procedure process()
     string status = "pass", message = ""
 
 --printf(1,"DATA:\n%s\n",{join(lines,"<\n")})
-    integer begins_hat = 0, begins_3 = 0
+    integer begins_hat = 0, begins_3 = 0, crashmsg = false
     for i,l in lines do
         if begins_hat=0
         and begins("^",trim_head(l)) then
@@ -78,10 +78,16 @@ procedure process()
             exit
         elsif match("passed: ",l) then
             lines[i] = ""
+        elsif i=5 and begins("--> see ",l) then
+            crashmsg = true
+            exit
         end if
     end for
-    if begins_3
-    or begins_hat then
+    if crashmsg then
+        status = "error"
+        message = lines[3]
+    elsif begins_3
+       or begins_hat then
         -- compilation error
         status = "error"
         if begins_3=0 then begins_3 = begins_hat end if
