@@ -45,8 +45,8 @@ end function
 --  are generally best done "by hand", this is more for call the one routine 138 ways.
 --  One exception is custom-set.
 
-function generate_tests(string slug, sequence json)
-    string res = "", desc, what
+function generate_tests(string res, slug, sequence json)
+    string desc, what, what2
     assert(extract_json_field(json,"exercise")==slug)
     sequence cases = extract_json_field(json,"cases"),
              jo,jg, inner_cases
@@ -64,16 +64,17 @@ function generate_tests(string slug, sequence json)
 
     integer k = find(slug,{`acronym`,`bob`,`crypto-square`,`markdown`,
                            `rna-transcription`,`phone-number`}),
-           kX = find(slug,{`pig-latin`,`run-length-encoding`}),
-           k2 = find(slug,{`book-store`,`bowling`}),
-           k3 = find(slug,{`sieve`,`prime-factors`}),
-           k4 = find(slug,{`spiral-matrix`,`pascals-triangle`}),
-           k5 = find(slug,{`space-age`,`largest-series-product`}),
-           k6 = find(slug,{`isbn-verifier`,`isogram`,`luhn`,
+           k2 = find(slug,{`pig-latin`,`run-length-encoding`}),
+           k3 = find(slug,{`book-store`,`bowling`}),
+           k4 = find(slug,{`sum-of-multiples`,`binary-search`}),
+           k5 = find(slug,{`sieve`,`prime-factors`}),
+           k6 = find(slug,{`spiral-matrix`,`pascals-triangle`}),
+           k7 = find(slug,{`space-age`,`largest-series-product`}),
+           k8 = find(slug,{`isbn-verifier`,`isogram`,`luhn`,
                            `matching-brackets`,`pangram`}),
-           k7 = find(slug,{`collatz-conjecture`,`eliuds-eggs`,
+           k9 = find(slug,{`collatz-conjecture`,`eliuds-eggs`,
                            `square-root`,`nth-prime`}),
-           k8 = find(slug,{`transpose`,`proverb`})
+           kA = find(slug,{`transpose`,`proverb`,`tournament`})
 
     if k then                                                                   -- string input, expected, description format:
         what = {`phrase`,`heyBob`,`plaintext`,`markdown`,`dna`,`phrase`}[k]
@@ -94,9 +95,11 @@ function generate_tests(string slug, sequence json)
             desc = extract_json_field(jo,"description")
             res &= sprintf("{%v,%v,%v},\n",{property,expect,desc})
         end for
-    elsif kX then                                                               -- string phrase, expected, desc; with extra nesting flattened
-        what = {`phrase`,`string`}[kX]
-        if slug=`run-length-encoding` then cases[3..3] = {} end if -- (replicated encode/decode)
+    elsif k2 then                                                               -- string phrase, expected, desc; with extra nesting flattened
+        what = {`phrase`,`string`}[k2]
+        if slug=`run-length-encoding` then 
+            cases[3..3] = {} -- (replicated encode/decode)
+        end if
         for jg in cases from 2 do
             inner_cases = extract_json_field(jg,"cases")
             for jo in inner_cases from 2 do
@@ -107,77 +110,6 @@ function generate_tests(string slug, sequence json)
                 res &= sprintf("{%v,%v,%v},\n",{phrase,expected,desc})
             end for
         end for
---/*
---<do not edit>
-constant canonical_data = {
-{-1,
- {`exercise`, `run-length-encoding`},
- {`cases`,
-  {-2,
-   {-1, {`description`, `run-length encode a string`},
-    {`cases`,
-     {-2,
-      {-1, {`uuid`, `ad53b61b-6ffc-422f-81a6-61f7df92a231`},
-       {`description`, `empty string`}, {`property`, `encode`},
-       {`input`, {-1, {`string`, ``}}}, {`expected`, ``}},
-      {-1, {`uuid`, `52012823-b7e6-4277-893c-5b96d42f82de`},
-       {`description`, `single characters only are encoded without count`},
-       {`property`, `encode`}, {`input`, {-1, {`string`, `XYZ`}}},
-       {`expected`, `XYZ`}},
-      {-1, {`uuid`, `b7868492-7e3a-415f-8da3-d88f51f80409`},
-       {`description`, `string with no single characters`},
-       {`property`, `encode`}, {`input`, {-1, {`string`, `AABBBCCCC`}}},
-       {`expected`, `2A3B4C`}},
-      {-1, {`uuid`, `859b822b-6e9f-44d6-9c46-6091ee6ae358`},
-       {`description`, `single characters mixed with repeated characters`},
-       {`property`, `encode`},
-       {`input`,
-        {-1,
-         {`string`, `WWWWWWWWWWWWBWWWWWWWWWWWWBBBWWWWWWWWWWWWWWWWWWWWWWWWB`}}},
-       {`expected`, `12WB12W3B24WB`}},
-      {-1, {`uuid`, `1b34de62-e152-47be-bc88-469746df63b3`},
-       {`description`, `multiple whitespace mixed in string`},
-       {`property`, `encode`}, {`input`, {-1, {`string`, `  hsqq qww  `}}},
-       {`expected`, `2 hs2q q2w2 `}},
-      {-1, {`uuid`, `abf176e2-3fbd-40ad-bb2f-2dd6d4df721a`},
-       {`description`, `lowercase characters`}, {`property`, `encode`},
-       {`input`, {-1, {`string`, `aabbbcccc`}}}, {`expected`, `2a3b4c`}}}}},
-   {-1, {`description`, `run-length decode a string`},
-    {`cases`,
-     {-2,
-      {-1, {`uuid`, `7ec5c390-f03c-4acf-ac29-5f65861cdeb5`},
-       {`description`, `empty string`}, {`property`, `decode`},
-       {`input`, {-1, {`string`, ``}}}, {`expected`, ``}},
-      {-1, {`uuid`, `ad23f455-1ac2-4b0e-87d0-b85b10696098`},
-       {`description`, `single characters only`}, {`property`, `decode`},
-       {`input`, {-1, {`string`, `XYZ`}}}, {`expected`, `XYZ`}},
-      {-1, {`uuid`, `21e37583-5a20-4a0e-826c-3dee2c375f54`},
-       {`description`, `string with no single characters`},
-       {`property`, `decode`}, {`input`, {-1, {`string`, `2A3B4C`}}},
-       {`expected`, `AABBBCCCC`}},
-      {-1, {`uuid`, `1389ad09-c3a8-4813-9324-99363fba429c`},
-       {`description`, `single characters with repeated characters`},
-       {`property`, `decode`}, {`input`, {-1, {`string`, `12WB12W3B24WB`}}},
-       {`expected`, `WWWWWWWWWWWWBWWWWWWWWWWWWBBBWWWWWWWWWWWWWWWWWWWWWWWWB`}},
-      {-1, {`uuid`, `3f8e3c51-6aca-4670-b86c-a213bf4706b0`},
-       {`description`, `multiple whitespace mixed in string`},
-       {`property`, `decode`}, {`input`, {-1, {`string`, `2 hs2q q2w2 `}}},
-       {`expected`, `  hsqq qww  `}},
-      {-1, {`uuid`, `29f721de-9aad-435f-ba37-7662df4fb551`},
-       {`description`, `lowercase string`}, {`property`, `decode`},
-       {`input`, {-1, {`string`, `2a3b4c`}}}, {`expected`, `aabbbcccc`}}}}},
-   {-1, {`description`, `encode and then decode`},
-    {`cases`,
-     {-2,
-      {-1, {`uuid`, `2a762efd-8695-4e04-b0d6-9736899fbc16`},
-       {`description`, `encode followed by decode gives original string`},
-       {`property`, `consistency`},
-       {`input`, {-1, {`string`, `zzz ZZ  zZ`}}},
-       {`expected`, `zzz ZZ  zZ`}}}}}}}}
-}
---</do not edit>
-
---*/
     elsif slug="kindergarten-garden" then                                       -- string diagram, student, []string expected, string desc; 
         for jg in cases from 2 do                                               --  with extra nested flattened nesting flattened(!)
             inner_cases = extract_json_field(jg,"cases")
@@ -190,6 +122,19 @@ constant canonical_data = {
                 else
                     res &= kg_extract(jo)
                 end if
+            end for
+        end for
+    elsif slug="twelve-days" then                                               -- int first, last, []string expected, string desc; 
+        for jg in cases from 2 do                                               --  with extra nesting flattened
+            inner_cases = extract_json_field(jg,"cases")
+            for jo in inner_cases from 2 do
+                sequence input = extract_json_field(jo,"input"),
+                      expected = extract_json_field(jo,"expected")[2..$]
+                integer first = extract_json_field(input,"startVerse"),
+                         last = extract_json_field(input,"endVerse")
+                desc = extract_json_field(jo,"description")
+                expected = join(expected,",\n",fmt:="`%s`")
+                res &= sprintf("{%d,%d,{%s},%v},\n",{first,last,expected,desc})
             end for
         end for
     elsif slug="atbash-cipher" then                                             -- string phrase, expected, desc; with extra nesting flipped
@@ -218,8 +163,8 @@ constant canonical_data = {
                 res &= sprintf("{%v,%d,%v,%v},\n",{msg,rails,expected,desc})
             end for
         end for
-    elsif k2 then                                                               -- []int input, int expected, string desc:
-        what = {"basket","previousRolls"}[k2]
+    elsif k3 then                                                               -- []int input, int expected, string desc:
+        what = {"basket","previousRolls"}[k3]
         for jo in cases from 2 do
             sequence ib = extract_json_field(jo,"input"),
                  thingy = extract_json_field(ib,what)[2..$]
@@ -238,17 +183,29 @@ constant canonical_data = {
             string estr = iff(err?"false":sprintf("%v",{expected[2..$]}))
             res &= sprintf("{%v,%d,%s,%v},\n",{coins,tgt,estr,desc})
         end for
-    elsif slug="sum-of-multiples" then                                          -- []int factors, int limit, int expected:
+    elsif k4 then                                                               -- []int factors, int limit, int expected:
+        what = {`factors`,`array`}[k4]
+        what2 = {`limit`,`value`}[k4]
         for jo in cases from 2 do
             sequence fl = extract_json_field(jo,"input"),
-                  facts = extract_json_field(fl,"factors")[2..$]
+                  facts = extract_json_field(fl,what)[2..$]
             desc = extract_json_field(jo,"description")
-            integer limit = extract_json_field(fl,"limit"),
-                 expected = extract_json_field(jo,"expected")
-            res &= sprintf("{%v,%d,%d,%v},\n",{facts,limit,expected,desc})
+            integer limit = extract_json_field(fl,what2)
+            object expect = extract_json_field(jo,"expected")
+            if not integer(expect) then expect = -1 end if
+            res &= sprintf("{%v,%d,%d,%v},\n",{facts,limit,expect,desc})
         end for
-    elsif k3 then                                                               -- atom n, []int expected, desc
-        what = {`limit`,`value`}[k3]
+    elsif slug="sublist" then                                                   -- []int s1, s2, string expected:
+        for jo in cases from 2 do
+            sequence fl = extract_json_field(jo,"input"),
+                     l1 = extract_json_field(fl,"listOne")[2..$],
+                     l2 = extract_json_field(fl,"listTwo")[2..$]
+            desc = extract_json_field(jo,"description")
+            string expect = extract_json_field(jo,"expected")
+            res &= sprintf("{%v,%v,%v,%v},\n",{l1,l2,expect,desc})
+        end for
+    elsif k5 then                                                               -- atom n, []int expected, desc
+        what = {`limit`,`value`}[k5]
         for jo in cases from 2 do
             sequence input = extract_json_field(jo,"input"),
                     expect = extract_json_field(jo,"expected")[2..$]
@@ -257,9 +214,9 @@ constant canonical_data = {
             expect = ppf(expect)
             res &= sprintf("{%d,%s,%v},\n",{n,expect,desc})
         end for
-    elsif k4 then                                                               -- int n, [][]int expected, desc
-        what = {`size`,`count`}[k4]
-        string f = {`%2d`,`%d`}[k4]
+    elsif k6 then                                                               -- int n, [][]int expected, desc
+        what = {`size`,`count`}[k6]
+        string f = {`%2d`,`%d`}[k6]
         for jo in cases from 2 do
             sequence input = extract_json_field(jo,"input"),
                     expect = extract_json_field(jo,"expected")[2..$]
@@ -273,9 +230,9 @@ constant canonical_data = {
             end if
             res &= sprintf("{%d,{%s},%v},\n",{n,expect,desc})
         end for
-    elsif k5 then                                                               -- string, int, atom expected
-        what = {"planet","digits"}[k5]
-        string arg2 = {"seconds","span"}[k5]
+    elsif k7 then                                                               -- string, int, atom expected
+        what = {"planet","digits"}[k7]
+        string arg2 = {"seconds","span"}[k7]
         for jo in cases from 2 do
             sequence input = extract_json_field(jo,"input")
             string thing = extract_json_field(input,what) -- planet/digits
@@ -294,59 +251,8 @@ constant canonical_data = {
             desc = extract_json_field(jo,"description")
             res &= sprintf("{%v,%d,%v,%v},\n",{text,shift,expect,desc})
         end for
---/*
---<do not edit>
-constant canonical_data = {
-{-1,
- {`exercise`, `rotational-cipher`},
- {`comments`, {-2, `The tests are a series of rotation tests: `}},
- {`cases`,
-  {-2,
-   {-1, {`uuid`, `74e58a38-e484-43f1-9466-877a7515e10f`},
-    {`description`, `rotate a by 0, same output as input`},
-    {`property`, `rotate`}, {`input`, {-1, {`text`, `a`}, {`shiftKey`, 0}}},
-    {`expected`, `a`}},
-   {-1, {`uuid`, `7ee352c6-e6b0-4930-b903-d09943ecb8f5`},
-    {`description`, `rotate a by 1`}, {`property`, `rotate`},
-    {`input`, {-1, {`text`, `a`}, {`shiftKey`, 1}}}, {`expected`, `b`}},
-   {-1, {`uuid`, `edf0a733-4231-4594-a5ee-46a4009ad764`},
-    {`description`, `rotate a by 26, same output as input`},
-    {`property`, `rotate`},
-    {`input`, {-1, {`text`, `a`}, {`shiftKey`, 26}}}, {`expected`, `a`}},
-   {-1, {`uuid`, `e3e82cb9-2a5b-403f-9931-e43213879300`},
-    {`description`, `rotate m by 13`}, {`property`, `rotate`},
-    {`input`, {-1, {`text`, `m`}, {`shiftKey`, 13}}}, {`expected`, `z`}},
-   {-1, {`uuid`, `19f9eb78-e2ad-4da4-8fe3-9291d47c1709`},
-    {`description`, `rotate n by 13 with wrap around alphabet`},
-    {`property`, `rotate`},
-    {`input`, {-1, {`text`, `n`}, {`shiftKey`, 13}}}, {`expected`, `a`}},
-   {-1, {`uuid`, `a116aef4-225b-4da9-884f-e8023ca6408a`},
-    {`description`, `rotate capital letters`}, {`property`, `rotate`},
-    {`input`, {-1, {`text`, `OMG`}, {`shiftKey`, 5}}}, {`expected`, `TRL`}},
-   {-1, {`uuid`, `71b541bb-819c-4dc6-a9c3-132ef9bb737b`},
-    {`description`, `rotate spaces`}, {`property`, `rotate`},
-    {`input`, {-1, {`text`, `O M G`}, {`shiftKey`, 5}}},
-    {`expected`, `T R L`}},
-   {-1, {`uuid`, `ef32601d-e9ef-4b29-b2b5-8971392282e6`},
-    {`description`, `rotate numbers`}, {`property`, `rotate`},
-    {`input`, {-1, {`text`, `Testing 1 2 3 testing`}, {`shiftKey`, 4}}},
-    {`expected`, `Xiwxmrk 1 2 3 xiwxmrk`}},
-   {-1, {`uuid`, `32dd74f6-db2b-41a6-b02c-82eb4f93e549`},
-    {`description`, `rotate punctuation`}, {`property`, `rotate`},
-    {`input`, {-1, {`text`, `Let's eat, Grandma!`}, {`shiftKey`, 21}}},
-    {`expected`, `Gzo'n zvo, Bmviyhv!`}},
-   {-1, {`uuid`, `9fb93fe6-42b0-46e6-9ec1-0bf0a062d8c9`},
-    {`description`, `rotate all letters`}, {`property`, `rotate`},
-    {`input`,
-     {-1, {`text`, `The quick brown fox jumps over the lazy dog.`},
-      {`shiftKey`, 13}}},
-    {`expected`, `Gur dhvpx oebja sbk whzcf bire gur ynml qbt.`}}}}}
-}
---</do not edit>
-
---*/
-    elsif k6 then                                                               -- string input, bool expected:
-        what = {`isbn`,`phrase`,`value`, `value`,`sentence`}[k6]
+    elsif k8 then                                                               -- string input, bool expected:
+        what = {`isbn`,`phrase`,`value`, `value`,`sentence`}[k8]
         for jo in cases from 2 do
             sequence input = extract_json_field(jo,"input")
             string thing = extract_json_field(input,what),
@@ -362,8 +268,8 @@ constant canonical_data = {
             integer expect = extract_json_field(jo,"expected")
             res &= sprintf("{%v,%d,%v},\n",{word,expect,desc})
         end for
-    elsif k7 then                                                               -- int steps, int|str expected:
-        what = {"number","number","radicand","number"}[k7]                      --     (or atom n, int res for eliuds-eggs)
+    elsif k9 then                                                               -- int steps, int|str expected:
+        what = {"number","number","radicand","number"}[k9]                      --     (or atom n, int res for eliuds-eggs)
         for jo in cases from 2 do                                               --    (and int radicand, res for square-root)
             sequence io = extract_json_field(jo,"input")
             atom input = extract_json_field(io,what)
@@ -374,14 +280,93 @@ constant canonical_data = {
             end if
             res &= sprintf("{%d,%v,%v},\n",{input,expect,desc})
         end for
-    elsif find(slug,{"raindrops","roman-numerals"}) then                        -- int n, string expected:
+    elsif find(slug,{"raindrops","roman-numerals",`say`}) then                  -- int n, string expected:
         for jo in cases from 2 do
             sequence iy = extract_json_field(jo,"input")
-            integer n = extract_json_field(iy,"number")
-            string expected = extract_json_field(jo,"expected")
-            desc = extract_json_field(jo,"description")
-            res &= sprintf("{%d,%v,%v},\n",{n,expected,desc})
+            atom n = extract_json_field(iy,"number")
+            sequence expected = extract_json_field(jo,"expected")
+            if string(expected) then
+                desc = extract_json_field(jo,"description")
+                res &= sprintf("{%d,%v,%v},\n",{n,expected,desc})
+            end if
         end for
+--/*
+constant canonical_data = {
+{-1,
+ {`exercise`, `say`},
+ {`comments`,
+  {-2, `An 'error' object is used as expected value to indicate that the`,
+   `input value is out of the range described in the exercise.`}},
+ {`cases`,
+  {-2,
+   {-1, {`uuid`, `5d22a120-ba0c-428c-bd25-8682235d83e8`},
+    {`description`, `zero`}, {`property`, `say`},
+    {`input`, {-1, {`number`, 0}}}, {`expected`, `zero`}},
+   {-1, {`uuid`, `9b5eed77-dbf6-439d-b920-3f7eb58928f6`},
+    {`description`, `one`}, {`property`, `say`},
+    {`input`, {-1, {`number`, 1}}}, {`expected`, `one`}},
+   {-1, {`uuid`, `7c499be1-612e-4096-a5e1-43b2f719406d`},
+    {`description`, `fourteen`}, {`property`, `say`},
+    {`input`, {-1, {`number`, 14}}}, {`expected`, `fourteen`}},
+   {-1, {`uuid`, `f541dd8e-f070-4329-92b4-b7ce2fcf06b4`},
+    {`description`, `twenty`}, {`property`, `say`},
+    {`input`, {-1, {`number`, 20}}}, {`expected`, `twenty`}},
+   {-1, {`uuid`, `d78601eb-4a84-4bfa-bf0e-665aeb8abe94`},
+    {`description`, `twenty-two`}, {`property`, `say`},
+    {`input`, {-1, {`number`, 22}}}, {`expected`, `twenty-two`}},
+   {-1, {`uuid`, `f010d4ca-12c9-44e9-803a-27789841adb1`},
+    {`description`, `thirty`}, {`property`, `say`},
+    {`input`, {-1, {`number`, 30}}}, {`expected`, `thirty`}},
+   {-1, {`uuid`, `738ce12d-ee5c-4dfb-ad26-534753a98327`},
+    {`description`, `ninety-nine`}, {`property`, `say`},
+    {`input`, {-1, {`number`, 99}}}, {`expected`, `ninety-nine`}},
+   {-1, {`uuid`, `e417d452-129e-4056-bd5b-6eb1df334dce`},
+    {`description`, `one hundred`}, {`property`, `say`},
+    {`input`, {-1, {`number`, 100}}}, {`expected`, `one hundred`}},
+   {-1, {`uuid`, `d6924f30-80ba-4597-acf6-ea3f16269da8`},
+    {`description`, `one hundred twenty-three`}, {`property`, `say`},
+    {`input`, {-1, {`number`, 123}}},
+    {`expected`, `one hundred twenty-three`}},
+   {-1, {`uuid`, `2f061132-54bc-4fd4-b5df-0a3b778959b9`},
+    {`description`, `two hundred`}, {`property`, `say`},
+    {`input`, {-1, {`number`, 200}}}, {`expected`, `two hundred`}},
+   {-1, {`uuid`, `feed6627-5387-4d38-9692-87c0dbc55c33`},
+    {`description`, `nine hundred ninety-nine`}, {`property`, `say`},
+    {`input`, {-1, {`number`, 999}}},
+    {`expected`, `nine hundred ninety-nine`}},
+   {-1, {`uuid`, `3d83da89-a372-46d3-b10d-de0c792432b3`},
+    {`description`, `one thousand`}, {`property`, `say`},
+    {`input`, {-1, {`number`, 1000}}}, {`expected`, `one thousand`}},
+   {-1, {`uuid`, `865af898-1d5b-495f-8ff0-2f06d3c73709`},
+    {`description`, `one thousand two hundred thirty-four`},
+    {`property`, `say`}, {`input`, {-1, {`number`, 1234}}},
+    {`expected`, `one thousand two hundred thirty-four`}},
+   {-1, {`uuid`, `b6a3f442-266e-47a3-835d-7f8a35f6cf7f`},
+    {`description`, `one million`}, {`property`, `say`},
+    {`input`, {-1, {`number`, 1000000}}}, {`expected`, `one million`}},
+   {-1, {`uuid`, `2cea9303-e77e-4212-b8ff-c39f1978fc70`},
+    {`description`, `one million two thousand three hundred forty-five`},
+    {`property`, `say`}, {`input`, {-1, {`number`, 1002345}}},
+    {`expected`, `one million two thousand three hundred forty-five`}},
+   {-1, {`uuid`, `3e240eeb-f564-4b80-9421-db123f66a38f`},
+    {`description`, `one billion`}, {`property`, `say`},
+    {`input`, {-1, {`number`, 1000000000}}}, {`expected`, `one billion`}},
+   {-1, {`uuid`, `9a43fed1-c875-4710-8286-5065d73b8a9e`},
+    {`description`, `a big number`}, {`property`, `say`},
+    {`input`, {-1, {`number`, 9.876543211e+11}}},
+    {`expected`,
+     `nine hundred eighty-seven billion six hundred fifty-four million three hundred twenty-one thousand one hundred twenty-three`}},
+   {-1, {`uuid`, `49a6a17b-084e-423e-994d-a87c0ecc05ef`},
+    {`description`, `numbers below zero are out of range`},
+    {`property`, `say`}, {`input`, {-1, {`number`, -1}}},
+    {`expected`, {-1, {`error`, `input out of range`}}}},
+   {-1, {`uuid`, `4d6492eb-5853-4d16-9d34-b0f61b261fd9`},
+    {`description`, `numbers above 999,999,999,999 are out of range`},
+    {`property`, `say`}, {`input`, {-1, {`number`, 1e+12}}},
+    {`expected`, {-1, {`error`, `input out of range`}}}}}}}
+}
+--</do not edit>
+--*/
     elsif slug="leap" then                                                      -- int year, bool expected:
         for jo in cases from 2 do
             sequence iy = extract_json_field(jo,"input")
@@ -442,6 +427,53 @@ constant canonical_data = {
             end if
             res &= sprintf("{%v,%s,%v},\n",{strand,expected,desc})
         end for
+    elsif slug="parallel-letter-frequency" then                                 -- []string texts, {int ch, n} expected
+        -- note: ch may be eg 'a' but also a unicode point >#255, 
+        --       which must be written as eg #10FFF /*(unicode)*/
+        for jo in cases from 2 do
+            sequence input = extract_json_field(jo,"input"),
+                     texts = extract_json_field(input,"texts")[2..$],
+                  expected = extract_json_field(jo,"expected")[2..$]
+            desc = extract_json_field(jo,"description")
+            -- ick, let's get really messy...
+            texts = sprintf("%v",{texts})
+            texts = substitute(texts,`while.`,`while.\n`)
+            texts = substitute(texts,`him. `,`him.\n `)
+            texts = substitute(texts,`thing:`,`thing:\n`)
+            texts = substitute(texts,`\r\n"`,"srsndq")
+            texts = substitute(texts,`\n`,`\n"&`&'\n'&`  "`)
+            texts = substitute(texts,"srsndq",`\r\n"`)
+            texts = substitute(texts,`e!","`,"e!\",\n  \"")
+            for i,e in expected do
+--              expected[i] = sprintf("{'%c',%d}",e)
+                if length(e[1])=1 then
+                    expected[i] = sprintf("{'%s',%d}",e)
+                else
+                    -- phix 'characters' (which are really just integers) 
+                    -- such as 'A' are strictly limited to 0..255, or less.
+                    e[1] = utf8_to_utf32(e[1])[1]
+                    expected[i] = sprintf("{#%x/*(unicode)*/,%d}",e)
+                end if
+            end for
+            string txt = sprintf("{%s,{%s},%v},\n",{texts,join(expected,","),desc})
+            txt = substitute(txt,"},{{'a',32}","},\n {{'a',32}")
+            txt = substitute(txt,"},{'r',17}","},\n  {'r',17}")
+            txt = substitute(txt,"},{{'a',845}","},\n {{'a',845}")
+            txt = substitute(txt,"},{'p',197}","},\n  {'p',197}")
+            integer kab = match(`{"abbccc",`,txt)
+            if kab then
+                txt[kab..find('}',txt,kab)] = `repeat("abbccc",50)`
+            end if
+            res &= txt
+        end for
+    elsif slug="word-count" then                                                -- string sentence, {{string word, int n}} expected:
+        for jo in cases from 2 do
+            sequence sc = extract_json_field(jo,"input"),
+               sentence = extract_json_field(sc,"sentence"),
+               expected = sort(extract_json_field(jo,"expected")[2..$])
+            desc = extract_json_field(jo,"description")
+            res &= sprintf("{%v,%v,%v},\n",{sentence,expected,desc})
+        end for
     elsif slug="protein-translation" then                                       -- string strand, string err|[]string expected:
         for jo in cases from 2 do
             sequence sc = extract_json_field(jo,"input"),
@@ -455,6 +487,21 @@ constant canonical_data = {
                 expected = expected[2..$]
             end if
             res &= sprintf("{%v,%v,%v},\n",{strand,expected,desc})
+        end for
+    elsif slug="series" then                                                    -- string text, int len, string err|[]string expected:
+        for jo in cases from 2 do
+            sequence tl = extract_json_field(jo,"input"),
+                   text = extract_json_field(tl,"series"),
+               expected = extract_json_field(jo,"expected")
+            integer len = extract_json_field(tl,"sliceLength")
+            desc = extract_json_field(jo,"description")
+            if expected[1]=JSON_OBJECT then
+                expected = extract_json_field(expected,"error")
+            else
+                assert(expected[1]=JSON_ARRAY)
+                expected = expected[2..$]
+            end if
+            res &= sprintf("{%v,%d,%v,%v},\n",{text,len,expected,desc})
         end for
     elsif slug="connect" then                                                   -- string board(joined), expected:
         for jo in cases from 2 do
@@ -556,6 +603,17 @@ constant canonical_data = {
             desc = extract_json_field(jo,"description")
             res &= sprintf("{%v,%v,%v,%v},\n",{s1,s2,expect,desc})
         end for
+    elsif slug="wordy" then                                                     -- string question, int|str expected:
+        for jo in cases from 2 do
+            sequence input = extract_json_field(jo,"input")
+            string qu = extract_json_field(input,"question")
+            object expect = extract_json_field(jo,"expected")
+            if not atom(expect) then
+                expect = extract_json_field(expect,"error")
+            end if
+            desc = extract_json_field(jo,"description")
+            res &= sprintf("{%v,%v,%v},\n",{qu,expect,desc})
+        end for
     elsif slug="hello-world" then                                               -- just the one expected (and a description)
         assert(length(cases)=2)
         string expect = extract_json_field(cases[2],"expected")
@@ -571,8 +629,8 @@ constant canonical_data = {
             desc = extract_json_field(jo,"description")
             res &= sprintf("{{%s},%v},\n",{mes,desc})
         end for
-    elsif k8 then                                                               -- []string lines, expected, desc
-        what = {`lines`,`strings`}[k8]
+    elsif kA then                                                               -- []string lines, expected, desc
+        what = {`lines`,`strings`,`rows`}[kA]
         for jo in cases from 2 do
             sequence input = extract_json_field(jo,"input"),
                      lines = extract_json_field(input,what)[2..$],
@@ -859,12 +917,106 @@ constant canonical_data = {
             desc = extract_json_field(jo,"description")
             res &= sprintf("{{%s,%s,%d,%d},%v,%v},\n",{week,dayofweek,month,year,expect,desc})
         end for
+    elsif slug="ledger" then                                                -- string currency, locale, {{string date, desc, int amt}} entries, []string expected
+        res = "\#EF\#BB\#BF" & res // UTF8 BOM
+        for jo in cases from 2 do
+            sequence input = extract_json_field(jo,"input"),
+                   entries = extract_json_field(input,"entries")[2..$],
+                    expect = extract_json_field(jo,"expected")[2..$]
+            string curr = extract_json_field(input,"currency"),
+                 locale = extract_json_field(input,"locale")
+            for i,e in entries do
+                string dt = extract_json_field(e,"date"),
+                      dsc = extract_json_field(e,"description")
+                integer amt = extract_json_field(e,"amountInCents")
+                entries[i] = sprintf("%v",{{dt,dsc,amt}})
+            end for
+            desc = extract_json_field(jo,"description")
+            entries = join(entries,",\n  ")
+            expect = join(expect,",\n  ",fmt:="`%s`")
+            res &= sprintf("{%v,%v,\n {%s},\n {%s},%v},\n",{curr,locale,entries,expect,desc})
+        end for
 --/*
-
+atom string
+constant canonical_data = {
+{-1,
+ {`exercise`, `say`},
+ {`comments`,
+  {-2, `An 'error' object is used as expected value to indicate that the`,
+   `input value is out of the range described in the exercise.`}},
+ {`cases`,
+  {-2,
+   {-1, {`uuid`, `5d22a120-ba0c-428c-bd25-8682235d83e8`},
+    {`description`, `zero`}, {`property`, `say`},
+    {`input`, {-1, {`number`, 0}}}, {`expected`, `zero`}},
+   {-1, {`uuid`, `9b5eed77-dbf6-439d-b920-3f7eb58928f6`},
+    {`description`, `one`}, {`property`, `say`},
+    {`input`, {-1, {`number`, 1}}}, {`expected`, `one`}},
+   {-1, {`uuid`, `7c499be1-612e-4096-a5e1-43b2f719406d`},
+    {`description`, `fourteen`}, {`property`, `say`},
+    {`input`, {-1, {`number`, 14}}}, {`expected`, `fourteen`}},
+   {-1, {`uuid`, `f541dd8e-f070-4329-92b4-b7ce2fcf06b4`},
+    {`description`, `twenty`}, {`property`, `say`},
+    {`input`, {-1, {`number`, 20}}}, {`expected`, `twenty`}},
+   {-1, {`uuid`, `d78601eb-4a84-4bfa-bf0e-665aeb8abe94`},
+    {`description`, `twenty-two`}, {`property`, `say`},
+    {`input`, {-1, {`number`, 22}}}, {`expected`, `twenty-two`}},
+   {-1, {`uuid`, `f010d4ca-12c9-44e9-803a-27789841adb1`},
+    {`description`, `thirty`}, {`property`, `say`},
+    {`input`, {-1, {`number`, 30}}}, {`expected`, `thirty`}},
+   {-1, {`uuid`, `738ce12d-ee5c-4dfb-ad26-534753a98327`},
+    {`description`, `ninety-nine`}, {`property`, `say`},
+    {`input`, {-1, {`number`, 99}}}, {`expected`, `ninety-nine`}},
+   {-1, {`uuid`, `e417d452-129e-4056-bd5b-6eb1df334dce`},
+    {`description`, `one hundred`}, {`property`, `say`},
+    {`input`, {-1, {`number`, 100}}}, {`expected`, `one hundred`}},
+   {-1, {`uuid`, `d6924f30-80ba-4597-acf6-ea3f16269da8`},
+    {`description`, `one hundred twenty-three`}, {`property`, `say`},
+    {`input`, {-1, {`number`, 123}}},
+    {`expected`, `one hundred twenty-three`}},
+   {-1, {`uuid`, `2f061132-54bc-4fd4-b5df-0a3b778959b9`},
+    {`description`, `two hundred`}, {`property`, `say`},
+    {`input`, {-1, {`number`, 200}}}, {`expected`, `two hundred`}},
+   {-1, {`uuid`, `feed6627-5387-4d38-9692-87c0dbc55c33`},
+    {`description`, `nine hundred ninety-nine`}, {`property`, `say`},
+    {`input`, {-1, {`number`, 999}}},
+    {`expected`, `nine hundred ninety-nine`}},
+   {-1, {`uuid`, `3d83da89-a372-46d3-b10d-de0c792432b3`},
+    {`description`, `one thousand`}, {`property`, `say`},
+    {`input`, {-1, {`number`, 1000}}}, {`expected`, `one thousand`}},
+   {-1, {`uuid`, `865af898-1d5b-495f-8ff0-2f06d3c73709`},
+    {`description`, `one thousand two hundred thirty-four`},
+    {`property`, `say`}, {`input`, {-1, {`number`, 1234}}},
+    {`expected`, `one thousand two hundred thirty-four`}},
+   {-1, {`uuid`, `b6a3f442-266e-47a3-835d-7f8a35f6cf7f`},
+    {`description`, `one million`}, {`property`, `say`},
+    {`input`, {-1, {`number`, 1000000}}}, {`expected`, `one million`}},
+   {-1, {`uuid`, `2cea9303-e77e-4212-b8ff-c39f1978fc70`},
+    {`description`, `one million two thousand three hundred forty-five`},
+    {`property`, `say`}, {`input`, {-1, {`number`, 1002345}}},
+    {`expected`, `one million two thousand three hundred forty-five`}},
+   {-1, {`uuid`, `3e240eeb-f564-4b80-9421-db123f66a38f`},
+    {`description`, `one billion`}, {`property`, `say`},
+    {`input`, {-1, {`number`, 1000000000}}}, {`expected`, `one billion`}},
+   {-1, {`uuid`, `9a43fed1-c875-4710-8286-5065d73b8a9e`},
+    {`description`, `a big number`}, {`property`, `say`},
+    {`input`, {-1, {`number`, 9.876543211e+11}}},
+    {`expected`,
+     `nine hundred eighty-seven billion six hundred fifty-four million three hundred twenty-one thousand one hundred twenty-three`}},
+   {-1, {`uuid`, `49a6a17b-084e-423e-994d-a87c0ecc05ef`},
+    {`description`, `numbers below zero are out of range`},
+    {`property`, `say`}, {`input`, {-1, {`number`, -1}}},
+    {`expected`, {-1, {`error`, `input out of range`}}}},
+   {-1, {`uuid`, `4d6492eb-5853-4d16-9d34-b0f61b261fd9`},
+    {`description`, `numbers above 999,999,999,999 are out of range`},
+    {`property`, `say`}, {`input`, {-1, {`number`, 1e+12}}},
+    {`expected`, {-1, {`error`, `input out of range`}}}}}}}
+}
+--</do not edit>
 --*/
     else
-        res = ppf(json,{pp_Nest,1})
---      res = print_json("",json)
+        res &= ppf(json,{pp_Nest,1})
+--      res &= print_json("",json)
     end if
     return res
 end function
@@ -955,7 +1107,7 @@ cd_tail = """
 """
 
 
-procedure test()
+procedure main()
 --DEV rework this: start from phix_exercises, fetch from prob_spec_dir on demand..
     sequence ped = read_dir(phix_exercises),
              esd = read_dir(exercise_specs),
@@ -1011,19 +1163,17 @@ procedure test()
     printf(1,"%d deprecated exercise%s (0 phix)\n",{ld,s(ld)})
     printf(1,"%d phix exercise%s implemented\n",{lp,s(lp)})
     printf(1,"%d exercise%s not implemented in phix\n",{np,s(np)})
---  ?not_phix -- good, 48 -- run (eg) F:\misc\phix\phix>bin\configlet create --practice-exercise zipper
+--  ?not_phix -- good, 18 -- run (eg) F:\misc\phix\phix>bin\configlet create --practice-exercise zipper
 --/*
-{"affine-cipher","dot-dsl","error-handling","etl","flatten-array","food-chain",
- "go-counting","grade-school","grep","hangman","killer-sudoku-helper","kindergarten-garden","knapsack",
- "largest-series-product","ledger","lens-person","linked-list","matrix","meetup","micro-blog","nth-prime",
- "paasio","parallel-letter-frequency","pascals-triangle","phone-number","pov","prime-factors","proverb",
- "rational-numbers","rectangles","resistor-color-trio","rest-api","rotational-cipher","run-length-encoding",
- "satellite","say","series","sgf-parsing","simple-cipher","simple-linked-list","sublist","tournament",
- "tree-building","twelve-days","word-count","wordy","zipper"}
+{"affine-cipher","dot-dsl","error-handling","go-counting","grade-school","hangman","killer-sudoku-helper","knapsack",
+                                                            ^^                                              ^^
+ "lens-person","micro-blog","paasio","rational-numbers","rectangles","rest-api","satellite","sgf-parsing","tree-building",
+ "zipper"}
 --*/
     printf(1,"%d exercise%s without canonical data\n",{lo,s(lo)})
+--  ?wo_canonic {"dot-dsl","error-handling","hangman","lens-person","paasio","robot-name","simple-linked-list","tree-building"}
     printf(1,"%d phix exercise%s without canonical data\n",{po,s(po)})
---  ?ipo -- (robot-name)
+--  ?ipo -- {"robot-name","simple-linked-list"}
     printf(1,"%d exercise%s with canonical data\n",{lw,s(lw)})
     printf(1,"%d phix exercise%s with canonical data\n",{pw,s(pw)})
 --  ?wo_canonic -- (includes robot_name)
@@ -1038,10 +1188,15 @@ procedure test()
         integer cdx = find(pe,with_canon)
         assert(cdx!=0)
         integer fn = open(canon_e,"w")
-        puts(fn,cd_hdr)
-        string cds = generate_tests(pe,canon_json[cdx])
+--      puts(fn,cd_hdr)
+        string cds = generate_tests(cd_hdr,pe,canon_json[cdx])
 --      string cds = ppf(canon_json[cdx],{pp_Nest,1})
         puts(fn,cds)
+        if not begins(cd_hdr,cds) then
+            cds = cds[4..$]
+            assert(begins(cd_hdr,cds))
+        end if
+        cds = cds[length(cd_hdr)+1..$]
         puts(fn,cd_tail)
         close(fn)
 --?{pe,cdx}
@@ -1107,5 +1262,5 @@ procedure test()
     ?"done"
     wait_key()
 end procedure
-test()
+main()
 

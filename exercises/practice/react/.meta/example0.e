@@ -172,7 +172,7 @@ procedure test_basic_compute1()
     test_equal(get_value(c), 3, "get_value(c) is properly computed based on changed input cell value")
 end procedure
 
---DEV: (compilation error!)
+--DEV: (compilation error!) [I think that's now solved... or just went away when I rebooted...]
 include hll_stubs.e
 
 // The value of a compute 2 cell is determined by the value of the dependencies.

@@ -9,3 +9,4 @@ pointers or similar of any kind. While multiple lists could be handled using mul
 the provided stack/queue include could be used (both can be instructed to perform an operation on
 their "other" end), to further simplify matters we'll just use the single static variable "list".
 
+[//]:# (this should require simple-linked-list to be completed first...)

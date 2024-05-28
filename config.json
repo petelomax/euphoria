@@ -897,7 +897,7 @@
         "practices": [],
         "prerequisites": [],
         "difficulty": 1
-      }
+      },
       {
         "slug": "yacht",
         "name": "Yacht",
@@ -913,6 +913,14 @@
         "practices": [],
         "prerequisites": [],
         "difficulty": 8
+      },
+      {
+        "slug": "simple-linked-list",
+        "name": "Simple Linked List",
+        "uuid": "3aa9eeb1-d666-49ca-bccc-0c6a1627c42d",
+        "practices": [],
+        "prerequisites": [],
+        "difficulty": 1
       }
     ]
   },
