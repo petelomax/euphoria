@@ -1,4 +1,5 @@
-﻿include parallel-letter-frequency.e
+﻿
+include parallel-letter-frequency.e
 
 --<do not edit>
 constant canonical_data = {
