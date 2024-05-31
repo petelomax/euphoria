@@ -8,7 +8,7 @@
 --          test generator needs updating to munge it, or you can just ignore it as above.
 --<do not edit>
 constant canonical_data = {
-{"",true,"empty input = empty output"},
+{{},true,"empty input = empty output"},
 {{{1,1}},true,"singleton input = singleton output"},
 {{{1,2}},false,`singleton that can't be chained`},
 {{{1,2},{3,1},{2,3}},true,"three elements"},

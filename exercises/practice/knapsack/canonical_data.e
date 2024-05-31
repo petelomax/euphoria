@@ -8,13 +8,13 @@
 --          test generator needs updating to munge it, or you can just ignore it as above.
 --<do not edit>
 constant canonical_data = {
-{12,{{3,4,5}},"triplets whose sum is 12"},
-{108,{{27,36,45}},"triplets whose sum is 108"},
-{1000,{{200,375,425}},"triplets whose sum is 1000"},
-{1001,{},"no matching triplets for 1001"},
-{90,{{9,40,41},{15,36,39}},"returns all matching triplets"},
-{840,{{40,399,401},{56,390,394},{105,360,375},{120,350,370},{140,336,364},{168,315,357},{210,280,350},{240,252,348}},"several matching triplets"},
-{30000,{{1200,14375,14425},{1875,14000,14125},{5000,12000,13000},{6000,11250,12750},{7500,10000,12500}},"triplets for large number"},
+{100,{},0,"no items"},
+{10,{{100,1}},0,"one item, too heavy"},
+{10,{{2,5},{2,5},{2,5},{2,5},{10,21}},21,"five items (cannot be greedy by weight)"},
+{10,{{2,20},{2,20},{2,20},{2,20},{10,50}},80,"five items (cannot be greedy by value)"},
+{10,{{5,10},{4,40},{6,30},{4,50}},90,"example knapsack"},
+{104,{{25,350},{35,400},{45,450},{5,20},{25,70},{3,8},{2,5},{2,5}},900,"8 items"},
+{750,{{70,135},{73,139},{77,149},{80,150},{82,156},{87,163},{90,173},{94,184},{98,192},{106,201},{110,210},{113,214},{115,221},{118,229},{120,240}},1458,"15 items"},
 }
 --</do not edit>
 
