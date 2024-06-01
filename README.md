@@ -8,6 +8,7 @@ Exercism exercises in Phix.
 
 To test the exercises, run `./bin/test`.
 This command will iterate over all exercises and check to see if their exemplar/example implementation passes all the tests.
+[ah, not yet attempted..]
 
 ### Track linting
 
